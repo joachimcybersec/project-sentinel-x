@@ -344,3 +344,8 @@ a.tech-id { display: inline-flex; align-items: center; min-height: 28px; }
   .dl dd { margin-bottom: 8px; }
 }
 .chart-data, .table-scroll { overflow-x: auto; max-width: 100%; }
+
+/* Phase 12: About page reviewer lists */
+.tour-list { margin: 0 0 16px; padding-left: 1.4em; display: grid; gap: 6px; }
+.tour-list li { line-height: 1.5; }
+.tour-list a { font-weight: 600; }

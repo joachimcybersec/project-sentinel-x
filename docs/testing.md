@@ -226,6 +226,16 @@ Live site: <https://joachimcybersec-project.netlify.app> (Netlify, deployed from
 | 130 | Console on the live site | ⚠️ one Trusted Types error from a script **Netlify injects** (`/.netlify/scripts/hud?variant=public`, the "Powered by Netlify" badge), which builds an iframe via `srcdoc`. The CSP blocks it, so the badge never renders. Turning the badge off in project settings did not remove it: the script itself says the badge cannot be hidden on the free plan. Not an application error; goes away on a paid plan or another host |
 | 131 | W3C Nu validator on the live URL | ❌ 2 errors in our markup (`aria-label` on `<time>`, clock `<time>` with no valid `datetime` before boot) + redundant `role="banner"` → ✅ fixed; `index.html` revalidated by direct input: 0 errors (the only warnings are CSP `'self'` not matching when there is no origin). The live page also reports a stray `<script>` after `</html>`: Netlify's injected badge tag, not our markup |
 
+## Phase 12 results — 2026-11-22 (portfolio presentation)
+
+| # | Check | Result |
+|---|---|---|
+| 132 | Provenance audit while reviewing screenshots: detection rules carried the *Lab result* badge, but have only been tested on simulated logs (architecture.md: *LAB* only once actually performed) | ❌ → ✅ relabelled *Simulated* in data, validator, Module 06 card and rule pages |
+| 133 | Demo guide: every step run against the live site (KPI filter, event drawer, incident → SIEM link, `host:FS-02` query, rule page matches exactly 1 expected log, policy simulator, packet checksums, 8 tunable correlation thresholds, KEV/NVD/EPSS freshness, CVSS breakdown, `innerHTML` → TypeError) | ✅ one link fixed: `#/network?tab=packets` does not select the tab, so the guide says to click it |
+| 134 | Case study facts against the data (attack chronology from incident timelines, counts from the JSON files) | ✅ one correction: the attack order |
+| 135 | About page "For reviewers" section at 1440 px and 390 px: no overflow; 5 in-app and 5 GitHub links | ✅ (the GitHub doc links resolve once pushed) |
+| 136 | Full suite and pre-deploy check after Phase 12 changes | see the release run below |
+
 ## Not yet performed
 
 | Check | Phase |

@@ -4,6 +4,25 @@
  */
 import { el, provenanceBadge, PROVENANCE_HELP } from '../utils/dom.js';
 
+const REPO = 'https://github.com/joachimcybersec/project-sentinel-x';
+
+// A five-minute path through one alert, end to end (mirrors docs/demo-guide.md).
+const TOUR = [
+  ['#/soc', 'SOC dashboard', 'filter by severity and open an event'],
+  ['#/incidents/IR-2026-004', 'Ransomware case IR-2026-004', 'lifecycle, investigation and timeline'],
+  ['#/siem?q=host%3AFS-02', 'SIEM: host:FS-02', 'the raw evidence behind the case, parsed and normalised'],
+  ['#/detections/shadow-copy-deletion', 'Sigma rule', 'evaluated live against the same logs'],
+  ['#/network', 'Network simulator', 'which policy would have blocked each attack step']
+];
+
+const REVIEW_DOCS = [
+  [`${REPO}/blob/main/docs/case-study.md`, 'Case study', 'problem, approach, trade-offs and the defects the tests caught'],
+  [`${REPO}/blob/main/docs/demo-guide.md`, 'Demo walkthrough', '5- and 15-minute presentation scripts'],
+  [`${REPO}/blob/main/docs/testing.md`, 'Test records', 'what was run, what failed first, what is still to do'],
+  [`${REPO}/actions/workflows/ci.yml`, 'CI runs', '127 tests and 21 routes in Chromium, Firefox and WebKit'],
+  [REPO, 'Source code', 'MIT licensed']
+];
+
 const DECISIONS = [
   ['Static-first, two-tier architecture', 'The full site runs from a CDN with curated JSON. Live indicator lookups go through one serverless function, so API keys never reach the browser, and the site still works when that function is absent.'],
   ['Vanilla ES modules, no framework', 'Keeps the payload small, needs no build step, and keeps the source readable for reviewers. Each module\'s code loads on first visit, so the landing page fetches about a third of the bytes. A minifier can be added without changing code structure.'],
@@ -30,10 +49,10 @@ const PHASES = [
   ['6', 'Module 06 — Detection engineering (Sigma)', 'Complete'],
   ['7', 'Modules 07–08 — CVE intelligence and network security', 'Complete'],
   ['8', 'Modules 09–10 — Tools directory, knowledge centre and site-wide search', 'Complete'],
-  ['9', 'Serverless IOC proxy and GitHub Actions automation', 'Complete (not yet deployed)'],
+  ['9', 'Serverless IOC proxy and GitHub Actions automation', 'Complete (deployed; no provider API keys set)'],
   ['10', 'Security review and QA (Trusted Types, accessibility audit, click-through crawl)', 'Complete'],
   ['11', 'Documentation and deployment (GitHub, Netlify, CI)', 'Complete'],
-  ['12', 'Portfolio presentation', 'Planned']
+  ['12', 'Portfolio presentation (screenshots, case study, demo guide)', 'Complete']
 ];
 
 export function renderAbout(view) {
@@ -42,6 +61,13 @@ export function renderAbout(view) {
       el('span', { class: 'eyebrow' }, 'About this project'),
       el('h1', null, 'Engineering Sentinel X'),
       el('p', { class: 'lede' }, 'Sentinel X is a portfolio project that demonstrates security operations, threat intelligence, incident response and detection engineering concepts through a working web platform. It is a demonstration, not a production SOC: it does not ingest live telemetry from any organisation.')
+    ),
+    el('section', { class: 'card', 'aria-labelledby': 'rev-h' },
+      el('h2', { id: 'rev-h' }, 'For reviewers'),
+      el('p', null, 'Follow one simulated alert through the platform in about five minutes:'),
+      el('ol', { class: 'tour-list' }, ...TOUR.map(([href, label, what]) => el('li', null, el('a', { href }, label), ' — ', what))),
+      el('p', null, 'Project documentation (opens on GitHub):'),
+      el('ul', { class: 'tour-list' }, ...REVIEW_DOCS.map(([href, label, what]) => el('li', null, el('a', { href }, label), ' — ', what)))
     ),
     el('section', { class: 'card', 'aria-labelledby': 'dec-h' },
       el('h2', { id: 'dec-h' }, 'Key engineering decisions'),

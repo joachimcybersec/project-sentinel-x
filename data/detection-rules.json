@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "provenance": "lab",
+  "provenance": "simulated",
   "reviewed": "2026-11-22",
   "testing": "Rules were written for this project and tested in the Sentinel X in-browser Sigma evaluator against the 52 simulated log lines in sample-logs.json. They have NOT been validated with pySigma / sigma-cli or run against a production SIEM backend; status is therefore 'experimental'. Field names follow the Sigma taxonomy; tune filters for your environment before use.",
   "references": [

@@ -2,6 +2,16 @@
 
 Versions follow the build phases. Dates are UTC.
 
+## 1.0.0 — 2026-11-22 · Phase 12: portfolio presentation
+- README completed against the brief: objectives, technologies, verified results, screenshot gallery,
+  configuration, future improvements; CI badge and live-demo link
+- `docs/case-study.md` (problem, approach, trade-offs, defects caught by testing) and `docs/demo-guide.md`
+  (5- and 15-minute walkthroughs, every step checked on the live site)
+- Nine screenshots in `docs/screenshots/`; Open Graph / link-preview tags with `assets/og-image.jpg`
+- About page: "For reviewers" section with a five-step tour and documentation links; roadmap complete
+- **Provenance fix:** detection rules were labelled *Lab result* but have only been tested against simulated
+  logs. They are now labelled *Simulated*; *Lab result* stays reserved for an actual lab run (none published)
+
 ## 0.11.0 — 2026-11-22 · Phase 11: documentation and deployment
 - Deployed to Netlify (<https://joachimcybersec-project.netlify.app>) from GitHub; CI green on Chromium,
   Firefox and WebKit

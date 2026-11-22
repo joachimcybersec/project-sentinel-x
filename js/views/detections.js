@@ -5,7 +5,7 @@
  *   #/detections/:slug        rule page: objective, logic, FPs, investigation, remediation, live test
  *
  * Rules are real Sigma YAML evaluated by js/detection/sigma.js against the
- * simulated logs. Results are labelled "lab": tested here, not in production.
+ * simulated logs. Labelled "simulated": original rules tested only against the simulated logs. "Lab result" is reserved for data from an actual lab run, and none has been published.
  */
 import { el, clear, provenanceBadge, severityBadge } from '../utils/dom.js';
 import { load, mitreUrl } from '../data-service.js';
@@ -193,7 +193,7 @@ export async function renderDetections(view) {
       el('span', { class: 'eyebrow' }, 'Module 06'),
       el('h1', null, 'Detection Engineering'),
       el('p', { class: 'lede' }, 'A Sigma rule library for the simulated environment. Every rule is evaluated live in your browser against the same raw logs as the SIEM module, with its expected matches checked by the test suite.'),
-      el('div', { class: 'meta-row' }, provenanceBadge('lab'), el('span', { class: 'kpi-sub' }, `Reviewed ${data.reviewed}`))),
+      el('div', { class: 'meta-row' }, provenanceBadge('simulated'), el('span', { class: 'kpi-sub' }, `Reviewed ${data.reviewed}`))),
     el('div', { class: 'notice' }, el('span', { 'aria-hidden': 'true' }, 'ⓘ'), el('span', null, el('strong', null, 'How these rules were tested. '), data.testing)),
     el('div', { class: 'grid grid-4' },
       kpi('Rules', rules.length, 'Sigma, status experimental', 'status-live'),
@@ -233,7 +233,7 @@ export async function renderDetection(view, { params }) {
         el('span', { class: 'eyebrow' }, `Sigma · ${r.logsource}`),
         el('h1', null, r.title),
         el('p', { class: 'lede' }, r.objective),
-        el('div', { class: 'meta-row' }, severityBadge(LEVEL_SEVERITY[r.level]), el('span', { class: 'badge status-planned' }, p.status), provenanceBadge('lab'), el('span', { class: 'kpi-sub mono' }, p.id))),
+        el('div', { class: 'meta-row' }, severityBadge(LEVEL_SEVERITY[r.level]), el('span', { class: 'badge status-planned' }, p.status), provenanceBadge('simulated'), el('span', { class: 'kpi-sub mono' }, p.id))),
       el('div', { class: 'btn-row' }, el('a', { class: 'btn btn-sm', href: `#/detections?edit=${r.slug}` }, 'Open in playground'), dl)),
     el('div', { class: 'grid grid-3' },
       el('section', { class: 'card', 'aria-labelledby': 'ov-h' }, el('h2', { id: 'ov-h' }, 'Rule facts'),

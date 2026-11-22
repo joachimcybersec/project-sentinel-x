@@ -41,8 +41,8 @@
       "id": "detections", "num": "06", "route": "/detections", "status": "live", "phase": 6,
       "title": "Detection Engineering",
       "summary": "Searchable Sigma rule library with ATT&CK mapping, false-positive guidance and investigation notes.",
-      "features": ["16 syntax-highlighted Sigma rules", "Live evaluation against the simulated logs", "Coverage by technique and incident", "Rule playground with validation", "pySigma validation in CI (planned, Phase 10)"],
-      "provenance": ["lab"]
+      "features": ["16 syntax-highlighted Sigma rules", "Live evaluation against the simulated logs", "Coverage by technique and incident", "Rule playground with validation", "pySigma sigma check in CI"],
+      "provenance": ["simulated"]
     },
     {
       "id": "vulnerabilities", "num": "07", "route": "/vulnerabilities", "status": "live", "phase": 7,

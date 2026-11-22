@@ -288,7 +288,7 @@ export function validateSiemTools(json) {
 /** Structural check of the rule library file. Sigma semantics are validated by js/detection/sigma.js. */
 export function validateDetections(json) {
   const p = [];
-  if (!json || json.provenance !== 'lab') p.push('detections must declare provenance "lab"');
+  if (!json || json.provenance !== 'simulated') p.push('detections must declare provenance "simulated" (rules are tested on simulated logs; "lab" is reserved for results from an actual lab run)');
   if (!json || !Array.isArray(json.rules) || !json.rules.length) return [...p, 'rules must be a non-empty array'];
   const slugs = new Set();
   json.rules.forEach((r, i) => {
