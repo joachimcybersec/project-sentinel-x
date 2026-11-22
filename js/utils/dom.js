@@ -75,7 +75,9 @@ const ALLOWED_ATTRS = new Set([
   // Phase 3 — SVG charts
   'x', 'y', 'x1', 'x2', 'y1', 'y2', 'cx', 'cy', 'r', 'rx', 'points', 'transform', 'text-anchor',
   'dominant-baseline', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin',
-  'preserveAspectRatio', 'focusable', 'opacity'
+  'preserveAspectRatio', 'focusable', 'opacity',
+  // Theme switcher (radio group)
+  'aria-checked'
 ]);
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const SVG_TAGS = new Set(['svg', 'path', 'g', 'rect', 'circle', 'line', 'polyline', 'polygon', 'text', 'title']);

@@ -46,7 +46,7 @@
   .topbar-status #env-label { display: none; }
   .main { padding: 20px 16px 48px; }
   .hero { min-height: 460px; }
-  .hero::after { background: linear-gradient(0deg, rgba(7, 11, 20, .95) 0%, rgba(7, 11, 20, .85) 55%, rgba(7, 11, 20, .1) 85%); }
+  .hero::after { background: linear-gradient(0deg, rgba(var(--bg0-rgb), .95) 0%, rgba(var(--bg0-rgb), .85) 55%, rgba(var(--bg0-rgb), .1) 85%); }
   .feed li { grid-template-columns: 1fr auto; }
   .feed li .feed-msg { grid-column: 1 / -1; }
   .kpi-value { font-size: 1.6rem; }

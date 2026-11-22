@@ -1,0 +1,225 @@
+/* ==========================================================================
+   Joachim's Sentinel X — themes.css
+   Three themes from Joachim's portfolio: Original (default, in main.css :root),
+   Dark (slate + electric blue) and Gold Luxury (rich black + metallic gold).
+   Also: the animated background canvas and the floating theme switcher.
+   Severity, provenance and categorical colours are deliberately not themed.
+   ========================================================================== */
+
+/* ── DARK — "Blue team precision" ─────────────────────────────── */
+html[data-theme="dark"] {
+  --bg-0: #0b0f19;
+  --bg-1: #0f1522;
+  --bg-2: #111827;
+  --bg-3: #1f2937;
+  --bg0-rgb: 11, 15, 25;
+  --bg1-rgb: 15, 21, 34;
+  --bg2-rgb: 17, 24, 39;
+  --bg3-rgb: 31, 41, 55;
+  --glass: rgba(17, 24, 39, 0.78);
+  --line: rgba(96, 165, 250, 0.16);
+  --line-strong: rgba(96, 165, 250, 0.34);
+  --code-bg: #070b14;
+  --code-bg-hover: #0b1120;
+
+  --text-1: #f8fafc;
+  --text-2: #cbd5e1;
+  --text-3: #94a3b8;
+
+  --cyan: #60a5fa;
+  --accent-hi: #93c5fd;
+  --accent-lo: #3b82f6;
+  --accent-rgb: 96, 165, 250;
+  --blue: #38bdf8;
+  --accent2-rgb: 56, 189, 248;
+  --accent-glow: rgba(96, 165, 250, 0.35);
+  --on-accent: #06101f;
+}
+
+/* ── GOLD LUXURY — "The gold standard" ────────────────────────── */
+html[data-theme="gold"] {
+  --bg-0: #050505;
+  --bg-1: #0b0b0b;
+  --bg-2: #141414;
+  --bg-3: #1f1f1f;
+  --bg0-rgb: 5, 5, 5;
+  --bg1-rgb: 11, 11, 11;
+  --bg2-rgb: 20, 20, 20;
+  --bg3-rgb: 31, 31, 31;
+  --glass: rgba(24, 24, 24, 0.8);
+  --line: rgba(212, 175, 55, 0.18);
+  --line-strong: rgba(212, 175, 55, 0.38);
+  --code-bg: #080808;
+  --code-bg-hover: #101010;
+
+  --text-1: #fafafa;
+  --text-2: #cfcfcf;
+  --text-3: #a3a3a3;
+
+  --cyan: #ffd966;
+  --accent-hi: #ffe8a3;
+  --accent-lo: #d4af37;
+  --accent-rgb: 255, 217, 102;
+  --blue: #d4af37;
+  --accent2-rgb: 212, 175, 55;
+  --accent-glow: rgba(255, 217, 102, 0.32);
+  --on-accent: #0a0800;
+}
+
+/* ── Animated background (js/effects/background.js) ───────────── */
+.bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* -1: painted above the page background (which propagates to the viewport) but below
+     all content, so the shell's own stacking (sticky top bar, mobile drawer) is unchanged. */
+  z-index: -1;
+  pointer-events: none;
+  display: block;
+  opacity: 0;
+  transition: opacity .45s ease;
+}
+.bg-canvas.is-on { opacity: .85; }
+@media (max-width: 600px) { .bg-canvas.is-on { opacity: .7; } }
+
+/* ── Smooth theme change (class added for ~400 ms by the switcher) ── */
+html.theme-anim,
+html.theme-anim body,
+html.theme-anim *,
+html.theme-anim *::before,
+html.theme-anim *::after {
+  transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease,
+              box-shadow 300ms ease, fill 300ms ease, stroke 300ms ease !important;
+}
+
+/* ── Floating theme switcher ──────────────────────────────────── */
+.theme-fab {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 45;           /* above content and the top bar (40), below the nav scrim (50) and drawer (60) */
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: rgba(var(--bg1-rgb), .78);
+  border: 1px solid rgba(var(--accent-rgb), .45);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .5), 0 0 16px rgba(var(--accent-rgb), .18);
+  color: var(--cyan);
+  transition: transform .3s var(--ease), box-shadow .3s ease;
+}
+.theme-fab:hover,
+.theme-fab:focus-visible {
+  transform: translateY(-3px) rotate(18deg);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, .55), 0 0 26px rgba(var(--accent-rgb), .4);
+}
+.theme-fab:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+.theme-fab svg { width: 24px; height: 24px; display: block; }
+
+.theme-menu {
+  position: fixed;
+  left: 18px;
+  bottom: 82px;
+  z-index: 45;           /* above content and the top bar (40), below the nav scrim (50) and drawer (60) */
+  min-width: 224px;
+  padding: 10px;
+  border-radius: 18px;
+  background: linear-gradient(165deg, rgba(var(--bg2-rgb), .96) 0%, rgba(var(--bg0-rgb), .98) 100%);
+  border: 1px solid rgba(var(--accent-rgb), .45);
+  backdrop-filter: blur(16px) saturate(1.15);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .6), 0 0 30px rgba(var(--accent-rgb), .12);
+  transform-origin: bottom left;
+}
+.theme-menu[hidden] { display: none; }
+.theme-menu:not([hidden]) { animation: theme-menu-in .28s var(--ease); }
+@keyframes theme-menu-in { from { opacity: 0; transform: translateY(14px) scale(.94); } to { opacity: 1; transform: none; } }
+
+.theme-menu-label {
+  margin: 0;
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  padding: 4px 10px 8px;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  color: var(--text-1);
+  font: inherit;
+  font-size: .9rem;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: background .25s ease, border-color .25s ease, transform .25s ease;
+}
+.theme-option:hover,
+.theme-option:focus-visible {
+  background: rgba(var(--accent-rgb), .08);
+  border-color: rgba(var(--accent-rgb), .22);
+  transform: translateX(3px);
+}
+.theme-option:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
+.theme-option[aria-checked="true"] {
+  background: rgba(var(--accent-rgb), .12);
+  border-color: rgba(var(--accent-rgb), .4);
+}
+.theme-option[aria-checked="true"] .theme-dot::after {
+  content: "✓";
+  font-size: 11px;
+  color: #000;
+  font-weight: 700;
+}
+
+/* Tri-colour preview swatch per theme (fixed colours: they preview each theme) */
+.theme-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, .25);
+  box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+}
+.theme-dot-original { background: conic-gradient(#1b0000 0 33%, #ffd56f 33% 66%, #b41208 66% 100%); }
+.theme-dot-dark     { background: conic-gradient(#0b0f19 0 33%, #3b82f6 33% 66%, #1f2937 66% 100%); }
+.theme-dot-gold     { background: conic-gradient(#050505 0 33%, #d4af37 33% 66%, #ffd966 66% 100%); }
+
+.theme-option-text small {
+  display: block;
+  color: var(--text-2);
+  font-size: .75rem;
+  margin-top: 1px;
+}
+
+/* Desktop: the button floats over the sidebar's bottom-left corner. Right-align the short footer
+   line so the two never collide, and leave room below it when the sidebar is scrolled to the end. */
+@media (min-width: 961px) {
+  .sidebar { padding-bottom: 76px; }
+  .sidebar-foot { text-align: right; }
+}
+
+@media (max-width: 600px) {
+  .theme-fab { left: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); width: 46px; height: 46px; }
+  .theme-menu { left: 12px; bottom: calc(66px + env(safe-area-inset-bottom)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-anim, html.theme-anim * { transition: none !important; }
+  .theme-fab, .theme-option { transition: none !important; }
+  .theme-menu:not([hidden]) { animation: none; }
+}

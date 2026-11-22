@@ -236,6 +236,21 @@ Live site: <https://joachimcybersec-project.netlify.app> (Netlify, deployed from
 | 135 | About page "For reviewers" section at 1440 px and 390 px: no overflow; 5 in-app and 5 GitHub links | ✅ (the GitHub doc links resolve once pushed) |
 | 136 | Release v1.0.0 (`3362de2`): CI run 45031615386 (pre-deploy, Sigma check, Chromium, Firefox, WebKit); live site redeployed; `og-image.jpg` served; rules served as `"simulated"`; live smoke test of 21 routes | ✅ all 5 CI jobs passed; no CSP violations from the app (the only console error is the Netlify badge script, #130) |
 
+## v1.1 results — 2026-11-23 (portfolio themes and name)
+
+Branch `feature/portfolio-themes`. Local runs used installed Chrome with Playwright 1.49.1 and `serve@14.2.4`.
+
+| # | Check | Result |
+|---|---|---|
+| 137 | Full suite with the new theme tests | ✅ 135/135 |
+| 138 | Accessibility audit (incl. contrast) on 21 routes × every tab × 3 themes | ✅ 0 findings |
+| 139 | Theme switching via the real button: attribute, saved choice, browser UI colour, reload persistence | ✅ all three themes |
+| 140 | CSP / Trusted Types violations and console errors while switching themes | ✅ none |
+| 141 | Phone (390 px): menu fits the screen, no horizontal overflow; open nav drawer covers the theme button | ✅ |
+| 142 | Reduced motion: background drawn once, then unchanged (sampled for 5.6 s) | ✅ one early redraw, then still |
+| 143 | Desktop: theme button covered the sidebar footer text | ❌ → ✅ footer right-aligned on desktop |
+| 144 | Syntax check of every changed script; pre-deploy check | ✅ (140 files) |
+
 ## Not yet performed
 
 | Check | Phase |

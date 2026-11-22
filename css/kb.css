@@ -17,7 +17,7 @@
 .lic-free { background: rgba(56, 189, 248, .14); color: #7dd3fc; }
 .lic-commercial { background: rgba(251, 146, 60, .16); color: #fdba74; }
 .lic-cloud-service { background: rgba(167, 139, 250, .16); color: #c4b5fd; }
-.workflow { border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px; background: rgba(7, 11, 20, .35); display: flex; flex-direction: column; gap: 8px; }
+.workflow { border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px; background: rgba(var(--bg0-rgb), .35); display: flex; flex-direction: column; gap: 8px; }
 .workflow h3 { margin: 0; font-size: .98rem; }
 .workflow p { margin: 0; }
 .wf-steps { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; font-size: .84rem; color: var(--text-2); }
@@ -35,7 +35,7 @@
 .pathway h3 { margin: 0; }
 .pathway p { margin: 0; font-size: .88rem; }
 .pw-steps { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 6px; counter-reset: step; }
-.pw-steps li { display: grid; grid-template-columns: auto auto 1fr; gap: 8px; align-items: center; font-size: .86rem; padding: 6px 8px; border-radius: var(--r-sm); background: rgba(7, 11, 20, .35); }
+.pw-steps li { display: grid; grid-template-columns: auto auto 1fr; gap: 8px; align-items: center; font-size: .86rem; padding: 6px 8px; border-radius: var(--r-sm); background: rgba(var(--bg0-rgb), .35); }
 .pw-steps li.is-done a { color: var(--text-3); text-decoration: line-through; }
 .pw-steps input { width: 16px; height: 16px; accent-color: var(--ok); }
 .step-type { font: 600 .62rem var(--font-mono); text-transform: uppercase; padding: 1px 6px; border-radius: 4px; }

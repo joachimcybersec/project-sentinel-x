@@ -152,7 +152,7 @@ export async function renderVulnerability(view, { params }) {
       el('a', { class: 'btn btn-primary', href: '#/vulnerabilities' }, '← CVE snapshot'));
     return;
   }
-  document.title = `${c.cveID} · Vulnerability Intelligence · Sentinel X`;
+  document.title = `${c.cveID} · Vulnerability Intelligence · Joachim's Sentinel X`;
   const n = c.nvd || {};
   const cv = n.cvss;
   const parsed = cv ? parseCvssVector(cv.vector) : null;

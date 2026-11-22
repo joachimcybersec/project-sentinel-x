@@ -11,15 +11,23 @@
  * Returns a destroy() function so the view can clean up on navigation.
  */
 
-const COLORS = {
-  link: 'rgba(96, 165, 250, 0.18)',
-  node: '#60a5fa',
-  nodeCore: '#22d3ee',
-  internet: '#94a3b8',
-  packet: '#22d3ee',
-  threat: '#f43f5e',
-  label: 'rgba(169, 182, 204, 0.75)'
-};
+import { THEME_EVENT } from '../theme.js';
+
+// Colours come from the active theme's CSS tokens, re-read when the theme changes.
+let COLORS = readColors();
+function readColors() {
+  const s = getComputedStyle(document.documentElement);
+  const v = (name, fallback) => s.getPropertyValue(name).trim() || fallback;
+  return {
+    link: `rgba(${v('--accent2-rgb', '96, 165, 250')}, 0.22)`,
+    node: v('--blue', '#60a5fa'),
+    nodeCore: v('--cyan', '#22d3ee'),
+    internet: v('--text-3', '#94a3b8'),
+    packet: v('--cyan', '#22d3ee'),
+    threat: v('--sev-critical', '#f43f5e'),
+    label: v('--text-2', '#a9b6cc')
+  };
+}
 
 // Normalised layout (x, y in 0..1). Tier drives colour/size.
 const NODES = [
@@ -49,6 +57,7 @@ const LINKS = [
 export function mountTopology(canvas, { reducedMotion = false } = {}) {
   const ctx = canvas.getContext('2d');
   if (!ctx) return () => {};
+  COLORS = readColors();
 
   const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
   const links = LINKS.map(([a, b]) => [byId[a], byId[b]]);
@@ -156,6 +165,8 @@ export function mountTopology(canvas, { reducedMotion = false } = {}) {
   io.observe(canvas);
   const onVis = () => (document.hidden ? stop() : start());
   document.addEventListener('visibilitychange', onVis);
+  const onTheme = () => { COLORS = readColors(); draw(); };
+  window.addEventListener(THEME_EVENT, onTheme);
 
   // Reduced motion: seed a few packets so the static frame still reads as a network.
   if (reducedMotion) { for (let i = 0; i < 12; i++) { spawn(); packets[packets.length - 1].t = Math.random(); } }
@@ -166,5 +177,6 @@ export function mountTopology(canvas, { reducedMotion = false } = {}) {
     ro.disconnect();
     io.disconnect();
     document.removeEventListener('visibilitychange', onVis);
+    window.removeEventListener(THEME_EVENT, onTheme);
   };
 }

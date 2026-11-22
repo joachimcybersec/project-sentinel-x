@@ -9,7 +9,7 @@
 /* ---------- Cards ---------- */
 .intel-card { display: flex; flex-direction: column; gap: 8px; height: 100%; color: inherit; text-decoration: none;
   transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease), background var(--dur) var(--ease); }
-.intel-card:hover { border-color: var(--line-strong); background: rgba(23, 34, 58, .7); transform: translateY(-2px); }
+.intel-card:hover { border-color: var(--line-strong); background: rgba(var(--bg3-rgb), .7); transform: translateY(-2px); }
 .intel-card h3 { margin: 0; }
 .intel-card p { margin: 0; font-size: .88rem; }
 .intel-card .tile-foot { margin-top: auto; padding-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }

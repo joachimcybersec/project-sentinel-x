@@ -1,4 +1,4 @@
-# Case study: Project Sentinel X
+# Case study: Joachim's Sentinel X
 
 **A security operations demonstration platform, built and verified like production software.**
 Live: <https://joachimcybersec-project.netlify.app> · Source: <https://github.com/joachimcybersec/project-sentinel-x>
@@ -45,7 +45,7 @@ It exists because AbuseIPDB, VirusTotal and OTX keys must never reach the browse
 | Policy simulator (`js/network/policy.js`) | Evaluates as-was, segmented and Zero Trust policies against the attack paths and the legitimate flows |
 | CVE pipeline (`tools/update-cve-snapshot.ps1`) | Joins CISA KEV, NVD CVE API 2.0 and FIRST EPSS into a dated snapshot; refreshed daily by GitHub Actions |
 | IOC proxy (`netlify/lib/ioc-core.mjs`) | Validates and classifies indicators, never sends private or documentation addresses upstream, allow-lists provider hosts, caps response size, normalises output |
-| Test harness (`tests/`) | 127 in-browser tests, a Playwright driver and a DOM-based accessibility audit run on every route and tab |
+| Test harness (`tests/`) | 135 in-browser tests, a Playwright driver and a DOM-based accessibility audit run on every route and tab |
 
 About 10,000 lines of JavaScript, CSS, PowerShell and tests.
 
@@ -78,7 +78,7 @@ the checks were actually executed:
 | Live-site checks | Development files (`package.json`, `serve.*`) were publicly served | 404 rules in `netlify.toml` |
 | W3C validator | Invalid attributes on the clock's `<time>` element | Valid `datetime`, visually hidden label |
 
-End state: **127/127 tests and 21/21 routes pass in Chromium, Firefox and WebKit** on GitHub Actions.
+End state: **135/135 tests and 21/21 routes pass in Chromium, Firefox and WebKit** on GitHub Actions.
 The accessibility audit reports zero findings on every tab panel, and the live site's headers and API
 behaviour match the documentation.
 

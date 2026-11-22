@@ -216,7 +216,7 @@ export async function renderDetection(view, { params }) {
       el('p', { class: 'lede' }, `No detection rule has the ID “${params.id}”.`)), el('a', { class: 'btn btn-primary', href: '#/detections' }, '← Rule library'));
     return;
   }
-  document.title = `${r.title} · Detection Engineering · Sentinel X`;
+  document.title = `${r.title} · Detection Engineering · Joachim's Sentinel X`;
   const libRes = await load('attacks').catch(() => null);
   const dossiers = libRes ? r.relatedAttacks.map((id) => libRes.data.attacks.find((a) => a.id === id)).filter(Boolean) : [];
   const p = r.parsed;

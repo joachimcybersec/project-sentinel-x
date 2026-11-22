@@ -152,7 +152,7 @@ export async function renderThreatProfile(view, { params }) {
       el('p', { class: 'lede' }, `No threat profile has the ID “${params.id}”.`)), el('a', { class: 'btn btn-primary', href: '#/threat-intel' }, '← All profiles'));
     return;
   }
-  document.title = `${p.name} · Threat Intelligence · Sentinel X`;
+  document.title = `${p.name} · Threat Intelligence · Joachim's Sentinel X`;
   const { data: lib } = await load('attacks').catch(() => ({ data: { attacks: [] } }));
   const related = (p.relatedAttacks || []).map((id) => lib.attacks.find((a) => a.id === id)).filter(Boolean);
 

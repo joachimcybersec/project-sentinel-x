@@ -72,14 +72,21 @@ for (const r of ROUTES) {
   const errorNotice = await page.$('#view .notice.is-error');
   if (errorNotice) problems.push(`error notice on ${r}: ${(await errorNotice.innerText()).slice(0, 120)}`);
   // Accessibility subset (tests/a11y-audit.js) on every tab panel: any finding fails the route.
+  // Run in every theme (Original, Dark, Gold): contrast must hold in all three.
   const a11y = await page.evaluate(async () => {
     const { audit } = await import('/tests/a11y-audit.js');
+    const root = document.documentElement;
     const tabs = [...document.querySelectorAll('#view [role="tab"]')];
     const found = [];
-    for (let t = 0; t < Math.max(1, tabs.length); t++) {
-      if (tabs[t]) { tabs[t].click(); await new Promise((res) => setTimeout(res, 150)); }
-      found.push(...audit().map((i) => `${tabs[t] ? `[${tabs[t].textContent.trim()}] ` : ''}${i.rule}: ${i.detail} @ ${i.el}`));
+    for (const theme of ['original', 'dark', 'gold']) {
+      if (theme === 'original') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', theme);
+      for (let t = 0; t < Math.max(1, tabs.length); t++) {
+        if (tabs[t]) { tabs[t].click(); await new Promise((res) => setTimeout(res, 150)); }
+        found.push(...audit().map((i) => `{${theme}} ${tabs[t] ? `[${tabs[t].textContent.trim()}] ` : ''}${i.rule}: ${i.detail} @ ${i.el}`));
+      }
+      if (tabs[0]) { tabs[0].click(); await new Promise((res) => setTimeout(res, 50)); }
     }
+    root.removeAttribute('data-theme');
     return [...new Set(found)];
   });
   for (const i of a11y) problems.push(`a11y ${r}: ${i}`);

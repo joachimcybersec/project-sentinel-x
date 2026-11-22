@@ -76,7 +76,7 @@ export async function renderAttackDossier(view, { params }) {
       el('p', { class: 'lede' }, `No attack dossier has the ID “${params.id}”.`)), el('a', { class: 'btn btn-primary', href: '#/attacks' }, '← All dossiers'));
     return;
   }
-  document.title = `${a.name} · Attack Library · Sentinel X`;
+  document.title = `${a.name} · Attack Library · Joachim's Sentinel X`;
   const { data: intel } = await load('intel').catch(() => ({ data: { profiles: [] } }));
   const relatedProfiles = (a.relatedProfiles || []).map((id) => intel.profiles.find((p) => p.id === id)).filter(Boolean);
 

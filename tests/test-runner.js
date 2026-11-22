@@ -32,6 +32,7 @@ async function run() {
   await import('./vuln-network.test.js');
   await import('./kb.test.js');
   await import('./backend.test.js');
+  await import('./theme.test.js');
 
   const list = document.getElementById('results');
   const summary = document.getElementById('summary');
