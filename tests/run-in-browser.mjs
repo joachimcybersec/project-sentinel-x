@@ -63,7 +63,12 @@ let routeFailures = 0;
 for (const r of ROUTES) {
   const before = problems.length;
   await page.goto(`${base}/#${r}`);
-  await waitFor(() => !document.getElementById('view').hasAttribute('aria-busy') && !!document.querySelector('#view h1'), 15000).catch(() => problems.push(`timeout rendering ${r}`));
+  // Wait for the view to hold *this* route's content: a hash-only goto returns before
+  // hashchange fires, so the previous route's heading could otherwise satisfy the check.
+  await waitFor(() => {
+    const v = document.getElementById('view');
+    return v.dataset.rendered === location.hash && !v.hasAttribute('aria-busy') && !!v.querySelector('h1');
+  }, 15000).catch(() => problems.push(`timeout rendering ${r}`));
   const errorNotice = await page.$('#view .notice.is-error');
   if (errorNotice) problems.push(`error notice on ${r}: ${(await errorNotice.innerText()).slice(0, 120)}`);
   // Accessibility subset (tests/a11y-audit.js) on every tab panel: any finding fails the route.

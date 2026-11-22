@@ -334,8 +334,8 @@ kbd {
 /* Phase 10: WCAG 2.2 SC 2.5.8 target size (minimum 24 x 24 CSS px) for small controls flagged by tests/a11y-audit.js */
 .th-sort { min-height: 28px; } /* headroom: exactly 24px measured as 23.x mid-layout and failed the audit intermittently */
 .crumbs a, .pw-steps a { display: inline-block; padding-block: 4px; }
-a.tech-id { display: inline-flex; align-items: center; min-height: 24px; }
-.wf-tool { min-height: 24px; }
+a.tech-id { display: inline-flex; align-items: center; min-height: 28px; }
+.wf-tool { min-height: 28px; }
 .chart-data > summary { padding-block: 3px; }
 /* Phase 10: narrow screens. Stack definition lists (long terms squeezed the description column to ~13px on
    the About page) and let wide data tables scroll inside their container instead of widening the page. */

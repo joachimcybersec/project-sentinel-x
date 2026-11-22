@@ -147,6 +147,8 @@ async function boot() {
       closeDrawer(); // a drawer opened on the previous page must not float over the next one
       if (typeof cleanup === 'function') { try { cleanup(); } catch (e) { console.error(e); } }
       cleanup = null;
+      const hash = window.location.hash;
+      delete view.dataset.rendered;
       clear(view);
       view.classList.remove('is-entering');
       view.setAttribute('aria-busy', 'true');
@@ -161,6 +163,7 @@ async function boot() {
         renderError(view, err);
       }
       view.removeAttribute('aria-busy');
+      view.dataset.rendered = hash; // which location this content belongs to (used by the browser test driver)
       if (!reducedMotion) { void view.offsetWidth; view.classList.add('is-entering'); }
       window.scrollTo(0, 0);
       // Move focus to main content on navigation (not on first load) for screen-reader users.

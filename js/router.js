@@ -46,12 +46,33 @@ export function resolve(routes, path) {
   return null;
 }
 
+/**
+ * Wrap an async task so runs never overlap. A call made while a run is in flight
+ * schedules exactly one more run after it; any further calls fold into that one.
+ * The router uses this so a slow (lazy-loaded) view can't finish rendering into
+ * the container after a newer navigation has already cleared and filled it.
+ */
+export function latestOnly(task) {
+  let running = null;
+  let again = false;
+  return function run() {
+    if (running) { again = true; return running; }
+    running = (async () => {
+      try {
+        do { again = false; await task(); } while (again);
+      } finally { running = null; }
+    })();
+    return running;
+  };
+}
+
 export function createRouter({ routes, onNavigate, notFound }) {
-  async function handle() {
+  // Each run reads the hash afresh, so the last navigation always wins.
+  const handle = latestOnly(async () => {
     const path = hashToPath(window.location.hash);
     const hit = resolve(routes, path);
     await onNavigate(hit ? hit : { route: notFound, params: {} }, path);
-  }
+  });
   window.addEventListener('hashchange', handle);
   return {
     start: handle,

@@ -1,5 +1,5 @@
 import { test, assert } from './test-runner.js';
-import { hashToPath, matchRoute, resolve } from '../js/router.js';
+import { hashToPath, matchRoute, resolve, latestOnly } from '../js/router.js';
 
 test('hashToPath normalises hashes', () => {
   assert.equal(hashToPath(''), '/');
@@ -27,4 +27,16 @@ test('resolve returns the first matching route', () => {
   assert.equal(resolve(routes, '/about').route.path, '/about');
   assert.equal(resolve(routes, '/attacks/phishing').params.id, 'phishing');
   assert.equal(resolve(routes, '/nope'), null);
+});
+
+test('latestOnly never overlaps runs and folds bursts into one final run', async () => {
+  let active = 0, maxActive = 0, runs = 0;
+  const tick = () => new Promise((r) => setTimeout(r, 10));
+  const run = latestOnly(async () => { active++; maxActive = Math.max(maxActive, active); runs++; await tick(); active--; });
+  const first = run(); run(); run(); // two calls arrive while the first is in flight
+  await first;
+  assert.equal(maxActive, 1, 'runs overlapped');
+  assert.equal(runs, 2, 'expected the in-flight run plus exactly one follow-up');
+  await run();
+  assert.equal(runs, 3, 'a later call starts a fresh run');
 });
