@@ -250,6 +250,8 @@ Branch `feature/portfolio-themes`. Local runs used installed Chrome with Playwri
 | 142 | Reduced motion: background drawn once, then unchanged (sampled for 5.6 s) | ✅ one early redraw, then still |
 | 143 | Desktop: theme button covered the sidebar footer text | ❌ → ✅ footer right-aligned on desktop |
 | 144 | Syntax check of every changed script; pre-deploy check | ✅ (140 files) |
+| 145 | Pull request #1 CI (8 checks) and Netlify Deploy Preview: themes, persistence and 21 routes | ✅ all checks passed; on the preview only, Netlify's injected feedback drawer (`/.netlify/scripts/cdp`) trips the CSP (inline style, framing app.netlify.com); not our code |
+| 146 | Release v1.1.0 (merge `43f27a9`): CI run 45070463977 (pre-deploy, Sigma check, Chromium, Firefox, WebKit); live site serves the new files with the CSP unchanged; themes switch, save and reload; 21 routes OK | ✅ all 5 jobs passed; only console message is the Netlify badge script (#130) |
 
 ## Not yet performed
 
