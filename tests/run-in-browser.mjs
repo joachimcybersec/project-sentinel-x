@@ -30,9 +30,31 @@ const problems = [];
 page.on('pageerror', (e) => problems.push(`pageerror: ${e.message}`));
 page.on('console', (m) => { if (m.type() === 'error') problems.push(`console: ${m.text()}`); });
 
+// Poll with page.evaluate rather than page.waitForFunction: waitForFunction evaluates a string
+// inside the page, which the app's CSP (no 'unsafe-eval', Trusted Types) correctly blocks.
+async function waitFor(fn, timeout) {
+  const end = Date.now() + timeout;
+  for (;;) {
+    const v = await page.evaluate(fn).catch(() => undefined); // navigation in flight → retry
+    if (v) return v;
+    if (Date.now() > end) throw new Error(`timed out after ${timeout} ms`);
+    await new Promise((r) => setTimeout(r, 100));
+  }
+}
+
 // 1. Unit / data / component tests
-await page.goto(`${base}/tests/`);
-const results = await (await page.waitForFunction(() => window.__TEST_RESULTS__, null, { timeout: 90000 })).jsonValue();
+// Explicit index.html: some static servers (e.g. `serve` with cleanUrls off) list directories instead.
+await page.goto(`${base}/tests/index.html`);
+let results;
+try {
+  results = await waitFor(() => window.__TEST_RESULTS__, 90000);
+} catch (err) {
+  console.error(`[${browserName}] test page never reported results: ${err.message}`);
+  for (const p of problems) console.error(`  ${p}`);
+  console.error(`  page title: ${await page.title()}`);
+  await browser.close();
+  process.exit(1);
+}
 console.log(`[${browserName}] unit tests: ${results.passed}/${results.total} passed`);
 for (const f of results.failures) console.log(`  FAIL ${f.name}: ${f.error}`);
 
@@ -41,7 +63,7 @@ let routeFailures = 0;
 for (const r of ROUTES) {
   const before = problems.length;
   await page.goto(`${base}/#${r}`);
-  await page.waitForFunction(() => !document.getElementById('view').hasAttribute('aria-busy') && document.querySelector('#view h1'), null, { timeout: 15000 }).catch(() => problems.push(`timeout rendering ${r}`));
+  await waitFor(() => !document.getElementById('view').hasAttribute('aria-busy') && !!document.querySelector('#view h1'), 15000).catch(() => problems.push(`timeout rendering ${r}`));
   const errorNotice = await page.$('#view .notice.is-error');
   if (errorNotice) problems.push(`error notice on ${r}: ${(await errorNotice.innerText()).slice(0, 120)}`);
   // Accessibility subset (tests/a11y-audit.js) on every tab panel: any finding fails the route.
