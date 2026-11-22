@@ -31,7 +31,7 @@ export async function renderHome(view, { reducedMotion }) {
     canvas,
     reducedMotion ? null : el('div', { class: 'hero-scan', 'aria-hidden': 'true' }),
     el('div', { class: 'hero-content' },
-      el('span', { class: 'eyebrow' }, 'Project Sentinel X'),
+      el('span', { class: 'eyebrow' }, "Joachim's Sentinel X"),
       el('h1', { id: 'hero-h' }, 'Cybersecurity Intelligence & ', el('span', { class: 'accent' }, 'Security Operations'), ' Platform'),
       el('p', { class: 'tagline' }, 'Detect. Investigate. Understand. Defend.'),
       el('p', null, 'A demonstration platform showing how SOC analysts monitor telemetry, investigate incidents, engineer detections and act on threat intelligence — with every dataset clearly labelled as simulated, documented or lab-produced.'),

@@ -9,6 +9,7 @@ import { el, clear, formatUtcTime } from './utils/dom.js';
 import { renderHome } from './views/home.js';
 import { renderModuleStatus } from './views/module-status.js';
 import { closeDrawer } from './components/drawer.js';
+import { mountThemeSwitcher } from './components/theme-switcher.js';
 
 /**
  * Module views are loaded on first visit (dynamic import), so the landing page does not
@@ -89,8 +90,21 @@ function startClock() {
   window.setInterval(tick, 1000);
 }
 
+/** The animated background loads after first paint (idle time), so content always wins. */
+function startAmbientBackground() {
+  const canvas = document.getElementById('bg-canvas');
+  if (!canvas) return;
+  const go = () => import('./effects/background.js')
+    .then((m) => m.startBackground(canvas, { reducedMotion }))
+    .catch((err) => console.error(err)); // decorative: a failure must never affect the app
+  if ('requestIdleCallback' in window) window.requestIdleCallback(go, { timeout: 600 });
+  else window.setTimeout(go, 200);
+}
+
 async function boot() {
   startClock();
+  mountThemeSwitcher();
+  startAmbientBackground();
 
   // Site-wide search: submit opens the Knowledge Centre search tab; "/" focuses the box.
   const siteSearch = document.getElementById('site-search');
@@ -153,7 +167,7 @@ async function boot() {
       view.classList.remove('is-entering');
       view.setAttribute('aria-busy', 'true');
       nav.setActive(path);
-      document.title = `${route.title} · Sentinel X`;
+      document.title = `${route.title} · Joachim's Sentinel X`;
 
       try {
         cleanup = await route.render(view, { params, path });

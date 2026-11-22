@@ -2,6 +2,18 @@
 
 Versions follow the build phases. Dates are UTC.
 
+## 1.1.0 — 2026-11-23 · Portfolio themes and name
+- Product name: **Joachim's Sentinel X** (logo, browser titles, link previews, home, About, README)
+- Three themes from Joachim's portfolio: Original (default, crimson + gold), Dark, Gold Luxury; floating
+  switcher (radio group, keyboard support), choice saved per browser, restored before CSS loads
+- Full-page animated background ported from the portfolio as `js/effects/background.js` (external module,
+  CSP and Trusted Types unchanged); still frame under reduced motion; paused in hidden tabs
+- About 70 hard-coded colours converted to theme tokens; severity, provenance and categorical colours
+  deliberately unchanged; landing-page network animation follows the theme
+- Tests: 8 new (theme state, switcher mouse/keyboard, restore-script sync, token contrast in every theme);
+  the browser driver now runs the accessibility audit on every route and tab in all three themes
+- Screenshots and link-preview image retaken in the new themes
+
 ## 1.0.0 — 2026-11-22 · Phase 12: portfolio presentation
 - README completed against the brief: objectives, technologies, verified results, screenshot gallery,
   configuration, future improvements; CI badge and live-demo link

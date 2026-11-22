@@ -19,11 +19,12 @@ const REVIEW_DOCS = [
   [`${REPO}/blob/main/docs/case-study.md`, 'Case study', 'problem, approach, trade-offs and the defects the tests caught'],
   [`${REPO}/blob/main/docs/demo-guide.md`, 'Demo walkthrough', '5- and 15-minute presentation scripts'],
   [`${REPO}/blob/main/docs/testing.md`, 'Test records', 'what was run, what failed first, what is still to do'],
-  [`${REPO}/actions/workflows/ci.yml`, 'CI runs', '127 tests and 21 routes in Chromium, Firefox and WebKit'],
+  [`${REPO}/actions/workflows/ci.yml`, 'CI runs', '135 tests and 21 routes in Chromium, Firefox and WebKit'],
   [REPO, 'Source code', 'MIT licensed']
 ];
 
 const DECISIONS = [
+  ["Three themes from Joachim's portfolio", 'Original (crimson and gold), Dark (slate and electric blue) and Gold Luxury, from a floating switcher. Every colour is a CSS token, so one set of components serves all three, and the accessibility audit checks contrast in each theme. Severity and provenance colours never change, because they carry meaning. The animated background was rebuilt as an external module so the strict Content Security Policy stays intact.'],
   ['Static-first, two-tier architecture', 'The full site runs from a CDN with curated JSON. Live indicator lookups go through one serverless function, so API keys never reach the browser, and the site still works when that function is absent.'],
   ['Vanilla ES modules, no framework', 'Keeps the payload small, needs no build step, and keeps the source readable for reviewers. Each module\'s code loads on first visit, so the landing page fetches about a third of the bytes. A minifier can be added without changing code structure.'],
   ['Security reviewed and enforced by the browser', 'Phase 10 added Trusted Types to the Content Security Policy, so the browser itself refuses HTML injection sinks such as innerHTML. A review also found and fixed a link-sanitiser bypass (backslash URLs), with regression tests.'],
@@ -59,8 +60,8 @@ export function renderAbout(view) {
   view.append(
     el('header', { class: 'page-head' },
       el('span', { class: 'eyebrow' }, 'About this project'),
-      el('h1', null, 'Engineering Sentinel X'),
-      el('p', { class: 'lede' }, 'Sentinel X is a portfolio project that demonstrates security operations, threat intelligence, incident response and detection engineering concepts through a working web platform. It is a demonstration, not a production SOC: it does not ingest live telemetry from any organisation.')
+      el('h1', null, "Engineering Joachim's Sentinel X"),
+      el('p', { class: 'lede' }, "Joachim's Sentinel X is a portfolio project that demonstrates security operations, threat intelligence, incident response and detection engineering concepts through a working web platform. It is a demonstration, not a production SOC: it does not ingest live telemetry from any organisation.")
     ),
     el('section', { class: 'card', 'aria-labelledby': 'rev-h' },
       el('h2', { id: 'rev-h' }, 'For reviewers'),

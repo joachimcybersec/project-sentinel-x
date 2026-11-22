@@ -181,7 +181,7 @@ export async function renderArticle(view, { params }) {
       el('p', { class: 'lede' }, `No article has the ID “${params.id}”.`)), el('a', { class: 'btn btn-primary', href: '#/knowledge' }, '← Knowledge Centre'));
     return;
   }
-  document.title = `${a.title} · Knowledge Centre · Sentinel X`;
+  document.title = `${a.title} · Knowledge Centre · Joachim's Sentinel X`;
   const cat = data.categories.find((c) => c.id === a.category);
   const sameCat = data.articles.filter((x) => x.category === a.category);
   const i = sameCat.indexOf(a);

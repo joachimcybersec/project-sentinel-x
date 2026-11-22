@@ -158,7 +158,7 @@ export async function renderIncident(view, { params }) {
       el('p', { class: 'lede' }, `No incident has the ID “${params.id}”.`)), el('a', { class: 'btn btn-primary', href: '#/incidents' }, '← All cases'));
     return;
   }
-  document.title = `${i.id} ${i.title} · Incident Response · Sentinel X`;
+  document.title = `${i.id} ${i.title} · Incident Response · Joachim's Sentinel X`;
   let intelItems = [];
   try { intelItems = (await load('intel')).data.iocWatchlist.items; } catch { /* enrichment is optional */ }
   const entries = processLogs(logData.logs, { year: logData.syslogYear });

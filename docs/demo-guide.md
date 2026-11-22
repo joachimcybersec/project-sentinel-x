@@ -24,7 +24,7 @@ Base URL: <https://joachimcybersec-project.netlify.app>
 | 4 | [SIEM, host:FS-02](https://joachimcybersec-project.netlify.app/#/siem?q=host%3AFS-02) | The `vssadmin delete shadows` line; expand it to show the parsed, normalised fields | "These are raw lines in seven formats, parsed and normalised in the browser." |
 | 5 | [Shadow-copy deletion rule](https://joachimcybersec-project.netlify.app/#/detections/shadow-copy-deletion) | The Sigma YAML and the logs it matches | "The rule actually runs against the same logs. Tests require each rule to match exactly its expected lines, and `sigma check` runs in CI." |
 
-Close with: *"127 tests pass in Chromium, Firefox and WebKit on every push, and the docs list what hasn't been
+Close with: *"135 tests pass in Chromium, Firefox and WebKit on every push, and the docs list what hasn't been
 verified yet."*
 
 ## 15-minute path: the 5-minute path, plus

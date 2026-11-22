@@ -1,4 +1,4 @@
-# PROJECT SENTINEL X
+# JOACHIM'S SENTINEL X
 
 **Cybersecurity Intelligence & Security Operations Platform** — *Detect. Investigate. Understand. Defend.*
 
@@ -14,7 +14,7 @@ public source) or **Lab result**. It does not ingest live telemetry from any org
 
 ![Sentinel X overview: hero, telemetry snapshot and module navigation](docs/screenshots/01-overview.jpg)
 
-> **Status: complete (v1.0.0, all 12 phases).** Ten live modules with site-wide search, a security review and
+> **Status: complete (v1.1.0, all 12 phases, plus three portfolio themes).** Ten live modules with site-wide search, a security review and
 > QA pass ([findings](docs/security-review.md)), deployment on Netlify, and CI (Chromium, Firefox, WebKit)
 > passing on GitHub. The IOC-lookup proxy is deployed but has **no provider API keys set**, so live lookups
 > report "not configured" until keys are added.
@@ -102,11 +102,19 @@ public source) or **Lab result**. It does not ingest live telemetry from any org
 - Responsive shell: sidebar on desktop, accessible off-canvas drawer on mobile (Escape, focus return)
 - Safe-DOM rendering layer, strict CSP with **Trusted Types** enforcement, security headers
 - Accessibility audit (`tests/a11y-audit.js`) run on every route and tab panel; module code loads on demand
-- 127 browser-run unit, data, component and backend tests
+- **Three themes from Joachim's portfolio**: Original (crimson + gold, default), Dark (slate + electric blue) and
+  Gold Luxury, chosen from a floating switcher (bottom-left) and remembered per browser. Each theme drives a
+  full-page animated background (hex grid, network nodes, binary rain, data streams, rings, circuit traces)
+  that pauses in hidden tabs, adapts to slow devices and becomes a still image under reduced motion
+- 135 browser-run unit, data, component and backend tests
 
 ## Screenshots
 
-Captured from the v1.0.0 build (Chrome, 1440×900, reduced motion), the same code that is deployed. All data shown is simulated or cited.
+Captured from the v1.1.0 build (Chrome, 1440×900, Original theme unless noted). All data shown is simulated or cited.
+
+| Original | Dark | Gold Luxury |
+|---|---|---|
+| ![SOC dashboard in the Original crimson and gold theme](docs/screenshots/theme-original.jpg) | ![SOC dashboard in the Dark slate and blue theme](docs/screenshots/theme-dark.jpg) | ![SOC dashboard in the Gold Luxury theme](docs/screenshots/theme-gold.jpg) |
 
 | | |
 |---|---|
@@ -136,11 +144,12 @@ Browser ── app.js → router.js → views/* → utils/dom.js
 |---|---|---|
 | Front end | HTML, CSS, vanilla ES modules; no framework, no build step | Every line is reviewable; nothing to patch in a dependency tree; works on any static host |
 | Charts and visuals | Hand-written SVG charts with data-table fallbacks; Canvas 2D topology | No chart library; each chart stays accessible |
+| Themes | CSS custom properties per theme; Canvas 2D background engine ported from Joachim's portfolio; restore script before the CSS | Three looks from one set of components; no flash of the wrong theme; contrast tested in every theme |
 | Security | CSP (`script-src 'self'`, Trusted Types), safe-DOM helper with an attribute allow-list, `safeUrl`, HSTS, COOP/CORP, frame denial | Injection sinks are refused by the browser itself, not just avoided by convention |
 | Back end | Netlify Functions v2 (Node), one endpoint: `/api/ioc` | Keeps provider API keys server-side; no always-on server to maintain |
 | Data | Static JSON validated by tests; CVE snapshot from CISA KEV, NVD and FIRST EPSS | Reproducible; every external fact carries its source and date |
 | Detection content | Sigma rules (YAML), an in-browser Sigma evaluator, pySigma `sigma check` in CI | Rules are executable and verified against the logs they should match |
-| Testing | In-browser test runner (127 tests), Playwright 1.49 driver, DOM-based accessibility audit | Same tests run locally and in CI in Chromium, Firefox and WebKit |
+| Testing | In-browser test runner (135 tests), Playwright 1.49 driver, DOM-based accessibility audit | Same tests run locally and in CI in Chromium, Firefox and WebKit |
 | Automation | GitHub Actions pinned to commit SHAs (CI, daily CVE refresh, weekly source checks); PowerShell tooling | Supply-chain hygiene; content is re-verified on a schedule |
 | Hosting | Netlify (static + functions), deployed from `main` | Security headers and redirects defined in `netlify.toml`, in version control |
 
@@ -148,8 +157,9 @@ Browser ── app.js → router.js → views/* → utils/dom.js
 
 What has been run, not just written. Full records in [docs/testing.md](docs/testing.md).
 
-- **127 / 127** unit, data, component and backend tests pass in **Chromium, Firefox and WebKit** (GitHub Actions)
-- **21 routes, every tab panel**: no console errors and no findings from the accessibility audit, in all three engines
+- **135 / 135** unit, data, component and backend tests pass in **Chromium, Firefox and WebKit** (GitHub Actions)
+- **21 routes, every tab panel, all three themes**: no console errors and no findings from the accessibility audit
+  (including colour contrast), in all three engines
 - **Live site**: security headers present, internal folders return 404, `/api/ioc` behaves as documented
   (private and documentation indicators never sent upstream, 400 on bad input, 405 on POST)
 - **Security review** ([security-review.md](docs/security-review.md)): a link-sanitiser bypass found and
@@ -179,9 +189,9 @@ With Node installed, `npx serve .` also works. Before deploying, run
 
 ```
 index.html  netlify.toml  serve.ps1  serve.json  package.json  SECURITY.md  CHANGELOG.md  LICENSE
-css/        main.css · components.css · dashboard.css · responsive.css
-js/         app.js · router.js · navigation.js · data-service.js
-            utils/{dom,attack}.js · effects/topology.js
+css/        main.css · components.css · dashboard.css · responsive.css · themes.css (Dark, Gold, switcher)
+js/         app.js · router.js · navigation.js · data-service.js · theme.js · theme-init.js
+            utils/{dom,attack}.js · effects/{topology,background}.js · components/theme-switcher.js
             views/{home,module-status,about,components,soc,threat-intel,attacks,incidents,siem,detections,
                    vulnerabilities,network,tools,knowledge}.js
             detection/{yaml,sigma}.js · network/{packets,policy,cvss}.js · search/search.js

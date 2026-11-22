@@ -44,7 +44,7 @@
 
 /* ---------- Pipeline ---------- */
 .pipeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; counter-reset: none; }
-.pipe-stage { position: relative; border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px; background: rgba(7, 11, 20, .45); }
+.pipe-stage { position: relative; border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px; background: rgba(var(--bg0-rgb), .45); }
 .pipe-stage:not(:last-child)::after { content: "→"; position: absolute; right: -10px; top: 50%; transform: translate(50%, -50%); color: var(--cyan); z-index: 1; }
 .pipe-num { font: 600 .7rem var(--font-mono); color: var(--cyan); }
 .pipe-stage h3 { margin: 4px 0; font-size: .95rem; }
@@ -73,13 +73,13 @@
 .phase-track li::before { content: counter(phase); font: 600 .7rem var(--font-mono); color: var(--cyan); margin-right: 8px; }
 .phase-track.is-progress li.done { border-color: rgba(52, 211, 153, .4); color: var(--ok); }
 .phase-track.is-progress li.done::before { content: "✓"; color: var(--ok); }
-.phase-track.is-progress li.current { border-color: var(--cyan); background: rgba(34, 211, 238, .12); color: var(--text-1); font-weight: 600; }
+.phase-track.is-progress li.current { border-color: var(--cyan); background: rgba(var(--accent-rgb), .12); color: var(--text-1); font-weight: 600; }
 
 /* ---------- Investigation ---------- */
 .inv-progress { height: 6px; border-radius: 3px; background: var(--bg-3); overflow: hidden; margin: 4px 0 6px; --pct: 0%; }
-.inv-progress::before { content: ""; display: block; height: 100%; width: var(--pct); background: linear-gradient(90deg, #0ea5e9, var(--ok)); transition: width 300ms var(--ease); }
+.inv-progress::before { content: ""; display: block; height: 100%; width: var(--pct); background: linear-gradient(90deg, var(--accent-lo), var(--ok)); transition: width 300ms var(--ease); }
 .investigation { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 10px; }
-.inv-step { border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px 14px; background: rgba(7, 11, 20, .35); }
+.inv-step { border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px 14px; background: rgba(var(--bg0-rgb), .35); }
 .inv-step.is-open { border-color: rgba(52, 211, 153, .35); }
 .inv-step h3 { margin: 0 0 6px; font-size: .95rem; display: flex; align-items: baseline; }
 .inv-step p { margin: 0 0 8px; font-size: .88rem; }
@@ -91,8 +91,8 @@
 /* ---------- Raw log lines ---------- */
 .log-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
 .log-line { width: 100%; display: grid; grid-template-columns: 5.5em 8.5em minmax(0, 1fr); gap: 10px; align-items: baseline; text-align: left;
-  padding: 7px 10px; border-radius: var(--r-sm); border: 1px solid var(--line); background: #060a12; color: var(--text-2); cursor: pointer; font: inherit; }
-.log-line:hover { border-color: var(--line-strong); background: #0a1120; }
+  padding: 7px 10px; border-radius: var(--r-sm); border: 1px solid var(--line); background: var(--code-bg); color: var(--text-2); cursor: pointer; font: inherit; }
+.log-line:hover { border-color: var(--line-strong); background: var(--code-bg-hover); }
 .log-id { color: var(--cyan); font-size: .75rem; }
 .log-raw { font-size: .74rem; white-space: pre-wrap; overflow-wrap: anywhere; color: #cbd5e1; }
 .root-cause { font-size: 1rem; color: var(--text-1); margin: 0; }
