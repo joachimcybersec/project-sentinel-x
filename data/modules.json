@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "updated": "2026-11-22",
+  "modules": [
+    {
+      "id": "soc", "num": "01", "route": "/soc", "status": "live", "phase": 3,
+      "title": "Security Operations Centre",
+      "summary": "Command-centre dashboard: event volume, severity distribution, timelines, suspicious logins, endpoint and network telemetry.",
+      "features": ["Severity KPI tiles (critical/high/medium/low)", "Event timeline and alert distribution charts", "Filter by severity, event type, date range and status", "Suspicious login and endpoint activity panels", "Network traffic and system health panels", "CSV/JSON export and shift-summary report"],
+      "provenance": ["simulated"]
+    },
+    {
+      "id": "threat-intel", "num": "02", "route": "/threat-intel", "status": "live", "phase": 4,
+      "title": "Threat Intelligence Centre",
+      "summary": "Threat actor, ransomware, malware and phishing campaign profiles with defanged IOCs and cited public reporting.",
+      "features": ["Ten actor and campaign profiles mapped to MITRE ATT&CK", "Every fact cited with source, publication date and link", "Simulated, defanged IOC watchlist with CSV export", "Source-report index and Markdown profile export", "Optional live lookups via serverless proxy (Phase 9)"],
+      "provenance": ["documented"]
+    },
+    {
+      "id": "attacks", "num": "03", "route": "/attacks", "status": "live", "phase": 4,
+      "title": "Attack Intelligence Library",
+      "summary": "Fourteen attack dossiers, each with methodology, a documented real-world incident, ATT&CK mapping, log sources, detections and response steps.",
+      "features": ["10-section dossier per attack", "Verified fact vs analytical interpretation labelling", "Cross-links to detections and incident playbooks"],
+      "provenance": ["documented"]
+    },
+    {
+      "id": "incidents", "num": "04", "route": "/incidents", "status": "live", "phase": 5,
+      "title": "Incident Response",
+      "summary": "Interactive case studies from identification to lessons learned, with evidence logs and a step-by-step investigation.",
+      "features": ["Six investigation scenarios with sample logs", "Priority matrix and lifecycle tracker", "Step-through investigation with evidence", "Containment, eradication and recovery recommendations", "Exportable incident report"],
+      "provenance": ["simulated"]
+    },
+    {
+      "id": "siem", "num": "05", "route": "/siem", "status": "live", "phase": 5,
+      "title": "SIEM & Log Analysis",
+      "summary": "Searchable sample log datasets with in-browser parsing, normalisation and correlation demonstrations.",
+      "features": ["Windows Security, Sysmon, PowerShell, Linux auth, firewall, DNS, web and EDR logs", "Query language with deep links", "Parser lab: raw → extracted → normalised → enriched", "Tunable correlation rules generating alerts"],
+      "provenance": ["simulated"]
+    },
+    {
+      "id": "detections", "num": "06", "route": "/detections", "status": "live", "phase": 6,
+      "title": "Detection Engineering",
+      "summary": "Searchable Sigma rule library with ATT&CK mapping, false-positive guidance and investigation notes.",
+      "features": ["16 syntax-highlighted Sigma rules", "Live evaluation against the simulated logs", "Coverage by technique and incident", "Rule playground with validation", "pySigma validation in CI (planned, Phase 10)"],
+      "provenance": ["lab"]
+    },
+    {
+      "id": "vulnerabilities", "num": "07", "route": "/vulnerabilities", "status": "live", "phase": 7,
+      "title": "Vulnerability & CVE Intelligence",
+      "summary": "CVE intelligence built from CISA KEV and NIST NVD snapshots with clear freshness timestamps.",
+      "features": ["CISA KEV + NVD CVSS + FIRST EPSS snapshot", "Transparent prioritisation model", "Freshness shown on every view", "CVE pages with CVSS breakdown", "Regeneration script for scheduled updates"],
+      "provenance": ["documented"]
+    },
+    {
+      "id": "network", "num": "08", "route": "/network", "status": "live", "phase": 7,
+      "title": "Network Security Intelligence",
+      "summary": "Traffic-flow visualisations, segmentation and Zero Trust reference architectures, IDS/IPS concepts.",
+      "features": ["Segmentation vs Zero Trust simulator using the incident attack paths", "Packet explorer with real bytes and verified checksums", "Ten topic briefs with NIST, CISA and RFC references"],
+      "provenance": ["documented", "simulated"]
+    },
+    {
+      "id": "tools", "num": "09", "route": "/tools", "status": "live", "phase": 8,
+      "title": "Security Tools Directory",
+      "summary": "Categorised directory of SIEM, EDR, IDS, forensics and cloud security tools with official documentation links.",
+      "features": ["33 tools across 10 categories", "Category and licence filters", "Practical use cases and links to practise in Sentinel X", "Five multi-tool example workflows"],
+      "provenance": ["documented"]
+    },
+    {
+      "id": "knowledge", "num": "10", "route": "/knowledge", "status": "live", "phase": 8,
+      "title": "Knowledge Centre",
+      "summary": "Searchable knowledge base and structured learning pathways for SOC, detection and incident response roles.",
+      "features": ["20 articles across 10 subject areas", "Five learning pathways with hands-on tasks", "Site-wide search across all modules"],
+      "provenance": ["documented"]
+    }
+  ]
+}

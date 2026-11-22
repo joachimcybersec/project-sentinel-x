@@ -1,0 +1,29 @@
+title: PowerShell Download Cradle in Script Block
+id: 3f5a6c2e-8d41-4b7a-9e1f-2c6d8a0b7e55
+status: experimental
+description: Detects common in-memory download-and-execute patterns logged by Script Block Logging (event 4104).
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.command-and-control
+  - attack.t1105
+logsource:
+  product: windows
+  category: ps_script
+detection:
+  selection_download:
+    ScriptBlockText|contains:
+      - 'Net.WebClient'
+      - 'DownloadString'
+      - 'DownloadFile'
+      - 'Invoke-WebRequest'
+  selection_exec:
+    ScriptBlockText|contains:
+      - 'IEX'
+      - 'Invoke-Expression'
+  condition: selection_download and selection_exec
+falsepositives:
+  - Administrative or software-deployment scripts that bootstrap from internal repositories
+level: high

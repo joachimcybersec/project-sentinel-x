@@ -1,0 +1,19 @@
+title: TXT Query With Long Base32-Like Label (Resolver Log)
+id: 0d6e2a9f-3b8c-4e71-b5a2-7f4d1c9e3b08
+status: experimental
+description: Detects TXT queries in DNS server logs where the first label is 25 or more base32-alphabet characters.
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.command-and-control
+  - attack.t1071.004
+logsource:
+  category: dns
+detection:
+  selection:
+    dns.question.type: TXT
+    dns.question.name|re: '^[a-z2-7]{25,}\.'
+  condition: selection
+falsepositives:
+  - Email security (SPF/DKIM) and anti-malware lookups using encoded TXT queries
+level: medium

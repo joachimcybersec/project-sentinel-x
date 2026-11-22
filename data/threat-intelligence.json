@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "provenance": "documented",
+  "reviewed": "2026-11-22",
+  "attackVersion": "MITRE ATT&CK Enterprise (technique IDs as published at time of each source)",
+  "disclaimer": "Profiles summarise the cited public sources. Each fact links to the source it came from, with that source's publication date. Statements marked Analysis are the author's interpretation, not facts from the source. Threat-actor activity changes over time: check the original advisory and newer reporting before relying on any profile. Real IOCs are not reproduced here; use the IOC appendices of the linked advisories.",
+  "profiles": [
+    {
+      "id": "lockbit",
+      "name": "LockBit",
+      "aliases": ["LockBit 2.0", "LockBit 3.0", "LockBit Black"],
+      "type": "ransomware",
+      "attribution": "Ransomware-as-a-Service (RaaS) operation with affiliates (per CISA)",
+      "summary": "A ransomware-as-a-service operation in which a core group develops the ransomware and affiliates carry out intrusions, combining encryption with data-theft extortion.",
+      "facts": [
+        { "text": "CISA and international partners described LockBit as the most deployed ransomware variant worldwide in 2022.", "source": 0 },
+        { "text": "Affiliates gained initial access through methods including exploitation of public-facing applications, RDP, phishing and abuse of valid accounts.", "source": 0 },
+        { "text": "In February 2024 the UK National Crime Agency led an international operation (Operation Cronos) that took control of LockBit's services and infrastructure.", "source": 1 }
+      ],
+      "analysis": [
+        "Because affiliates bring their own access methods, defending against LockBit is largely defending against common initial-access techniques rather than a single toolset.",
+        "Law-enforcement disruption reduces capacity but RaaS affiliates commonly migrate to other programmes; defences should not depend on a specific brand."
+      ],
+      "incidents": [
+        { "date": "2023-11-21", "title": "Citrix Bleed exploitation by LockBit 3.0 affiliates", "text": "CISA and FBI reported LockBit 3.0 affiliates exploiting CVE-2023-4966 (Citrix Bleed) for initial access.", "source": 2 },
+        { "date": "2024-02-20", "title": "Operation Cronos", "text": "NCA-led action disrupted LockBit infrastructure.", "source": 1 }
+      ],
+      "techniques": ["T1190", "T1133", "T1078", "T1562.001", "T1486", "T1490"],
+      "defences": ["Patch internet-facing systems prioritising the CISA KEV catalog", "Enforce phishing-resistant MFA on remote access and admin accounts", "Restrict and monitor RDP; remove direct internet exposure", "Maintain offline, tested backups", "Alert on shadow-copy deletion and security-tool tampering"],
+      "sources": [
+        { "title": "AA23-165A: Understanding Ransomware Threat Actors: LockBit", "publisher": "CISA and partners", "date": "2023-06-14", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-165a" },
+        { "title": "NCA leads international investigation targeting world's most harmful ransomware group", "publisher": "UK National Crime Agency", "date": "2024-02-20", "url": "https://www.nationalcrimeagency.gov.uk/news/nca-leads-international-investigation-targeting-worlds-most-harmful-ransomware-group" },
+        { "title": "AA23-325A: LockBit 3.0 Ransomware Affiliates Exploit CVE 2023-4966 Citrix Bleed Vulnerability", "publisher": "CISA, FBI and partners", "date": "2023-11-21", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a" }
+      ],
+      "relatedAttacks": ["ransomware", "exploit-known-vuln"]
+    },
+    {
+      "id": "alphv-blackcat",
+      "name": "ALPHV / BlackCat",
+      "aliases": ["ALPHV", "BlackCat", "Noberus"],
+      "type": "ransomware",
+      "attribution": "Ransomware-as-a-Service operation (per CISA/FBI)",
+      "summary": "A ransomware-as-a-service operation whose affiliates used social engineering, including impersonating IT staff, before deploying ransomware and stealing data for extortion.",
+      "facts": [
+        { "text": "ALPHV Blackcat affiliates posed as company IT and/or helpdesk staff, using phone calls or SMS messages to obtain credentials from employees.", "source": 0 },
+        { "text": "The February 2024 update reported that, of nearly 70 leaked victims since mid-December 2023, the healthcare sector was the most commonly victimised.", "source": 0 }
+      ],
+      "analysis": [
+        "Impersonation of internal IT bypasses many technical controls; employees need a simple way to verify unsolicited IT contact, and credential resets need strong identity checks."
+      ],
+      "incidents": [
+        { "date": "2023-12-19", "title": "Joint advisory AA23-353A", "text": "Initial publication of ALPHV Blackcat TTPs and IOCs.", "source": 0 }
+      ],
+      "techniques": ["T1566.004", "T1078", "T1219", "T1021.001", "T1486", "T1490"],
+      "defences": ["Train staff to verify unsolicited IT calls or messages through a known channel", "Strict identity verification for credential and MFA resets", "Application allow-listing for remote-access software", "Phishing-resistant MFA", "Network segmentation and monitoring of RDP between workstations"],
+      "sources": [
+        { "title": "AA23-353A: #StopRansomware: ALPHV Blackcat (updated February 2024)", "publisher": "FBI, CISA and HHS", "date": "2023-12-19", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-353a" }
+      ],
+      "relatedAttacks": ["ransomware", "phishing"]
+    },
+    {
+      "id": "scattered-spider",
+      "name": "Scattered Spider",
+      "aliases": ["Octo Tempest", "UNC3944", "Starfraud", "Muddled Libra"],
+      "type": "cybercrime",
+      "attribution": "Cybercriminal group (per CISA/FBI advisory)",
+      "summary": "A financially motivated group that targets large companies and their contracted IT help desks. It uses social engineering such as push bombing and SIM swapping to get credentials and bypass MFA, then steals data and deploys ransomware.",
+      "facts": [
+        { "text": "Scattered Spider threat actors use social-engineering techniques, including push bombing, and SIM-swap attacks to obtain credentials, install remote access tools and/or bypass MFA.", "source": 0 },
+        { "text": "Actors posed as company IT or helpdesk staff to get employees to run commercial remote-access tools or share one-time passcodes, and called help desks to have passwords reset or MFA transferred.", "source": 0 },
+        { "text": "A July 2025 update reported that, according to trusted third parties, the group had more recently deployed DragonForce ransomware, including encrypting VMware ESXi servers.", "source": 0 }
+      ],
+      "analysis": [
+        "Detection should focus on identity telemetry: unusual MFA enrolment, repeated MFA prompts and new remote-access tool installations.",
+        "The group's use of different ransomware brands over time shows why defences should target its social-engineering tradecraft rather than any one payload."
+      ],
+      "incidents": [
+        { "date": "2023-11-16", "title": "Joint advisory AA23-320A", "text": "CISA and FBI published TTPs and IOCs for Scattered Spider.", "source": 0 },
+        { "date": "2025-07-29", "title": "Advisory update", "text": "Updated TTPs, including help-desk impersonation of employees and DragonForce ransomware deployment.", "source": 0 }
+      ],
+      "techniques": ["T1566.004", "T1621", "T1078", "T1219", "T1486"],
+      "defences": ["Phishing-resistant MFA (FIDO2) instead of push or SMS", "Number-matching and rate limits on MFA prompts", "Verified call-back procedures for help-desk requests", "Alert on new MFA device registration and remote-access tool installs"],
+      "sources": [
+        { "title": "AA23-320A: Scattered Spider (updated 29 July 2025)", "publisher": "CISA and FBI", "date": "2023-11-16", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-320a" }
+      ],
+      "relatedAttacks": ["phishing", "password-spraying"]
+    },
+    {
+      "id": "volt-typhoon",
+      "name": "Volt Typhoon",
+      "aliases": ["Vanguard Panda", "BRONZE SILHOUETTE"],
+      "type": "apt",
+      "attribution": "People's Republic of China state-sponsored actor (per CISA, NSA, FBI and partners)",
+      "summary": "A state-sponsored actor that relies on living-off-the-land techniques to get into and stay in critical-infrastructure IT networks.",
+      "facts": [
+        { "text": "The U.S. authoring agencies assessed that Volt Typhoon was pre-positioning on IT networks to enable disruptive or destructive attacks against U.S. critical infrastructure.", "source": 0 },
+        { "text": "The actor relied heavily on living-off-the-land techniques, using built-in tools such as wmic, ntdsutil and netsh to avoid detection.", "source": 0 },
+        { "text": "The advisory described extraction of the Active Directory database (NTDS.dit) from domain controllers, including via Volume Shadow Copies.", "source": 0 }
+      ],
+      "analysis": [
+        "Living-off-the-land activity defeats signature-based tools; behavioural baselines of admin-tool usage on domain controllers are the practical detection surface."
+      ],
+      "incidents": [
+        { "date": "2024-02-07", "title": "Joint advisory AA24-038A", "text": "Multinational advisory on Volt Typhoon compromise of critical-infrastructure networks.", "source": 0 }
+      ],
+      "techniques": ["T1190", "T1078", "T1047", "T1003.003", "T1090", "T1070.001"],
+      "defences": ["Patch and harden internet-facing network appliances", "Centralise and retain logs (including command-line auditing) out of attacker reach", "Baseline and alert on ntdsutil/vssadmin/wmic use on domain controllers", "Replace end-of-life edge devices"],
+      "sources": [
+        { "title": "AA24-038A: PRC State-Sponsored Actors Compromise and Maintain Persistent Access to U.S. Critical Infrastructure", "publisher": "CISA, NSA, FBI and partners", "date": "2024-02-07", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-038a" }
+      ],
+      "relatedAttacks": ["credential-dumping", "lateral-movement"]
+    },
+    {
+      "id": "apt29",
+      "name": "APT29 / Midnight Blizzard",
+      "aliases": ["Midnight Blizzard", "NOBELIUM", "Cozy Bear", "The Dukes"],
+      "type": "apt",
+      "attribution": "Russian state-sponsored actor (attribution as stated in the cited sources)",
+      "summary": "A long-running espionage actor linked to the SolarWinds supply-chain compromise and to a 2024 password-spray intrusion into Microsoft corporate email.",
+      "facts": [
+        { "text": "CISA reported an APT compromise of government, critical-infrastructure and private-sector networks that used a supply-chain compromise of SolarWinds Orion software.", "source": 0 },
+        { "text": "Microsoft reported that Midnight Blizzard used a password-spray attack to compromise a legacy, non-production test tenant account, then accessed a small percentage of Microsoft corporate email accounts.", "source": 1 }
+      ],
+      "analysis": [
+        "Both incidents show trusted-relationship and identity abuse (signed software, legacy test accounts) rather than malware exploits as the decisive step."
+      ],
+      "incidents": [
+        { "date": "2020-12-17", "title": "SolarWinds Orion supply-chain compromise", "text": "CISA alert on APT activity using compromised SolarWinds Orion updates.", "source": 0 },
+        { "date": "2024-01-19", "title": "Microsoft corporate email intrusion", "text": "Microsoft disclosed the password-spray intrusion and its response.", "source": 1 }
+      ],
+      "techniques": ["T1195.002", "T1071.001", "T1606.002", "T1078.004", "T1110.003"],
+      "defences": ["Inventory and remove legacy/test tenants and accounts", "Enforce MFA everywhere, including non-production", "Monitor OAuth application consent and permission grants", "Verify software update integrity and monitor build pipelines"],
+      "sources": [
+        { "title": "AA20-352A: Advanced Persistent Threat Compromise of Government Agencies, Critical Infrastructure, and Private Sector Organizations", "publisher": "CISA", "date": "2020-12-17", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-352a" },
+        { "title": "Microsoft Actions Following Attack by Nation State Actor Midnight Blizzard", "publisher": "Microsoft Security Response Center", "date": "2024-01-19", "url": "https://www.microsoft.com/en-us/msrc/blog/2024/01/microsoft-actions-following-attack-by-nation-state-actor-midnight-blizzard" }
+      ],
+      "relatedAttacks": ["supply-chain", "password-spraying", "dns-tunnelling"]
+    },
+    {
+      "id": "cl0p",
+      "name": "CL0P",
+      "aliases": ["TA505 (associated)", "Lace Tempest (associated)"],
+      "type": "ransomware",
+      "attribution": "Ransomware and data-extortion gang (per CISA/FBI)",
+      "summary": "A data-extortion group known for mass exploitation of file-transfer products, most notably the 2023 MOVEit Transfer campaign.",
+      "facts": [
+        { "text": "CL0P exploited a previously unknown SQL injection vulnerability (CVE-2023-34362) in Progress Software's MOVEit Transfer beginning on 27 May 2023.", "source": 0 },
+        { "text": "Internet-facing MOVEit Transfer web applications were infected with a web shell named LEMURLOOT, which was used to steal data from underlying databases.", "source": 0 }
+      ],
+      "analysis": [
+        "Managed file-transfer platforms hold concentrated sensitive data and are high-value targets for mass exploitation; they warrant priority patching and egress monitoring."
+      ],
+      "incidents": [
+        { "date": "2023-06-07", "title": "MOVEit Transfer mass exploitation", "text": "CISA/FBI advisory on CL0P exploitation of CVE-2023-34362.", "source": 0 }
+      ],
+      "techniques": ["T1190", "T1505.003", "T1048", "T1657"],
+      "defences": ["Rapid patching of file-transfer appliances", "Restrict management interfaces from the internet", "File-integrity monitoring of web roots for new scripts", "Alert on unusual database export volumes"],
+      "sources": [
+        { "title": "AA23-158A: #StopRansomware: CL0P Ransomware Gang Exploits CVE-2023-34362 MOVEit Vulnerability", "publisher": "CISA and FBI", "date": "2023-06-07", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-158a" }
+      ],
+      "relatedAttacks": ["sql-injection", "exploit-known-vuln"]
+    },
+    {
+      "id": "emotet",
+      "name": "Emotet",
+      "aliases": ["Geodo", "Heodo"],
+      "type": "botnet",
+      "attribution": "Criminal malware/botnet operation (per CISA, Europol)",
+      "summary": "Modular malware spread through malicious email attachments and links. It later served as a loader that delivered other malware to infected machines.",
+      "facts": [
+        { "text": "CISA described Emotet as an advanced Trojan primarily spread through phishing email attachments and links that, once clicked, launch the payload.", "source": 0 },
+        { "text": "Emotet was used to deliver other malware, such as TrickBot and QakBot.", "source": 0 },
+        { "text": "In January 2021, law enforcement and judicial authorities coordinated by Europol and Eurojust disrupted the Emotet botnet infrastructure.", "source": 1 }
+      ],
+      "analysis": [
+        "Loader botnets act as access brokers: an Emotet infection should be treated as a precursor to hands-on-keyboard intrusion and ransomware."
+      ],
+      "incidents": [
+        { "date": "2020-10-06", "title": "CISA alert on increased Emotet activity", "text": "CISA alert AA20-280A on Emotet targeting state and local governments.", "source": 0 },
+        { "date": "2021-01-27", "title": "International takedown", "text": "Europol-coordinated action disrupted Emotet infrastructure.", "source": 1 }
+      ],
+      "techniques": ["T1566.001", "T1204.002", "T1059.005", "T1547.001", "T1105", "T1071.001"],
+      "defences": ["Block macros in files from the internet", "Attachment sandboxing at the mail gateway", "Alert on Office applications spawning script interpreters", "Block SMB between workstations"],
+      "sources": [
+        { "title": "AA20-280A: Emotet Malware", "publisher": "CISA", "date": "2020-10-06", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-280a" },
+        { "title": "World's most dangerous malware EMOTET disrupted through global action", "publisher": "Europol", "date": "2021-01-27", "url": "https://www.europol.europa.eu/media-press/newsroom/news/world%E2%80%99s-most-dangerous-malware-emotet-disrupted-through-global-action" }
+      ],
+      "relatedAttacks": ["malware-execution", "phishing"]
+    },
+    {
+      "id": "qakbot",
+      "name": "QakBot",
+      "aliases": ["Qbot", "Pinkslipbot"],
+      "type": "botnet",
+      "attribution": "Criminal malware/botnet operation (per FBI/DOJ)",
+      "summary": "A banking Trojan that became a loader and botnet, giving ransomware actors initial access until a multinational takedown in 2023.",
+      "facts": [
+        { "text": "The U.S. Department of Justice announced a multinational operation, with actions in seven countries, to disrupt the QakBot botnet and take down its infrastructure in August 2023.", "source": 0 },
+        { "text": "According to DOJ, QakBot infected more than 700,000 victim computers and facilitated ransomware deployments.", "source": 0 },
+        { "text": "CISA and FBI published IOCs and TTPs to help organisations detect QakBot-related activity on their networks.", "source": 1 }
+      ],
+      "analysis": [
+        "As with Emotet, QakBot infections historically preceded ransomware; infections found in logs warrant a full intrusion investigation."
+      ],
+      "incidents": [
+        { "date": "2023-08-29", "title": "QakBot infrastructure disrupted", "text": "DOJ/FBI-led takedown of QakBot botnet.", "source": 0 }
+      ],
+      "techniques": ["T1566.001", "T1204.002", "T1055", "T1105", "T1071.001"],
+      "defences": ["Email attachment controls and user reporting", "EDR rules for process injection into legitimate processes", "Egress filtering and DNS monitoring"],
+      "sources": [
+        { "title": "Qakbot Malware Disrupted in International Cyber Takedown", "publisher": "U.S. Department of Justice", "date": "2023-08-29", "url": "https://www.justice.gov/archives/opa/pr/qakbot-malware-disrupted-international-cyber-takedown" },
+        { "title": "AA23-242A: Identification and Disruption of QakBot Infrastructure", "publisher": "CISA and FBI", "date": "2023-08-30", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-242a" }
+      ],
+      "relatedAttacks": ["malware-execution"]
+    },
+    {
+      "id": "aitm-phishing",
+      "name": "Adversary-in-the-Middle (AiTM) phishing campaign",
+      "aliases": ["AiTM", "session-cookie theft"],
+      "type": "phishing",
+      "attribution": "Campaign reported by Microsoft Threat Intelligence; operators not attributed to a named state actor in the source",
+      "summary": "A large phishing campaign that used proxy sites to steal session cookies, which got the attackers past MFA. They then used the hijacked mailboxes for business email compromise (BEC).",
+      "facts": [
+        { "text": "Microsoft reported a large-scale phishing campaign that used AiTM phishing sites to steal passwords, hijack sign-in sessions and skip authentication even when MFA was enabled.", "source": 0 },
+        { "text": "Attackers used the stolen credentials and session cookies to access mailboxes and carry out follow-on business email compromise against other targets.", "source": 0 }
+      ],
+      "analysis": [
+        "Session-cookie theft defeats one-time-code and push MFA; phishing-resistant authenticators and token-binding/conditional access are the effective controls."
+      ],
+      "incidents": [
+        { "date": "2022-07-12", "title": "Microsoft AiTM campaign report", "text": "Microsoft described the campaign and detection guidance.", "source": 0 }
+      ],
+      "techniques": ["T1566.002", "T1557", "T1539", "T1550.004", "T1564.008"],
+      "defences": ["FIDO2/certificate-based phishing-resistant MFA", "Conditional access requiring compliant devices", "Alert on new inbox rules that hide or forward mail", "Detect sign-ins from unfamiliar infrastructure with valid session tokens"],
+      "sources": [
+        { "title": "From cookie theft to BEC: Attackers use AiTM phishing sites as entry point to further financial fraud", "publisher": "Microsoft Threat Intelligence", "date": "2022-07-12", "url": "https://www.microsoft.com/en-us/security/blog/2022/07/12/from-cookie-theft-to-bec-attackers-use-aitm-phishing-sites-as-entry-point-to-further-financial-fraud/" }
+      ],
+      "relatedAttacks": ["phishing"]
+    },
+    {
+      "id": "citrix-bleed",
+      "name": "Citrix Bleed exploitation campaign (CVE-2023-4966)",
+      "aliases": ["Citrix Bleed"],
+      "type": "exploitation",
+      "attribution": "Exploited by multiple actors, including LockBit 3.0 affiliates (per CISA/FBI)",
+      "summary": "Widespread exploitation of a NetScaler ADC/Gateway flaw that let attackers hijack existing authenticated sessions, bypassing passwords and MFA.",
+      "facts": [
+        { "text": "CVE-2023-4966 affects Citrix NetScaler ADC and NetScaler Gateway appliances and enables threat actors to bypass password requirements and MFA by hijacking legitimate user sessions.", "source": 0 },
+        { "text": "CISA and FBI reported that LockBit 3.0 affiliates exploited the vulnerability to gain initial access.", "source": 0 }
+      ],
+      "analysis": [
+        "Patching alone is insufficient for session-hijack flaws: existing sessions must also be terminated, because stolen session tokens remain valid after the patch."
+      ],
+      "incidents": [
+        { "date": "2023-11-21", "title": "Joint advisory AA23-325A", "text": "Advisory with IOCs and detection methods for Citrix Bleed exploitation.", "source": 0 }
+      ],
+      "techniques": ["T1190", "T1550.004", "T1078", "T1486"],
+      "defences": ["Patch per vendor guidance and terminate all active sessions", "Hunt for session reuse from new IP addresses", "Place appliance management interfaces off the internet", "Track KEV catalog additions for edge devices"],
+      "sources": [
+        { "title": "AA23-325A: LockBit 3.0 Ransomware Affiliates Exploit CVE 2023-4966 Citrix Bleed Vulnerability", "publisher": "CISA, FBI and partners", "date": "2023-11-21", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-325a" }
+      ],
+      "relatedAttacks": ["exploit-known-vuln", "ransomware"]
+    }
+  ],
+  "iocWatchlist": {
+    "provenance": "simulated",
+    "note": "Training indicators drawn from the simulated SOC dataset. IP addresses use RFC 5737 documentation ranges and domains use reserved TLDs; none of these are real malicious infrastructure.",
+    "items": [
+      { "type": "ipv4", "value": "203.0.113.45", "role": "Brute-force source", "confidence": "high", "firstSeen": "2026-11-21T22:01:14Z", "events": ["EVT-0001", "EVT-0002", "EVT-0003"] },
+      { "type": "ipv4", "value": "198.51.100.23", "role": "Password-spraying source", "confidence": "high", "firstSeen": "2026-11-21T22:14:47Z", "events": ["EVT-0004"] },
+      { "type": "ipv4", "value": "192.0.2.77", "role": "Anomalous admin logon source", "confidence": "medium", "firstSeen": "2026-11-21T22:31:09Z", "events": ["EVT-0005"] },
+      { "type": "ipv4", "value": "198.51.100.88", "role": "Payload download / C2 beacon", "confidence": "high", "firstSeen": "2026-11-21T22:37:05Z", "events": ["EVT-0008", "EVT-0029"] },
+      { "type": "url", "value": "http://198.51.100.88/a.ps1", "role": "PowerShell download cradle payload", "confidence": "high", "firstSeen": "2026-11-21T22:36:52Z", "events": ["EVT-0007"] },
+      { "type": "domain", "value": "cdn-sync.example", "role": "Suspected DNS tunnelling domain", "confidence": "medium", "firstSeen": "2026-11-21T23:05:41Z", "events": ["EVT-0011", "EVT-0012"] },
+      { "type": "ipv4", "value": "198.51.100.14", "role": "SQL injection attempts", "confidence": "medium", "firstSeen": "2026-11-21T23:20:55Z", "events": ["EVT-0014"] },
+      { "type": "filename", "value": "invoice_8841.docm", "role": "Macro-enabled phishing attachment", "confidence": "high", "firstSeen": "2026-11-21T23:34:07Z", "events": ["EVT-0016"] },
+      { "type": "ipv4", "value": "203.0.113.200", "role": "Exfiltration destination", "confidence": "high", "firstSeen": "2026-11-22T00:26:33Z", "events": ["EVT-0023"] },
+      { "type": "ipv4", "value": "203.0.113.9", "role": "Port-sweep source (blocked)", "confidence": "low", "firstSeen": "2026-11-21T23:12:18Z", "events": ["EVT-0013"] }
+    ]
+  }
+}

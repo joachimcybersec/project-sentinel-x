@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "provenance": "simulated",
+  "note": "The zones, hosts, flows and policies model the fictitious Sentinel X environment. They are a simplified teaching model: real firewalls and Zero Trust platforms evaluate far more context (identity risk, device posture over time, session behaviour). Topic guidance is general good practice; the linked references are the authoritative sources.",
+  "zones": [
+    { "id": "internet", "label": "Internet", "x": 20, "y": 150, "w": 150, "h": 200 },
+    { "id": "dmz", "label": "DMZ", "x": 230, "y": 40, "w": 170, "h": 120 },
+    { "id": "workstations", "label": "Workstations", "x": 230, "y": 330, "w": 170, "h": 150 },
+    { "id": "servers", "label": "Servers", "x": 470, "y": 210, "w": 190, "h": 160 },
+    { "id": "management", "label": "Management", "x": 470, "y": 40, "w": 190, "h": 110 }
+  ],
+  "hosts": [
+    { "name": "web-01", "zone": "dmz", "role": "Web server" },
+    { "name": "WS-FIN-014", "zone": "workstations", "role": "Finance workstation" },
+    { "name": "WS-HR-022", "zone": "workstations", "role": "HR workstation" },
+    { "name": "WS-ENG-031", "zone": "workstations", "role": "Engineering workstation" },
+    { "name": "DC-01", "zone": "servers", "role": "Domain controller" },
+    { "name": "FS-02", "zone": "servers", "role": "File server" },
+    { "name": "dns-01", "zone": "servers", "role": "Internal resolver" },
+    { "name": "PAW-01", "zone": "management", "role": "Privileged access workstation" }
+  ],
+  "flows": [
+    { "id": "F01", "kind": "legitimate", "from": "203.0.113.80", "to": "web-01", "proto": "tcp", "port": 443, "label": "Customer HTTPS to the web server", "attributes": [] },
+    { "id": "F02", "kind": "attack", "from": "192.0.2.77", "to": "DC-01", "proto": "tcp", "port": 3389, "label": "RDP to the domain controller through the published gateway", "incident": "IR-2026-002", "attributes": [] },
+    { "id": "F03", "kind": "attack", "from": "203.0.113.45", "to": "WS-FIN-014", "proto": "tcp", "port": 445, "label": "SMB logon attempts to a workstation through a stale NAT rule", "incident": "IR-2026-001", "attributes": [] },
+    { "id": "F04", "kind": "attack", "from": "WS-HR-022", "to": "198.51.100.88", "proto": "tcp", "port": 443, "label": "C2 beacon over HTTPS to a first-seen address", "incident": "IR-2026-003", "attributes": ["compliant-device"] },
+    { "id": "F05", "kind": "attack", "from": "WS-HR-022", "to": "FS-02", "proto": "tcp", "port": 3389, "label": "Lateral RDP to the file server with stolen credentials", "incident": "IR-2026-004", "attributes": ["compliant-device"] },
+    { "id": "F06", "kind": "attack", "from": "FS-02", "to": "203.0.113.200", "proto": "tcp", "port": 8443, "label": "Bulk exfiltration from the file server", "incident": "IR-2026-006", "attributes": [] },
+    { "id": "F07", "kind": "attack", "from": "WS-ENG-031", "to": "198.51.100.53", "proto": "udp", "port": 53, "label": "Direct DNS to an external resolver (bypasses DNS logging)", "incident": "IR-2026-005", "attributes": ["compliant-device"] },
+    { "id": "F08", "kind": "legitimate", "from": "WS-FIN-014", "to": "FS-02", "proto": "tcp", "port": 445, "label": "Finance user opens a file share", "attributes": ["mfa", "compliant-device"] },
+    { "id": "F09", "kind": "legitimate", "from": "WS-HR-022", "to": "DC-01", "proto": "tcp", "port": 88, "label": "Kerberos authentication", "attributes": ["compliant-device"] },
+    { "id": "F10", "kind": "legitimate", "from": "PAW-01", "to": "DC-01", "proto": "tcp", "port": 3389, "label": "Administrator RDP from a privileged access workstation", "attributes": ["mfa", "compliant-device", "privileged-access"] },
+    { "id": "F11", "kind": "legitimate", "from": "WS-ENG-031", "to": "dns-01", "proto": "udp", "port": 53, "label": "DNS through the internal resolver", "attributes": ["compliant-device"] },
+    { "id": "F12", "kind": "legitimate", "from": "WS-FIN-014", "to": "www.example.com", "proto": "tcp", "port": 443, "label": "Web browsing to a categorised site", "attributes": ["compliant-device", "categorised-destination"] }
+  ],
+  "policies": [
+    {
+      "id": "as-was", "label": "As-was (at time of incident)", "default": "allow",
+      "summary": "Flat internal network with unrestricted outbound access, plus two forgotten inbound rules.",
+      "rules": [
+        { "id": "A1", "from": "internet", "to": "dmz", "ports": [443], "action": "allow", "reason": "Published web server." },
+        { "id": "A2", "from": "internet", "to": "servers", "toHost": "DC-01", "ports": [3389], "action": "allow", "reason": "RDP gateway rule forwarding to DC-01 (misconfiguration found in IR-2026-002)." },
+        { "id": "A3", "from": "internet", "to": "workstations", "toHost": "WS-FIN-014", "ports": [445], "action": "allow", "reason": "Expired vendor NAT rule still active (found in IR-2026-001)." },
+        { "id": "A4", "from": "internet", "to": "*", "ports": "*", "action": "deny", "reason": "Default inbound deny." }
+      ]
+    },
+    {
+      "id": "segmented", "label": "Segmented (zone firewall)", "default": "deny",
+      "summary": "Zone-based rules: workstations reach only the services they need, servers have no internet egress, admin protocols only from management.",
+      "rules": [
+        { "id": "S1", "from": "internet", "to": "dmz", "ports": [443], "action": "allow", "reason": "Published web server only." },
+        { "id": "S2", "from": "internet", "to": "*", "ports": "*", "action": "deny", "reason": "No other inbound access." },
+        { "id": "S3", "from": "management", "to": "servers", "ports": [3389, 22, 5985], "action": "allow", "reason": "Admin protocols only from the management zone." },
+        { "id": "S4", "from": "workstations", "to": "servers", "ports": [445, 88, 389, 53], "action": "allow", "reason": "Workstations reach file, authentication and DNS services only." },
+        { "id": "S5", "from": "workstations", "to": "servers", "ports": "*", "action": "deny", "reason": "No RDP, WinRM or other protocols from workstations to servers." },
+        { "id": "S6", "from": "workstations", "to": "workstations", "ports": "*", "action": "deny", "reason": "Workstation-to-workstation traffic blocked." },
+        { "id": "S7", "from": "workstations", "to": "internet", "ports": [80, 443], "action": "allow", "reason": "Web access (through the proxy)." },
+        { "id": "S8", "from": "workstations", "to": "internet", "ports": "*", "action": "deny", "reason": "No other direct outbound traffic, including DNS." },
+        { "id": "S9", "from": "servers", "to": "internet", "ports": "*", "action": "deny", "reason": "Servers have no direct internet egress." }
+      ]
+    },
+    {
+      "id": "zero-trust", "label": "Zero Trust (identity + device + destination)", "default": "deny",
+      "summary": "Every request is checked for user verification, device health and destination reputation; network location alone grants nothing.",
+      "rules": [
+        { "id": "Z1", "from": "internet", "to": "dmz", "ports": [443], "action": "allow", "reason": "Published application behind a WAF." },
+        { "id": "Z2", "from": "internet", "to": "*", "ports": "*", "action": "deny", "reason": "No other inbound access." },
+        { "id": "Z3", "from": "*", "to": "servers", "ports": [3389, 22, 5985], "requires": ["privileged-access", "mfa", "compliant-device"], "action": "allow", "reason": "Admin access only from privileged access workstations with phishing-resistant MFA." },
+        { "id": "Z4", "from": "workstations", "to": "servers", "ports": [445], "requires": ["mfa", "compliant-device"], "action": "allow", "reason": "File access requires a verified user on a compliant device." },
+        { "id": "Z5", "from": "workstations", "to": "servers", "ports": [88, 389, 53], "requires": ["compliant-device"], "action": "allow", "reason": "Core infrastructure services for healthy devices." },
+        { "id": "Z6", "from": "workstations", "to": "internet", "ports": [443], "requires": ["categorised-destination"], "action": "allow", "reason": "Secure web gateway allows only categorised, reputable destinations." },
+        { "id": "Z7", "from": "*", "to": "*", "ports": "*", "action": "deny", "reason": "Everything else is denied: no implicit trust." }
+      ]
+    }
+  ],
+  "references": [
+    { "title": "SP 800-207: Zero Trust Architecture", "publisher": "NIST", "date": "2020-08", "url": "https://csrc.nist.gov/pubs/sp/800/207/final" },
+    { "title": "Zero Trust Maturity Model", "publisher": "CISA", "date": "n.d.", "url": "https://www.cisa.gov/zero-trust-maturity-model" },
+    { "title": "SP 800-41 Rev. 1: Guidelines on Firewalls and Firewall Policy", "publisher": "NIST", "date": "2009-09", "url": "https://csrc.nist.gov/pubs/sp/800/41/r1/final" },
+    { "title": "SP 800-94: Guide to Intrusion Detection and Prevention Systems (IDPS)", "publisher": "NIST", "date": "2007-02", "url": "https://csrc.nist.gov/pubs/sp/800/94/final" },
+    { "title": "SP 800-77 Rev. 1: Guide to IPsec VPNs", "publisher": "NIST", "date": "2020-06", "url": "https://csrc.nist.gov/pubs/sp/800/77/r1/final" },
+    { "title": "RFC 791: Internet Protocol", "publisher": "IETF", "date": "1981-09", "url": "https://www.rfc-editor.org/rfc/rfc791" },
+    { "title": "RFC 9293: Transmission Control Protocol (TCP)", "publisher": "IETF", "date": "2022-08", "url": "https://www.rfc-editor.org/rfc/rfc9293" },
+    { "title": "RFC 768: User Datagram Protocol", "publisher": "IETF", "date": "1980-08", "url": "https://www.rfc-editor.org/rfc/rfc768" },
+    { "title": "RFC 1035: Domain Names - Implementation and Specification", "publisher": "IETF", "date": "1987-11", "url": "https://www.rfc-editor.org/rfc/rfc1035" },
+    { "title": "SP 800-81 Rev. 3: Secure Domain Name System (DNS) Deployment Guide", "publisher": "NIST", "date": "2026-03", "url": "https://csrc.nist.gov/pubs/sp/800/81/r3/final" },
+    { "title": "RFC 1071: Computing the Internet Checksum", "publisher": "IETF", "date": "1988-09", "url": "https://www.rfc-editor.org/rfc/rfc1071" }
+  ],
+  "topics": [
+    {
+      "id": "tcp-ip", "title": "TCP/IP fundamentals",
+      "summary": "IP moves packets between addresses, TCP adds reliable ordered streams with a handshake, and UDP sends independent datagrams. Most detections rely on these header fields.",
+      "keyPoints": ["The TCP three-way handshake (SYN, SYN-ACK, ACK) means a lone SYN with no reply indicates scanning or filtering", "TTL and window size can hint at the sender's operating system", "UDP has no handshake, so source addresses are easy to spoof (amplification DDoS)"],
+      "defensiveChecks": ["Alert on SYN bursts to many ports or hosts", "Drop inbound packets with internal source addresses at the edge (anti-spoofing)"],
+      "related": [{ "label": "Packet explorer", "tab": "packets" }],
+      "refs": [5, 6, 7]
+    },
+    {
+      "id": "dns-security", "title": "DNS security",
+      "summary": "DNS is needed by almost everything, so attackers use it for C2 and exfiltration, and defenders use resolver logs as a rich detection source.",
+      "keyPoints": ["Labels can be up to 63 characters; long, high-entropy labels are a tunnelling indicator", "TXT, NULL and CNAME responses can carry data back to malware", "Resolver logs show which host asked for which domain, and when"],
+      "defensiveChecks": ["Force all clients through internal resolvers and block outbound port 53 elsewhere", "Log queries and alert on first-seen domains and long labels", "Use protective DNS / response policy zones to block known-bad domains"],
+      "related": [{ "label": "SIEM: cdn-sync queries", "href": "#/siem?q=domain%3A*cdn-sync.example" }, { "label": "DNS tunnelling dossier", "href": "#/attacks/dns-tunnelling" }],
+      "refs": [8, 9]
+    },
+    {
+      "id": "traffic-analysis", "title": "Network traffic analysis",
+      "summary": "Flow records (who talked to whom, when, how much) reveal beaconing, lateral movement and exfiltration even when payloads are encrypted.",
+      "keyPoints": ["Beacons show regular intervals and similar sizes", "Exfiltration looks like upload-heavy sessions (bytes out far larger than bytes in)", "Baselines per host make volume anomalies meaningful"],
+      "defensiveChecks": ["Collect NetFlow/IPFIX or Zeek conn logs at key boundaries", "Alert on first-seen external destinations from servers"],
+      "related": [{ "label": "SOC network traffic panel", "href": "#/soc" }, { "label": "SIEM: exfiltration session", "href": "#/siem?q=dst%3A203.0.113.200" }],
+      "refs": []
+    },
+    {
+      "id": "firewall-monitoring", "title": "Firewall monitoring",
+      "summary": "Firewall logs record allowed and denied sessions. Rule reviews find forgotten exceptions like the NAT and RDP rules behind IR-2026-001 and IR-2026-002.",
+      "keyPoints": ["Denied inbound traffic is mostly internet noise; allowed traffic to unusual ports is more interesting", "Rules without owners or expiry dates drift into risk"],
+      "defensiveChecks": ["Review rules regularly; require an owner and expiry for exceptions", "Alert on new allow rules and on large outbound sessions"],
+      "related": [{ "label": "SIEM: firewall logs", "href": "#/siem?q=type%3Afirewall" }],
+      "refs": [2]
+    },
+    {
+      "id": "ids-ips", "title": "IDS and IPS",
+      "summary": "Intrusion detection systems alert on suspicious traffic; prevention systems sit inline and can block it. Both rely on signatures, protocol analysis and anomaly detection.",
+      "keyPoints": ["Signature engines (e.g. Suricata) see payloads only where traffic is unencrypted or decrypted", "Inline IPS adds blocking but also latency and the risk of false-positive blocks"],
+      "defensiveChecks": ["Tune rules to your environment and track false-positive rates", "Place sensors where they can see both north-south and key east-west traffic"],
+      "related": [{ "label": "Detection rules", "href": "#/detections" }],
+      "refs": [3]
+    },
+    {
+      "id": "vpn-security", "title": "VPN security",
+      "summary": "VPN concentrators are internet-facing, high-value targets. Several widely exploited vulnerabilities in recent years affected VPN and remote-access appliances.",
+      "keyPoints": ["A VPN extends the network to the client device, so device health matters", "Shared or legacy credentials without MFA are a common entry point"],
+      "defensiveChecks": ["Patch VPN appliances urgently when KEV-listed vulnerabilities are announced", "Require phishing-resistant MFA and device checks for remote access", "Restrict what VPN users can reach (segmentation still applies)"],
+      "related": [{ "label": "Vulnerability snapshot", "href": "#/vulnerabilities" }],
+      "refs": [4]
+    },
+    {
+      "id": "segmentation", "title": "Segmentation and VLAN security",
+      "summary": "Dividing the network into zones with enforced rules limits how far an attacker can move. VLANs separate broadcast domains but are not a security boundary unless traffic between them is filtered.",
+      "keyPoints": ["Workstation-to-workstation and workstation-to-server-admin traffic is rarely needed", "VLAN hopping (switch spoofing, double tagging) is mitigated by disabling auto-trunking and not using the native VLAN for user traffic"],
+      "defensiveChecks": ["Filter inter-VLAN traffic at a firewall or ACL, not just by VLAN membership", "Test segmentation regularly: attempt the flows that should be blocked"],
+      "related": [{ "label": "Segmentation simulator", "tab": "segmentation" }],
+      "refs": [2]
+    },
+    {
+      "id": "nids", "title": "Network intrusion detection",
+      "summary": "Network sensors (Zeek for protocol logs, Suricata for signatures) give visibility that does not depend on endpoint agents, which is useful when an EDR agent is offline.",
+      "keyPoints": ["Zeek produces structured connection, DNS, HTTP and TLS logs", "Network evidence is independent of endpoint compromise"],
+      "defensiveChecks": ["Mirror traffic (SPAN/TAP) at internet egress and in front of critical servers", "Send sensor logs to the SIEM and correlate them with endpoint events"],
+      "related": [{ "label": "SIEM pipeline", "href": "#/siem" }],
+      "refs": [3]
+    },
+    {
+      "id": "packet-analysis", "title": "Packet analysis",
+      "summary": "Reading packets field by field explains what tools like Wireshark show and why certain values are suspicious.",
+      "keyPoints": ["Checksums detect corruption, not tampering; anyone can recompute them", "Cleartext protocols expose payloads; TLS hides them from network sensors"],
+      "defensiveChecks": ["Capture packets for confirmation, but rely on logs and flows for scale", "Handle captures as sensitive evidence (they may contain credentials or personal data)"],
+      "related": [{ "label": "Packet explorer", "tab": "packets" }],
+      "refs": [5, 10]
+    },
+    {
+      "id": "zero-trust", "title": "Zero Trust Architecture",
+      "summary": "Zero Trust removes implicit trust based on network location. Each access request is evaluated using identity, device state and context, and is granted with least privilege.",
+      "keyPoints": ["Network location alone is not enough to grant access", "Policy decisions combine user, device, resource and behaviour signals", "It is an architecture and a journey, not a single product"],
+      "defensiveChecks": ["Inventory resources and their access paths", "Require strong authentication and device health for each resource", "Log every access decision for monitoring"],
+      "related": [{ "label": "Segmentation simulator", "tab": "segmentation" }],
+      "refs": [0, 1]
+    }
+  ]
+}

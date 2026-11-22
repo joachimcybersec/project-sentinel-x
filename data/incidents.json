@@ -1,0 +1,269 @@
+{
+  "schemaVersion": 1,
+  "provenance": "simulated",
+  "description": "Six simulated incident case studies built on the same synthetic events (sample-events.json) and raw logs (sample-logs.json). The organisation, people, hosts and findings are fictitious. Analyst roles are generic; no real persons are named.",
+  "generated": "2026-11-22",
+  "priorityMatrix": {
+    "note": "Example impact × urgency matrix. Each organisation defines its own criteria.",
+    "impact": ["1 · Minor: single user or system, no sensitive data", "2 · Significant: multiple systems or sensitive data at risk", "3 · Severe: critical systems or confirmed data loss"],
+    "urgency": ["1 · Low: no active attacker activity", "2 · Medium: activity possible or spreading slowly", "3 · High: active attacker or imminent impact"]
+  },
+  "references": [
+    { "title": "SP 800-61 Rev. 3: Incident Response Recommendations and Considerations for Cybersecurity Risk Management: A CSF 2.0 Community Profile", "publisher": "NIST", "date": "2025-04", "url": "https://csrc.nist.gov/pubs/sp/800/61/r3/final" },
+    { "title": "Federal Government Cybersecurity Incident and Vulnerability Response Playbooks", "publisher": "CISA (per Executive Order 14028)", "date": "n.d.", "url": "https://www.cisa.gov/resources-tools/resources/federal-government-cybersecurity-incident-and-vulnerability-response-playbooks" }
+  ],
+  "incidents": [
+    {
+      "id": "IR-2026-001",
+      "title": "Multiple failed authentication attempts",
+      "classification": "Attempted unauthorised access",
+      "severity": "medium", "impact": 1, "urgency": 2,
+      "status": "closed", "phase": "lessons",
+      "detectedAt": "2026-11-21T22:02:03Z",
+      "detectionSource": "SIEM correlation rule COR-001 (brute force)",
+      "owner": "Tier 1 analyst → Tier 2 analyst",
+      "affected": { "hosts": ["WS-FIN-014"], "users": ["j.doe"] },
+      "scenario": "A burst of failed network logons against a Finance workstation from an external address, followed hours later by an account lockout.",
+      "alert": { "rule": "COR-001 Brute-force: repeated authentication failures", "source": "Windows Security 4625", "trigger": "6 failures in 38 s from 203.0.113.45 (sample of 25 in the full log)" },
+      "relatedEvents": ["EVT-0001", "EVT-0002", "EVT-0003", "EVT-0030"],
+      "logs": ["LOG-001", "LOG-002", "LOG-003", "LOG-004", "LOG-005", "LOG-006", "LOG-052"],
+      "siemQuery": "src:203.0.113.45",
+      "techniques": ["T1110.001"],
+      "timeline": [
+        { "ts": "2026-11-21T22:01:14Z", "text": "First failed logon (4625, LogonType 3) for j.doe from 203.0.113.45" },
+        { "ts": "2026-11-21T22:02:03Z", "text": "COR-001 alert raised; Tier 1 triage begins" },
+        { "ts": "2026-11-21T22:09:00Z", "text": "Source IP blocked at the edge firewall; no successful logon found" },
+        { "ts": "2026-11-21T22:20:00Z", "text": "Precautionary password reset for j.doe" },
+        { "ts": "2026-11-22T01:44:12Z", "text": "Account lockout (4740) from WS-FIN-014, traced to a cached credential on a mapped drive" },
+        { "ts": "2026-11-22T09:00:00Z", "text": "Case closed after firewall rule review" }
+      ],
+      "investigation": [
+        { "question": "Did any attempt succeed?", "finding": "No 4624 logon for j.doe from 203.0.113.45. All attempts returned Status 0xC000006D / SubStatus 0xC000006A (bad password for a valid user).", "evidence": ["LOG-001", "LOG-006"] },
+        { "question": "Why could an external address reach a workstation?", "finding": "A temporary NAT rule created for a vendor session had not been removed, exposing the workstation's SMB/NTLM authentication to the internet.", "evidence": [] },
+        { "question": "Is the later lockout a second attack?", "finding": "No. The 4740 caller was WS-FIN-014 itself. A mapped drive cached the pre-reset password, so this was a false positive.", "evidence": ["LOG-052"] }
+      ],
+      "rootCause": "An expired vendor NAT rule exposed a workstation to the internet. The valid username suggests prior reconnaissance, but the password held.",
+      "evidence": [
+        { "item": "Windows Security log export (WS-FIN-014)", "source": "WS-FIN-014", "collectedBy": "Tier 2 analyst", "integrity": "SHA-256 recorded in case file" },
+        { "item": "Firewall NAT configuration snapshot", "source": "edge-fw-01", "collectedBy": "Network engineer", "integrity": "Config revision ID recorded" }
+      ],
+      "containment": ["Block 203.0.113.45 at the perimeter", "Remove the expired NAT rule"],
+      "eradication": ["Confirm no other inbound rules expose workstations"],
+      "recovery": ["Reset j.doe's password and clear cached credentials", "Unlock the account after the user confirms access"],
+      "lessons": ["Time-limit vendor access rules and alert on rules older than their expiry", "Account-lockout alerts should check the caller computer before escalating"],
+      "relatedAttacks": ["brute-force"],
+      "linkedIncidents": []
+    },
+    {
+      "id": "IR-2026-002",
+      "title": "Suspicious administrator login",
+      "classification": "Unauthorised access (privileged account)",
+      "severity": "critical", "impact": 3, "urgency": 3,
+      "status": "investigating", "phase": "eradication",
+      "detectedAt": "2026-11-21T22:31:09Z",
+      "detectionSource": "SIEM correlation rule COR-002 (success after failures)",
+      "owner": "Incident commander (Tier 3)",
+      "affected": { "hosts": ["DC-01"], "users": ["adm.svc", "svc_backup2"] },
+      "scenario": "A privileged service account logged on interactively to a domain controller from a new external address outside any change window. Afterwards the audit log was cleared and a new domain account was created.",
+      "alert": { "rule": "COR-002 Successful logon after repeated failures", "source": "Windows Security 4625 → 4624", "trigger": "3 failures then RDP logon (LogonType 10) for adm.svc from 192.0.2.77" },
+      "relatedEvents": ["EVT-0004", "EVT-0005", "EVT-0006", "EVT-0021", "EVT-0022"],
+      "logs": ["LOG-007", "LOG-008", "LOG-009", "LOG-010", "LOG-011", "LOG-041", "LOG-042"],
+      "siemQuery": "user:adm.svc",
+      "techniques": ["T1110.003", "T1078.002", "T1070.001", "T1136.002"],
+      "timeline": [
+        { "ts": "2026-11-21T22:14:47Z", "text": "Password-spraying pattern against 41 accounts from 198.51.100.23 (identity provider)" },
+        { "ts": "2026-11-21T22:30:41Z", "text": "Three failed logons for adm.svc on DC-01 from 192.0.2.77" },
+        { "ts": "2026-11-21T22:31:09Z", "text": "Successful RDP logon (4624, type 10); COR-002 alert" },
+        { "ts": "2026-11-21T22:31:10Z", "text": "Special privileges assigned (4672): SeDebugPrivilege, SeBackupPrivilege, SeRestorePrivilege" },
+        { "ts": "2026-11-22T00:10:22Z", "text": "Security audit log cleared on DC-01 (1102)" },
+        { "ts": "2026-11-22T00:18:45Z", "text": "New domain account svc_backup2 created by adm.svc (4720)" },
+        { "ts": "2026-11-22T00:25:00Z", "text": "adm.svc and svc_backup2 disabled; RDP gateway rule withdrawn" }
+      ],
+      "investigation": [
+        { "question": "Is this logon expected?", "finding": "No change ticket covers the logon, adm.svc is a service account that should never log on interactively, and 192.0.2.77 has never been seen before.", "evidence": ["LOG-010"] },
+        { "question": "How was the credential obtained?", "finding": "Assessed with medium confidence: adm.svc was among the accounts targeted by the 22:14 password spray and had a weak, non-expiring password with no MFA.", "evidence": [] },
+        { "question": "What did the attacker do with the access?", "finding": "Debug and backup privileges were assigned, the Security log was cleared, and a backdoor account svc_backup2 was created. Forwarded logs in the SIEM preserved the events from before the clear.", "evidence": ["LOG-011", "LOG-041", "LOG-042"] },
+        { "question": "Is the domain compromised?", "finding": "Treated as likely. Domain-wide credential reset is planned, including resetting KRBTGT twice.", "evidence": [] }
+      ],
+      "rootCause": "A privileged service account with a weak password and no MFA was reachable through an internet-published RDP gateway that forwarded to a domain controller.",
+      "evidence": [
+        { "item": "SIEM copy of DC-01 Security events (pre-clear)", "source": "SIEM", "collectedBy": "Tier 3 analyst", "integrity": "Export SHA-256 recorded in case file" },
+        { "item": "DC-01 memory image", "source": "DC-01", "collectedBy": "DFIR responder", "integrity": "SHA-256 recorded; stored on write-once media" },
+        { "item": "RDP gateway connection logs", "source": "RDP gateway", "collectedBy": "Network engineer", "integrity": "SHA-256 recorded in case file" }
+      ],
+      "containment": ["Disable adm.svc and svc_backup2", "Withdraw the internet-facing RDP gateway rule", "Block 192.0.2.77 and 198.51.100.23"],
+      "eradication": ["Reset all privileged credentials and KRBTGT (twice, with replication in between)", "Review GPOs, scheduled tasks and AD changes made since 22:31", "Rebuild DC-01 if integrity cannot be confirmed"],
+      "recovery": ["Re-issue service credentials as group-managed service accounts (gMSA)", "Restore audit policy and confirm forwarding is healthy"],
+      "lessons": ["Service accounts must be denied interactive and RDP logon", "Administrative access only from privileged access workstations with phishing-resistant MFA", "Log forwarding protected the evidence the attacker tried to destroy; keep it out of reach of domain admins"],
+      "relatedAttacks": ["password-spraying", "privilege-escalation"],
+      "linkedIncidents": ["IR-2026-003"]
+    },
+    {
+      "id": "IR-2026-003",
+      "title": "Suspicious PowerShell execution",
+      "classification": "Malware / malicious code execution",
+      "severity": "critical", "impact": 3, "urgency": 3,
+      "status": "investigating", "phase": "eradication",
+      "detectedAt": "2026-11-21T22:36:52Z",
+      "detectionSource": "PowerShell script block logging (4104) + COR-003",
+      "owner": "Tier 2 analyst → DFIR responder",
+      "affected": { "hosts": ["WS-HR-022", "FS-02"], "users": ["m.ito"] },
+      "scenario": "A Word document on an HR workstation launched hidden, encoded PowerShell that downloaded a payload, established C2, dumped credentials and moved laterally to a file server.",
+      "alert": { "rule": "COR-003 Office application spawned a script interpreter", "source": "Sysmon 1 / PowerShell 4104", "trigger": "WINWORD.EXE → powershell.exe -EncodedCommand; script block contains a Net.WebClient download cradle" },
+      "relatedEvents": ["EVT-0007", "EVT-0008", "EVT-0009", "EVT-0010", "EVT-0017", "EVT-0029"],
+      "logs": ["LOG-012", "LOG-013", "LOG-014", "LOG-015", "LOG-016", "LOG-017", "LOG-018", "LOG-037", "LOG-051"],
+      "siemQuery": "host:WS-HR-022",
+      "techniques": ["T1204.002", "T1059.001", "T1105", "T1003.001", "T1021.001", "T1053.005"],
+      "timeline": [
+        { "ts": "2026-11-21T22:36:49Z", "text": "WINWORD.EXE spawns hidden powershell.exe with an encoded command" },
+        { "ts": "2026-11-21T22:36:52Z", "text": "Script block shows DownloadString from 198.51.100.88" },
+        { "ts": "2026-11-21T22:37:05Z", "text": "First outbound TLS connection from PowerShell to 198.51.100.88:443" },
+        { "ts": "2026-11-21T22:37:20Z", "text": "updchk.exe written to the user's AppData\\Roaming" },
+        { "ts": "2026-11-21T22:44:30Z", "text": "updchk.exe opens lsass.exe (GrantedAccess 0x1010)" },
+        { "ts": "2026-11-21T22:58:12Z", "text": "RDP logon to FS-02 as m.ito from WS-HR-022" },
+        { "ts": "2026-11-21T23:47:26Z", "text": "Scheduled task \\Microsoft\\Windows\\UpdateCheck created for persistence" },
+        { "ts": "2026-11-22T01:30:58Z", "text": "Periodic beacon to 198.51.100.88:443 still observed; host isolated" }
+      ],
+      "investigation": [
+        { "question": "How did the code start?", "finding": "WINWORD.EXE was the parent of powershell.exe, which is consistent with a macro. The lure arrived as a password-protected archive that the mail gateway could not scan.", "evidence": ["LOG-012"] },
+        { "question": "What did PowerShell do?", "finding": "Script block logging decoded the command: an in-memory download-and-execute cradle from 198.51.100.88, followed by a dropped executable updchk.exe.", "evidence": ["LOG-013", "LOG-014", "LOG-016"] },
+        { "question": "Were credentials stolen?", "finding": "Yes, likely. updchk.exe opened LSASS with read access (0x1010), a common credential-dumping pattern. m.ito's credentials were then used to RDP to FS-02.", "evidence": ["LOG-017", "LOG-018"] },
+        { "question": "Is the attacker persistent?", "finding": "A scheduled task disguised as a Windows task was created, and C2 beaconing continued until isolation.", "evidence": ["LOG-037", "LOG-051"] }
+      ],
+      "rootCause": "A macro-enabled document inside a password-protected archive bypassed mail filtering. Office was allowed to launch PowerShell, and no ASR rule blocked child processes.",
+      "evidence": [
+        { "item": "WS-HR-022 memory image and triage collection", "source": "WS-HR-022", "collectedBy": "DFIR responder", "integrity": "SHA-256 recorded; write-once storage" },
+        { "item": "updchk.exe sample", "source": "WS-HR-022 AppData\\Roaming", "collectedBy": "DFIR responder", "integrity": "Hash recorded; stored in malware vault, not detonated outside the lab" },
+        { "item": "Original email and archive", "source": "Mail gateway", "collectedBy": "Email administrator", "integrity": "Message ID and hash recorded" }
+      ],
+      "containment": ["Isolate WS-HR-022", "Block 198.51.100.88 at proxy and firewall", "Disable m.ito and reset the password; revoke sessions"],
+      "eradication": ["Remove the scheduled task and updchk.exe; reimage WS-HR-022", "Hunt for updchk.exe and the C2 address across all endpoints"],
+      "recovery": ["Restore the user from a clean image", "Monitor the account and host for 14 days"],
+      "lessons": ["Enable the ASR rule blocking Office from creating child processes", "Quarantine password-protected archives from external senders", "Enable LSA protection (RunAsPPL)"],
+      "relatedAttacks": ["malware-execution", "credential-dumping", "lateral-movement"],
+      "linkedIncidents": ["IR-2026-004"]
+    },
+    {
+      "id": "IR-2026-004",
+      "title": "Possible ransomware execution",
+      "classification": "Malware: ransomware",
+      "severity": "critical", "impact": 3, "urgency": 3,
+      "status": "contained", "phase": "recovery",
+      "detectedAt": "2026-11-22T00:03:11Z",
+      "detectionSource": "SIEM correlation rule COR-007 + EDR behavioural detection",
+      "owner": "Incident commander (Tier 3)",
+      "affected": { "hosts": ["FS-02"], "users": ["m.ito"] },
+      "scenario": "On the file server reached through lateral movement, shadow copies were deleted and thousands of files renamed with a new extension. The EDR isolation command did not take effect straight away.",
+      "alert": { "rule": "COR-007 System recovery inhibited", "source": "Sysmon 1 / EDR", "trigger": "vssadmin.exe delete shadows /all /quiet (parent C:\\Users\\Public\\svc.exe), then mass file rename" },
+      "relatedEvents": ["EVT-0010", "EVT-0019", "EVT-0020"],
+      "logs": ["LOG-018", "LOG-039", "LOG-040", "LOG-044"],
+      "siemQuery": "host:FS-02",
+      "techniques": ["T1021.001", "T1490", "T1486"],
+      "timeline": [
+        { "ts": "2026-11-21T22:58:12Z", "text": "RDP logon to FS-02 with m.ito's credentials (see IR-2026-003)" },
+        { "ts": "2026-11-22T00:03:11Z", "text": "Shadow copies deleted by svc.exe; COR-007 alert" },
+        { "ts": "2026-11-22T00:03:58Z", "text": "EDR detects mass rename (3,412 files, .lockd) and requests isolation: status pending_agent_ack" },
+        { "ts": "2026-11-22T00:14:00Z", "text": "Outbound bulk transfer begins (see IR-2026-006)" },
+        { "ts": "2026-11-22T00:29:00Z", "text": "On-call engineer shuts the FS-02 switch port after SOC escalation" },
+        { "ts": "2026-11-22T00:31:40Z", "text": "EDR confirms isolation enforced" },
+        { "ts": "2026-11-22T06:00:00Z", "text": "Restore from offline backup begins" }
+      ],
+      "investigation": [
+        { "question": "Is this really ransomware?", "finding": "Yes. Recovery was inhibited (shadow copies deleted) and files were renamed in bulk with a new extension by the same unsigned binary in C:\\Users\\Public.", "evidence": ["LOG-039", "LOG-040"] },
+        { "question": "Why did containment take 28 minutes?", "finding": "The EDR agent had lost its connection to the management console, so the isolation command waited for acknowledgement until 00:31. The SOC treated 'isolation requested' as 'isolated'.", "evidence": ["LOG-040", "LOG-044"] },
+        { "question": "What is the blast radius?", "finding": "Encryption is limited to FS-02 shares. No other hosts show svc.exe. Offline backups from 21 Nov 20:00 are intact.", "evidence": [] }
+      ],
+      "rootCause": "Credentials stolen in IR-2026-003 gave RDP access to FS-02. Ransomware ran under that account, and containment was delayed because an isolation request was never confirmed.",
+      "evidence": [
+        { "item": "FS-02 disk image (pre-restore)", "source": "FS-02", "collectedBy": "DFIR responder", "integrity": "SHA-256 recorded; write-once storage" },
+        { "item": "svc.exe sample and ransom note", "source": "FS-02", "collectedBy": "DFIR responder", "integrity": "Hashes recorded; malware vault" },
+        { "item": "EDR console audit trail", "source": "EDR platform", "collectedBy": "Tier 3 analyst", "integrity": "Export SHA-256 recorded" }
+      ],
+      "containment": ["Network isolation of FS-02 (switch port shutdown, then EDR isolation)", "Disable m.ito"],
+      "eradication": ["Rebuild FS-02 from a clean image", "Hunt for svc.exe and its hash across the estate"],
+      "recovery": ["Restore shares from the 21 Nov 20:00 offline backup", "Validate file integrity with data owners before reopening shares"],
+      "lessons": ["Containment is not done until it is verified. Track the isolation status, not the request", "Have a network-level fallback (switch, NAC or firewall) when EDR is unreachable", "Alert when EDR agents go offline on critical servers"],
+      "relatedAttacks": ["ransomware", "lateral-movement"],
+      "linkedIncidents": ["IR-2026-003", "IR-2026-006"]
+    },
+    {
+      "id": "IR-2026-005",
+      "title": "Unusual outbound network traffic",
+      "classification": "Suspected command and control",
+      "severity": "high", "impact": 2, "urgency": 2,
+      "status": "investigating", "phase": "analysis",
+      "detectedAt": "2026-11-21T23:06:02Z",
+      "detectionSource": "SIEM correlation rule COR-005 (DNS tunnelling)",
+      "owner": "Tier 2 analyst",
+      "affected": { "hosts": ["WS-ENG-031"], "users": ["a.khan"] },
+      "scenario": "An engineering workstation sent a burst of TXT queries with long, base32-looking subdomains to a single domain, from an unsigned binary in a temp folder.",
+      "alert": { "rule": "COR-005 Possible DNS tunnelling", "source": "BIND query log / Sysmon 22", "trigger": "7 queries with 32-character labels to cdn-sync.example within 12 s" },
+      "relatedEvents": ["EVT-0011", "EVT-0012", "EVT-0018", "EVT-0027"],
+      "logs": ["LOG-019", "LOG-020", "LOG-021", "LOG-022", "LOG-023", "LOG-024", "LOG-025", "LOG-038", "LOG-050"],
+      "siemQuery": "domain:*cdn-sync.example",
+      "techniques": ["T1071.004", "T1547.001", "T1218.011"],
+      "timeline": [
+        { "ts": "2026-11-21T23:05:41Z", "text": "odsync.exe begins TXT queries to *.cdn-sync.example" },
+        { "ts": "2026-11-21T23:06:02Z", "text": "COR-005 alert raised" },
+        { "ts": "2026-11-21T23:52:40Z", "text": "Run key OneDriveSync set to the temp-folder binary (persistence)" },
+        { "ts": "2026-11-22T01:15:02Z", "text": "WINWORD.EXE spawns rundll32.exe with no arguments" },
+        { "ts": "2026-11-22T01:20:00Z", "text": "cdn-sync.example sinkholed on internal resolvers" }
+      ],
+      "investigation": [
+        { "question": "Is the DNS pattern tunnelling or a legitimate service?", "finding": "The labels are 32 characters of base32 alphabet, the query type is TXT, the queries come at a fixed rate from one process, and the parent domain is first-seen. This is consistent with DNS-based C2.", "evidence": ["LOG-019", "LOG-020", "LOG-025"] },
+        { "question": "Which process is responsible?", "finding": "Sysmon 22 attributes the queries to odsync.exe in the user's Temp folder. The binary is unsigned and impersonates OneDrive.", "evidence": ["LOG-019"] },
+        { "question": "Is there persistence or further execution?", "finding": "A Run key launches odsync.exe at logon. A later rundll32 child of Word suggests a second document lure.", "evidence": ["LOG-038", "LOG-050"] }
+      ],
+      "rootCause": "Under investigation. Working hypothesis: a malicious document dropped odsync.exe, which uses DNS TXT records for command and control.",
+      "evidence": [
+        { "item": "Resolver query logs (23:00–01:30)", "source": "dns-01", "collectedBy": "Tier 2 analyst", "integrity": "Export SHA-256 recorded" },
+        { "item": "odsync.exe sample", "source": "WS-ENG-031", "collectedBy": "DFIR responder", "integrity": "Hash recorded; malware vault" }
+      ],
+      "containment": ["Sinkhole cdn-sync.example on internal resolvers", "Block direct outbound DNS (port 53) except from resolvers", "Isolate WS-ENG-031"],
+      "eradication": ["Remove the Run key and binary; reimage", "Retro-hunt DNS logs for the domain and the label pattern"],
+      "recovery": ["Return the host after reimage; monitor DNS for 14 days"],
+      "lessons": ["Long-label DNS analytics caught what signature tools missed", "Force all DNS through monitored resolvers"],
+      "relatedAttacks": ["dns-tunnelling", "malware-execution"],
+      "linkedIncidents": []
+    },
+    {
+      "id": "IR-2026-006",
+      "title": "Potential data exfiltration",
+      "classification": "Data breach (suspected)",
+      "severity": "critical", "impact": 3, "urgency": 2,
+      "status": "open", "phase": "analysis",
+      "detectedAt": "2026-11-22T00:26:33Z",
+      "detectionSource": "SIEM correlation rule COR-006 (large outbound transfer)",
+      "owner": "Incident commander (Tier 3) + Data protection officer",
+      "affected": { "hosts": ["FS-02"], "users": [] },
+      "scenario": "While the ransomware host was waiting for isolation, it sent 2.3 GiB over TCP 8443 to an external address. This is consistent with double-extortion data theft.",
+      "alert": { "rule": "COR-006 Large outbound transfer to external host", "source": "Firewall session log", "trigger": "2.30 GiB from 10.20.5.14 to 203.0.113.200:8443 over 712 s (baseline about 40 MB per 15 min)" },
+      "relatedEvents": ["EVT-0023"],
+      "logs": ["LOG-043", "LOG-040", "LOG-044"],
+      "siemQuery": "dst:203.0.113.200",
+      "techniques": ["T1048"],
+      "timeline": [
+        { "ts": "2026-11-22T00:14:41Z", "text": "Session from FS-02 to 203.0.113.200:8443 starts (derived from duration)" },
+        { "ts": "2026-11-22T00:26:33Z", "text": "Session ends: 2,469,606,195 bytes sent; COR-006 alert" },
+        { "ts": "2026-11-22T00:31:40Z", "text": "FS-02 isolation confirmed" },
+        { "ts": "2026-11-22T08:00:00Z", "text": "Data-owner review of affected shares begins; legal and DPO engaged" }
+      ],
+      "investigation": [
+        { "question": "Was data actually sent out?", "finding": "Yes. The firewall recorded 2.3 GiB outbound and only 1.8 MB inbound, an upload-shaped session to a first-seen external host on a non-standard port.", "evidence": ["LOG-043"] },
+        { "question": "Why was this possible during an active incident?", "finding": "FS-02 isolation was requested at 00:03:58 but enforced only at 00:31:40. The transfer fits entirely inside that gap.", "evidence": ["LOG-040", "LOG-044"] },
+        { "question": "What data was taken?", "finding": "Open. Share access logs and file-server audit data are being reviewed with data owners to determine whether personal data was involved and whether notification is required.", "evidence": [] }
+      ],
+      "rootCause": "Exfiltration happened in the containment gap described in IR-2026-004. Egress filtering allowed arbitrary outbound TCP 8443 from servers.",
+      "evidence": [
+        { "item": "Firewall session logs and NetFlow (23:00–01:00)", "source": "edge-fw-01", "collectedBy": "Network engineer", "integrity": "Export SHA-256 recorded" },
+        { "item": "FS-02 share access audit logs", "source": "FS-02", "collectedBy": "Tier 3 analyst", "integrity": "Export SHA-256 recorded" }
+      ],
+      "containment": ["Block 203.0.113.200 and restrict server egress to an allow-list"],
+      "eradication": ["Covered by IR-2026-004 (FS-02 rebuild)"],
+      "recovery": ["Notification decision with legal / DPO within regulatory deadlines"],
+      "lessons": ["Servers should have default-deny egress", "Track containment confirmation, not request time (shared with IR-2026-004)"],
+      "relatedAttacks": ["ransomware"],
+      "linkedIncidents": ["IR-2026-004"]
+    }
+  ]
+}

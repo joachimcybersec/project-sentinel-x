@@ -1,0 +1,122 @@
+/* ==========================================================================
+   Sentinel X — ir.css
+   Incident Response (Module 04) and SIEM & Log Analysis (Module 05).
+   ========================================================================== */
+
+/* ---------- Log type pills ---------- */
+.log-type { display: inline-block; padding: 1px 8px; border-radius: 4px; font: 600 .68rem var(--font-mono); text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; background: var(--bg-3); color: var(--text-2); }
+.lt-windows { background: rgba(59, 130, 246, .18); color: #93c5fd; }
+.lt-sysmon { background: rgba(34, 211, 238, .15); color: #67e8f9; }
+.lt-powershell { background: rgba(167, 139, 250, .18); color: #c4b5fd; }
+.lt-linux-auth { background: rgba(250, 204, 21, .14); color: #fde68a; }
+.lt-firewall { background: rgba(251, 146, 60, .16); color: #fdba74; }
+.lt-dns { background: rgba(52, 211, 153, .14); color: #6ee7b7; }
+.lt-web { background: rgba(244, 114, 182, .15); color: #f9a8d4; }
+.lt-edr { background: rgba(244, 63, 94, .16); color: #fda4af; }
+
+/* ---------- Query bar ---------- */
+.query-bar { display: grid; gap: 6px; }
+.query-row { display: flex; gap: 8px; }
+.query-row .input { flex: 1; min-height: 42px; font-size: .9rem; }
+.query-error { margin: 0; color: var(--sev-critical); font-size: .85rem; }
+.example-queries { align-items: center; }
+.example-queries .btn { font-size: .75rem; }
+
+/* ---------- Fields & enrichment ---------- */
+.field-table td { font-size: .76rem; overflow-wrap: anywhere; vertical-align: top; }
+.field-table td:first-child { color: var(--cyan); white-space: nowrap; width: 1%; }
+.enrich-list { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; font-size: .85rem; color: var(--text-2); }
+.ioc-hit { color: var(--sev-high); font-weight: 600; }
+.parse-input { min-height: 96px; padding: 10px 12px; resize: vertical; line-height: 1.5; font-size: .8rem; }
+.parse-output { display: grid; gap: 14px; }
+
+/* ---------- Correlation ---------- */
+.rule-card { display: flex; flex-direction: column; gap: 8px; }
+.rule-card p { margin: 0; font-size: .86rem; }
+.rule-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.rule-toggle { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; cursor: pointer; }
+.rule-toggle input { width: 16px; height: 16px; accent-color: var(--cyan); transform: translateY(2px); }
+.rule-toggle .mono { color: var(--cyan); font-size: .75rem; }
+.rule-foot { margin-top: auto; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.params { display: flex; flex-wrap: wrap; gap: 8px; }
+.param { display: inline-flex; align-items: center; gap: 6px; font: .75rem var(--font-mono); color: var(--text-3); }
+.param-input { width: 6.5em; min-height: 30px; padding: 0 8px; font-family: var(--font-mono); }
+
+/* ---------- Pipeline ---------- */
+.pipeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; counter-reset: none; }
+.pipe-stage { position: relative; border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px; background: rgba(7, 11, 20, .45); }
+.pipe-stage:not(:last-child)::after { content: "→"; position: absolute; right: -10px; top: 50%; transform: translate(50%, -50%); color: var(--cyan); z-index: 1; }
+.pipe-num { font: 600 .7rem var(--font-mono); color: var(--cyan); }
+.pipe-stage h3 { margin: 4px 0; font-size: .95rem; }
+.pipe-value { font: 700 1.05rem var(--font-mono); color: var(--text-1); margin-bottom: 6px; }
+.pipe-stage p { margin: 0; font-size: .75rem; color: var(--text-3); }
+
+/* ---------- Incident dashboard ---------- */
+.ir-grid { display: grid; gap: var(--gap); grid-template-columns: minmax(0, 2.2fr) minmax(280px, 1fr); align-items: start; }
+.prio { display: inline-block; min-width: 2.4em; text-align: center; padding: 1px 8px; border-radius: 4px; font: 700 .72rem var(--font-mono); }
+.prio-P1 { background: rgba(244, 63, 94, .2); color: #fda4af; }
+.prio-P2 { background: rgba(251, 146, 60, .2); color: #fdba74; }
+.prio-P3 { background: rgba(250, 204, 21, .16); color: #fde68a; }
+.prio-P4 { background: rgba(56, 189, 248, .14); color: #7dd3fc; }
+.matrix { display: grid; grid-template-columns: auto repeat(3, minmax(0, 1fr)); gap: 6px; align-items: stretch; margin: 10px 0; }
+.matrix-corner { font-size: .65rem; color: var(--text-3); align-self: end; }
+.matrix-axis { font: 600 .72rem var(--font-mono); color: var(--text-3); display: grid; place-items: center; }
+.matrix-cell { min-height: 64px; border-radius: var(--r-sm); border: 1px solid transparent; cursor: pointer; display: grid; place-items: center; align-content: center; gap: 2px; font: inherit; }
+.matrix-cell .matrix-p { font: 700 .9rem var(--font-mono); }
+.matrix-cell .matrix-n { font-size: .7rem; color: var(--text-2); }
+.matrix-cell[aria-pressed="true"] { border-color: var(--text-1); box-shadow: inset 0 0 0 1px var(--text-1); }
+.matrix-cell:hover { filter: brightness(1.2); }
+.plain-list { margin: 0 0 8px; padding-left: 1.1em; font-size: .8rem; color: var(--text-2); }
+
+.phase-track { list-style: none; margin: 0 0 10px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; counter-reset: phase; }
+.phase-track li { counter-increment: phase; padding: 6px 12px 6px 10px; border-radius: 999px; border: 1px solid var(--line-strong); font-size: .8rem; color: var(--text-2); }
+.phase-track li::before { content: counter(phase); font: 600 .7rem var(--font-mono); color: var(--cyan); margin-right: 8px; }
+.phase-track.is-progress li.done { border-color: rgba(52, 211, 153, .4); color: var(--ok); }
+.phase-track.is-progress li.done::before { content: "✓"; color: var(--ok); }
+.phase-track.is-progress li.current { border-color: var(--cyan); background: rgba(34, 211, 238, .12); color: var(--text-1); font-weight: 600; }
+
+/* ---------- Investigation ---------- */
+.inv-progress { height: 6px; border-radius: 3px; background: var(--bg-3); overflow: hidden; margin: 4px 0 6px; --pct: 0%; }
+.inv-progress::before { content: ""; display: block; height: 100%; width: var(--pct); background: linear-gradient(90deg, #0ea5e9, var(--ok)); transition: width 300ms var(--ease); }
+.investigation { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 10px; }
+.inv-step { border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px 14px; background: rgba(7, 11, 20, .35); }
+.inv-step.is-open { border-color: rgba(52, 211, 153, .35); }
+.inv-step h3 { margin: 0 0 6px; font-size: .95rem; display: flex; align-items: baseline; }
+.inv-step p { margin: 0 0 8px; font-size: .88rem; }
+.finding { color: var(--text-1) !important; outline: none; }
+.evidence-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.evidence-btn { padding: 2px 8px; border-radius: 4px; border: 1px solid var(--line-strong); background: var(--bg-2); color: var(--cyan); cursor: pointer; font-size: .75rem; }
+.evidence-btn:hover { border-color: var(--cyan); }
+
+/* ---------- Raw log lines ---------- */
+.log-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.log-line { width: 100%; display: grid; grid-template-columns: 5.5em 8.5em minmax(0, 1fr); gap: 10px; align-items: baseline; text-align: left;
+  padding: 7px 10px; border-radius: var(--r-sm); border: 1px solid var(--line); background: #060a12; color: var(--text-2); cursor: pointer; font: inherit; }
+.log-line:hover { border-color: var(--line-strong); background: #0a1120; }
+.log-id { color: var(--cyan); font-size: .75rem; }
+.log-raw { font-size: .74rem; white-space: pre-wrap; overflow-wrap: anywhere; color: #cbd5e1; }
+.root-cause { font-size: 1rem; color: var(--text-1); margin: 0; }
+
+/* ---------- Detection engineering (Module 06) ---------- */
+.test-pass { color: var(--ok); font: 600 .8rem var(--font-mono); white-space: nowrap; }
+.test-fail { color: var(--sev-critical); font: 600 .8rem var(--font-mono); }
+.log-line.is-unexpected { border-color: var(--sev-critical); }
+.pg-editor { min-height: 360px; font-size: .78rem; tab-size: 2; }
+.pg-errors li { color: var(--sev-critical); }
+.pg-warnings li { color: var(--sev-medium); }
+.cov-bar { display: inline-block; width: 80px; height: 6px; margin-right: 8px; border-radius: 3px; background: var(--bg-3); overflow: hidden; vertical-align: middle; }
+.cov-bar > span { display: block; height: 100%; background: var(--ok); }
+.cov-list li { grid-template-columns: 7.5em 1fr; }
+
+@media (max-width: 1200px) {
+  .pipeline { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pipe-stage:nth-child(3)::after { display: none; }
+  .ir-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .pipeline { grid-template-columns: minmax(0, 1fr); }
+  .pipe-stage::after { display: none; }
+  .query-row { flex-direction: column; }
+  .log-line { grid-template-columns: auto 1fr; }
+  .log-line .log-raw { grid-column: 1 / -1; }
+}

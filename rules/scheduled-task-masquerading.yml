@@ -1,0 +1,22 @@
+title: Scheduled Task Created Under Microsoft Folder by a User
+id: 5e9b3d7a-0c4f-4a12-b8d6-9f2e1c7a4b30
+status: experimental
+description: Detects event 4698 for tasks whose name starts with \Microsoft\Windows\ when the creator is a user account rather than the computer account.
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.persistence
+  - attack.t1053.005
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4698
+    TaskName|startswith: '\Microsoft\Windows\'
+  filter_computer_account:
+    SubjectUserName|endswith: '$'
+  condition: selection and not filter_computer_account
+falsepositives:
+  - Software installers run interactively that register tasks in this folder
+level: medium

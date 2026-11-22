@@ -1,0 +1,34 @@
+title: Office Application Spawned Script Interpreter or LOLBin
+id: 7c1e4a92-3b5d-4f08-9a6e-2d4b8c0f1a37
+status: experimental
+description: Detects Microsoft Office applications starting script interpreters or proxy-execution binaries, which often indicates a malicious macro.
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.execution
+  - attack.t1204.002
+  - attack.t1059.001
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - '\WINWORD.EXE'
+      - '\EXCEL.EXE'
+      - '\POWERPNT.EXE'
+      - '\OUTLOOK.EXE'
+  selection_child:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\cmd.exe'
+      - '\wscript.exe'
+      - '\cscript.exe'
+      - '\mshta.exe'
+      - '\rundll32.exe'
+      - '\regsvr32.exe'
+  condition: selection_parent and selection_child
+falsepositives:
+  - Legitimate macros or add-ins that call scripts (document management, reporting tools)
+level: high

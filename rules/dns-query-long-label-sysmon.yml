@@ -1,0 +1,19 @@
+title: Long Base32-Like DNS Label (Sysmon)
+id: f3b8d2a6-9e1c-4f57-a4d3-2c7b0e9f8a16
+status: experimental
+description: Detects Sysmon DNS query events where the first label is 25 or more characters from the base32 alphabet.
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.command-and-control
+  - attack.t1071.004
+logsource:
+  product: windows
+  category: dns_query
+detection:
+  selection:
+    QueryName|re: '^[a-z2-7]{25,}\.'
+  condition: selection
+falsepositives:
+  - CDNs and security products that encode identifiers in subdomains
+level: medium

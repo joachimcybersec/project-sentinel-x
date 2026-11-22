@@ -1,0 +1,24 @@
+# Dependencies and tool caches (the site has no runtime dependencies)
+node_modules/
+package-lock.json
+.netlify/
+
+# Secrets: provider API keys belong in Netlify / GitHub settings, never in the repo
+.env
+.env.*
+*.pem
+*.key
+
+# Generated in CI or locally
+rules-ci/
+serve.log
+*.log
+test-results/
+playwright-report/
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

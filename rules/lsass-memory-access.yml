@@ -1,0 +1,30 @@
+title: Suspicious LSASS Memory Access
+id: e4d9b2a7-1c6f-4a38-b0e5-7f3c2a9d8e14
+status: experimental
+description: Detects a process outside system and program directories opening lsass.exe with access masks typical of credential dumping tools.
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.credential-access
+  - attack.t1003.001
+logsource:
+  product: windows
+  category: process_access
+detection:
+  selection:
+    TargetImage|endswith: '\lsass.exe'
+    GrantedAccess:
+      - '0x1010'
+      - '0x1410'
+      - '0x1438'
+      - '0x143a'
+      - '0x1fffff'
+  filter_system:
+    SourceImage|startswith:
+      - 'C:\Windows\System32\'
+      - 'C:\Program Files\'
+      - 'C:\ProgramData\Microsoft\Windows Defender\'
+  condition: selection and not filter_system
+falsepositives:
+  - Security and backup agents installed outside the filtered paths
+level: high

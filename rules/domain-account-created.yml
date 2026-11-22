@@ -1,0 +1,19 @@
+title: User Account Created
+id: c6a1e9d3-2b7f-4d50-9e84-3a5c8f1b0d26
+status: experimental
+description: Detects event 4720 (a user account was created). Intended for review against change records rather than as a high-fidelity alert.
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.persistence
+  - attack.t1136.002
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4720
+  condition: selection
+falsepositives:
+  - Normal account provisioning by administrators or identity systems
+level: medium

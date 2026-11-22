@@ -1,0 +1,383 @@
+{
+  "schemaVersion": 1,
+  "provenance": "documented",
+  "reviewed": "2026-11-22",
+  "disclaimer": "Educational and defensive content only. Incident facts cite the listed source; text marked Analysis is the author's interpretation. Detection and control guidance is general good practice and must be adapted and tested in your own environment.",
+  "attacks": [
+    {
+      "id": "phishing",
+      "name": "Phishing",
+      "category": "initial-access",
+      "overview": "Social engineering through email, messaging or voice calls to trick a person into revealing credentials, approving access or running malicious content.",
+      "methodology": ["Research targets and pretexts (roles, suppliers, internal tools)", "Deliver a lure: email link or attachment, SMS, or a phone call impersonating IT", "Harvest credentials or MFA codes, or get the user to run a payload", "Use the access for mailbox takeover, internal tools or further compromise"],
+      "incident": {
+        "title": "Twitter account takeover via phone spear-phishing",
+        "date": "2020-07-15",
+        "facts": [
+          { "text": "NYDFS found that the hackers accessed Twitter's systems by calling Twitter employees and claiming to be from Twitter's IT department.", "source": 0 },
+          { "text": "The hackers posted \"double your bitcoin\" messages from compromised accounts and stole over $118,000 worth of bitcoin from consumers.", "source": 0 }
+        ],
+        "analysis": "The attack bypassed technical email filtering entirely, which shows why voice phishing must be part of awareness training and help-desk verification procedures."
+      },
+      "techniques": ["T1566.001", "T1566.002", "T1566.004", "T1078"],
+      "indicators": ["Look-alike or newly registered sender domains", "Sign-ins from new devices or locations shortly after a reported lure", "Inbox rules created to hide or forward mail", "Users reporting unexpected IT calls or MFA prompts"],
+      "logSources": ["Email gateway / Microsoft 365 message trace", "Identity provider sign-in logs", "Mailbox audit logs (inbox rules, forwarding)", "Proxy / DNS logs for clicks on lure domains"],
+      "detections": ["Correlate a delivered phishing email with a sign-in from a new IP for the same user within hours", "Alert on creation of inbox rules that move, delete or forward messages", "Flag impossible-travel or anomalous-token sign-ins after password reset"],
+      "controls": ["Phishing-resistant MFA (FIDO2)", "DMARC/SPF/DKIM enforcement and external-sender banners", "Verified call-back procedure for IT and help-desk requests", "Easy one-click reporting and regular simulation training"],
+      "response": ["Identify all recipients and remove the message from mailboxes", "Reset credentials and revoke sessions/tokens for users who interacted", "Review mailbox rules, OAuth consents and recent sign-ins", "Block lure domains and sender infrastructure", "Notify and brief affected users"],
+      "references": [
+        { "title": "Department of Financial Services Calls for Regulation of Social Media Giants After Twitter Hack Investigation", "publisher": "New York State Department of Financial Services", "date": "2020-10-14", "url": "https://www.dfs.ny.gov/reports_and_publications/press_releases/pr202010141" },
+        { "title": "Twitter Investigation Report (PDF)", "publisher": "New York State Department of Financial Services", "date": "2020-10-14", "url": "https://www.dfs.ny.gov/reports-and-publications/other-reports/Twitter_Report" }
+      ],
+      "relatedProfiles": ["aitm-phishing", "scattered-spider"]
+    },
+    {
+      "id": "ransomware",
+      "name": "Ransomware",
+      "category": "impact",
+      "overview": "Malware that encrypts data and systems to extort payment, now commonly combined with data theft and threats to leak it.",
+      "methodology": ["Gain initial access (stolen credentials, exposed RDP/VPN, phishing, exploited vulnerabilities)", "Escalate privileges and move laterally to domain controllers and file servers", "Exfiltrate data for double extortion", "Disable defences and delete backups / shadow copies", "Deploy encryption widely, often via GPO or remote execution tools"],
+      "incident": {
+        "title": "Colonial Pipeline ransomware attack",
+        "date": "2021-05-07",
+        "facts": [
+          { "text": "On 7 May 2021 a ransomware attack on Colonial Pipeline led to long queues at gas stations across the U.S. eastern seaboard and panic buying of fuel.", "source": 0 },
+          { "text": "CISA describes the incident as the moment the vulnerability of a highly connected society became a nationwide issue. In the following two years it created stopransomware.gov and launched the Joint Ransomware Task Force with the FBI.", "source": 0 }
+        ],
+        "analysis": "The public impact came from fuel-supply disruption rather than data loss, which shows how ransomware against one company's IT can cascade into critical-infrastructure effects."
+      },
+      "techniques": ["T1133", "T1078", "T1021.001", "T1490", "T1486"],
+      "indicators": ["Shadow-copy deletion (vssadmin, wmic shadowcopy)", "Mass file renames with new extensions", "Security tools stopped or tampered with", "Large outbound transfers before encryption"],
+      "logSources": ["EDR telemetry", "Windows Security (4688, 4624/4625, 7045, 1102)", "Sysmon (1, 11, 13)", "Firewall / NetFlow for exfiltration", "Backup system logs"],
+      "detections": ["Alert on vssadmin/wbadmin/bcdedit commands that delete or disable recovery", "High-rate file modification by a single process (canary files)", "New services or scheduled tasks created on many hosts in a short window"],
+      "controls": ["Offline, immutable and regularly tested backups", "MFA on all remote access and privileged accounts", "Network segmentation, especially between IT and OT", "Least privilege and tiered administration", "Rapid patching of internet-facing systems"],
+      "response": ["Isolate affected hosts and segments; do not power off before capturing volatile evidence where feasible", "Disable compromised accounts and reset privileged credentials (including KRBTGT twice)", "Determine the initial access vector and scope of data theft", "Restore from known-good backups after eradication", "Engage legal, regulators and law enforcement as required"],
+      "references": [
+        { "title": "The Attack on Colonial Pipeline: What We've Learned & What We've Done Over the Past Two Years", "publisher": "CISA", "date": "2023-05-07", "url": "https://www.cisa.gov/news-events/news/attack-colonial-pipeline-what-weve-learned-what-weve-done-over-past-two-years" },
+        { "title": "#StopRansomware Guide", "publisher": "CISA", "date": "2023-05", "url": "https://www.cisa.gov/stopransomware/ransomware-guide" }
+      ],
+      "relatedProfiles": ["lockbit", "alphv-blackcat", "cl0p"]
+    },
+    {
+      "id": "sql-injection",
+      "name": "SQL injection",
+      "category": "web-application",
+      "overview": "Injecting SQL syntax into application input so that the database runs attacker-controlled queries. Attackers can then read or change data, or run commands on the server.",
+      "methodology": ["Find input reaching the database (parameters, headers, cookies)", "Probe with syntax-breaking characters and boolean/time-based payloads", "Extract schema and data (UNION, error-based or blind techniques)", "Escalate: write files, create accounts or execute commands where the DBMS allows"],
+      "incident": {
+        "title": "MOVEit Transfer mass exploitation (CVE-2023-34362)",
+        "date": "2023-05-27",
+        "facts": [
+          { "text": "The CL0P group exploited a previously unknown SQL injection vulnerability in MOVEit Transfer, beginning on 27 May 2023.", "source": 0 },
+          { "text": "Exploitation led to installation of the LEMURLOOT web shell, which was used to steal data from MOVEit Transfer databases.", "source": 0 }
+        ],
+        "analysis": "SQL injection remains impactful in commercial products, not just custom code; vendor software exposed to the internet needs the same scrutiny as in-house applications."
+      },
+      "techniques": ["T1190", "T1505.003"],
+      "indicators": ["Quotes, comments (--, /* */), UNION SELECT, SLEEP() or WAITFOR in request parameters", "Spikes of HTTP 500 errors from one client", "Unusual database queries or large result sets", "New script files in web directories"],
+      "logSources": ["Web server access logs", "WAF logs", "Application error logs", "Database audit logs", "File-integrity monitoring"],
+      "detections": ["WAF/IDS signatures for SQLi patterns (tune for false positives)", "Many 500 responses for a single parameter from one IP", "Database account executing statements outside its normal pattern"],
+      "controls": ["Parameterised queries / prepared statements everywhere", "Least-privilege database accounts per application", "Input validation and output encoding", "WAF as a compensating control, not the primary fix", "Timely vendor patching"],
+      "response": ["Block the source and, if confirmed, take the vulnerable endpoint offline or patch", "Review database and web logs to scope data accessed", "Hunt for web shells and new accounts", "Rotate database and application secrets", "Assess notification obligations for exposed data"],
+      "references": [
+        { "title": "AA23-158A: CL0P Ransomware Gang Exploits CVE-2023-34362 MOVEit Vulnerability", "publisher": "CISA and FBI", "date": "2023-06-07", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-158a" },
+        { "title": "A03:2021 – Injection", "publisher": "OWASP Top 10", "date": "2021", "url": "https://top10.owasp.org/2021/A03_2021-Injection/index.html" },
+        { "title": "SQL Injection Prevention Cheat Sheet", "publisher": "OWASP", "date": "n.d.", "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html" }
+      ],
+      "relatedProfiles": ["cl0p"]
+    },
+    {
+      "id": "xss",
+      "name": "Cross-Site Scripting (XSS)",
+      "category": "web-application",
+      "overview": "Injecting script into pages that other users view, so it runs in the victim's browser with the site's privileges. Attackers use this to hijack sessions, deface pages or spread worms.",
+      "methodology": ["Find input that is reflected or stored and later rendered without encoding", "Craft a payload that runs in the page context", "Deliver it: stored on the site, or reflected via a crafted link", "Act as the victim: steal tokens, perform actions or spread"],
+      "incident": {
+        "title": "The Samy worm on MySpace",
+        "date": "2005-10-04",
+        "facts": [
+          { "text": "A stored XSS payload placed on a MySpace profile caused visitors to add the author as a friend and copy the payload to their own profiles.", "source": 0 },
+          { "text": "The worm spread to over one million users in under 20 hours.", "source": 0 }
+        ],
+        "analysis": "Self-propagating XSS shows that client-side injection can have platform-wide impact; modern defences such as CSP and HttpOnly cookies limit, but do not replace, correct output encoding."
+      },
+      "techniques": ["T1189", "T1059.007", "T1539"],
+      "indicators": ["<script>, event handlers (onerror=, onload=) or javascript: in parameters", "Unexpected outbound requests from pages to unknown domains", "CSP violation reports", "Sudden spread of identical content across user profiles"],
+      "logSources": ["Web server and WAF logs", "CSP report-uri / report-to endpoint", "Application logs of stored user content", "Browser telemetry (where available)"],
+      "detections": ["WAF rules for XSS payload patterns", "Monitor CSP violation reports for injected script sources", "Alert on stored content containing script or event-handler syntax"],
+      "controls": ["Context-aware output encoding", "Strict Content Security Policy (no inline script)", "Safe DOM APIs (textContent) instead of innerHTML with data", "HttpOnly and SameSite cookies", "Template frameworks with auto-escaping"],
+      "response": ["Remove stored payloads and fix the vulnerable rendering path", "Invalidate sessions that may have been stolen", "Review CSP reports and logs to scope affected users", "Deploy or tighten CSP"],
+      "references": [
+        { "title": "MySpace Worm Explanation", "publisher": "Samy Kamkar", "date": "2005-10", "url": "https://samy.pl/myspace/" },
+        { "title": "Cross Site Scripting (XSS)", "publisher": "OWASP", "date": "n.d.", "url": "https://community.owasp.org/attacks/xss/" },
+        { "title": "Cross Site Scripting Prevention Cheat Sheet", "publisher": "OWASP", "date": "n.d.", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html" }
+      ],
+      "relatedProfiles": []
+    },
+    {
+      "id": "brute-force",
+      "name": "Brute-force attacks",
+      "category": "credential-access",
+      "overview": "Repeatedly guessing passwords for one or more accounts, often using default or common credentials against exposed services such as SSH, RDP, Telnet or web logins.",
+      "methodology": ["Find exposed authentication services", "Try password lists, default credentials or credential-stuffing pairs", "Use successful logins for access, persistence or to recruit devices into botnets"],
+      "incident": {
+        "title": "Mirai botnet built from default IoT credentials",
+        "date": "2016-10-14",
+        "facts": [
+          { "text": "Mirai malware scanned for Internet of Things devices and infected them by logging in with a built-in list of common default usernames and passwords.", "source": 0 },
+          { "text": "The resulting botnets were used for large distributed denial-of-service attacks.", "source": 0 }
+        ],
+        "analysis": "Credential guessing at internet scale succeeds wherever default credentials ship unchanged; the fix lies with device configuration and vendor defaults rather than detection."
+      },
+      "techniques": ["T1110.001", "T1110", "T1078"],
+      "indicators": ["Many failed logons from one source (4625, sshd 'Failed password')", "Failures across sequential usernames such as admin, root or test", "Success immediately after a run of failures", "Account lockouts (4740)"],
+      "logSources": ["Windows Security 4625/4624/4740", "Linux auth.log / secure", "VPN and firewall authentication logs", "IdP sign-in logs"],
+      "detections": ["Threshold: more than N failures from one IP in M minutes (tune per service)", "Failure-then-success sequence for the same account and source", "Authentication attempts from known-bad or anonymising infrastructure"],
+      "controls": ["Disable default credentials; enforce unique strong passwords", "MFA on all remote access", "Remove direct internet exposure of RDP/SSH/Telnet", "Rate limiting, lockout or progressive delays", "Fail2ban-style automated blocking"],
+      "response": ["Block offending sources", "Check for any successful logon and investigate that session", "Reset affected credentials", "Reduce exposure of the targeted service"],
+      "references": [
+        { "title": "Heightened DDoS Threat Posed by Mirai and Other Botnets (TA16-288A)", "publisher": "CISA (US-CERT)", "date": "2016-10-14", "url": "https://www.cisa.gov/news-events/alerts/2016/10/14/heightened-ddos-threat-posed-mirai-and-other-botnets" }
+      ],
+      "relatedProfiles": []
+    },
+    {
+      "id": "password-spraying",
+      "name": "Password spraying",
+      "category": "credential-access",
+      "overview": "Trying a few common passwords against many accounts, staying under per-account lockout thresholds.",
+      "methodology": ["Enumerate valid usernames (email format, directory leaks)", "Try one or two likely passwords across all accounts, slowly", "Rotate source IPs to avoid rate limits", "Use any successful account for further access"],
+      "incident": {
+        "title": "Midnight Blizzard password spray against Microsoft",
+        "date": "2024-01-19",
+        "facts": [
+          { "text": "Microsoft reported that Midnight Blizzard used a password spray to compromise a legacy, non-production test tenant account.", "source": 0 },
+          { "text": "The actor then used that account's permissions to access a small percentage of Microsoft corporate email accounts, including senior leadership.", "source": 0 }
+        ],
+        "analysis": "Forgotten non-production accounts without MFA are a recurring weak point; account inventory matters as much as password policy."
+      },
+      "techniques": ["T1110.003", "T1078.004"],
+      "indicators": ["One source failing against many distinct accounts", "Same password-failure pattern across accounts in a short window", "Sign-in attempts against disabled or non-existent accounts", "Legacy-protocol authentication attempts"],
+      "logSources": ["IdP / Entra ID sign-in logs", "Windows Security 4625/4771 on domain controllers", "VPN and OWA authentication logs"],
+      "detections": ["Count distinct usernames with failures per source IP per hour", "Low-and-slow detection across distributed IPs using the same user-agent", "Alert on success from a source that also produced many failures"],
+      "controls": ["MFA on all accounts including test and service accounts", "Block legacy authentication protocols", "Banned-password lists", "Smart lockout and IP reputation-based blocking", "Remove stale and unused accounts"],
+      "response": ["Identify any successful sign-ins from spraying sources", "Reset and revoke sessions for affected accounts", "Review permissions granted to compromised accounts (including OAuth apps)", "Block source infrastructure"],
+      "references": [
+        { "title": "Microsoft Actions Following Attack by Nation State Actor Midnight Blizzard", "publisher": "Microsoft Security Response Center", "date": "2024-01-19", "url": "https://www.microsoft.com/en-us/msrc/blog/2024/01/microsoft-actions-following-attack-by-nation-state-actor-midnight-blizzard" },
+        { "title": "Password spray investigation playbook", "publisher": "Microsoft Learn", "date": "n.d.", "url": "https://learn.microsoft.com/en-us/security/operations/incident-response-playbook-password-spray" }
+      ],
+      "relatedProfiles": ["apt29", "scattered-spider"]
+    },
+    {
+      "id": "privilege-escalation",
+      "name": "Privilege escalation",
+      "category": "privilege-escalation",
+      "overview": "Gaining higher permissions than initially obtained, for example SYSTEM or domain administrator, through vulnerabilities, misconfigurations or stolen credentials.",
+      "methodology": ["Enumerate local and domain privileges, services and patch levels", "Exploit a vulnerable service or driver, or abuse misconfigured permissions", "Obtain SYSTEM/root or administrative tokens", "Use elevated access to dump credentials or disable defences"],
+      "incident": {
+        "title": "PrintNightmare (CVE-2021-34527) emergency directive",
+        "date": "2021-07-13",
+        "facts": [
+          { "text": "CISA reported active exploitation, by multiple threat actors, of CVE-2021-34527 in the Windows Print Spooler service, which allows a remote authenticated attacker to execute arbitrary code with SYSTEM privileges.", "source": 0 },
+          { "text": "Federal civilian agencies were directed to stop and disable the Print Spooler service on all Active Directory domain controllers and to apply the July 2021 cumulative updates.", "source": 0 }
+        ],
+        "analysis": "Services running as SYSTEM on domain controllers are high-value escalation paths; disabling unneeded services shrinks attack surface regardless of patch status."
+      },
+      "techniques": ["T1068", "T1548.002", "T1078.002"],
+      "indicators": ["Special privileges assigned to new logons (4672) for unexpected accounts", "New members added to privileged groups (4728/4732/4756)", "Driver or DLL loads from unusual paths by system services", "Processes running as SYSTEM spawned by user applications"],
+      "logSources": ["Windows Security 4672, 4728/4732/4756, 4688", "Sysmon 1, 6, 7", "EDR telemetry", "Print Service operational logs"],
+      "detections": ["Alert on additions to Domain Admins / Enterprise Admins", "User-context process spawning a SYSTEM child process", "Spooler service loading DLLs from non-standard directories"],
+      "controls": ["Prompt patching (prioritise KEV)", "Disable unnecessary services, especially on domain controllers", "Least privilege and LAPS for local admin passwords", "Tiered administration model"],
+      "response": ["Contain affected hosts", "Review privileged group changes and revert unauthorised ones", "Reset credentials of exposed privileged accounts", "Patch or mitigate the exploited flaw across the estate"],
+      "references": [
+        { "title": "Emergency Directive 21-04: Mitigate Windows Print Spooler Service Vulnerability", "publisher": "CISA", "date": "2021-07-13", "url": "https://www.cisa.gov/news-events/directives/ed-21-04-mitigate-windows-print-spooler-service-vulnerability" }
+      ],
+      "relatedProfiles": []
+    },
+    {
+      "id": "lateral-movement",
+      "name": "Lateral movement",
+      "category": "lateral-movement",
+      "overview": "Moving from an initially compromised host to other systems using stolen credentials, remote services or exploits, until the attacker reaches high-value assets.",
+      "methodology": ["Discover hosts, shares and trust relationships", "Harvest credentials from the foothold", "Authenticate to other hosts with RDP, SMB/PsExec, WMI or WinRM, or exploit network services", "Repeat until reaching domain controllers or data stores"],
+      "incident": {
+        "title": "NotPetya (Petya) destructive malware",
+        "date": "2017-06-27",
+        "facts": [
+          { "text": "The malware spread laterally using the EternalBlue SMB exploit (MS17-010) as well as harvested credentials with legitimate tools such as PsExec and WMI.", "source": 0 },
+          { "text": "It encrypted the master boot record and files, rendering systems unusable.", "source": 0 }
+        ],
+        "analysis": "Combining an exploit with credential-based movement meant fully patched hosts were still infected when admin credentials were reused; patching and credential hygiene are both required."
+      },
+      "techniques": ["T1021.001", "T1021.002", "T1047", "T1550.002"],
+      "indicators": ["Logons of type 3/10 between workstations", "PsExec service installation (7045, PSEXESVC)", "WMI process creation on remote hosts", "One account authenticating to many hosts in minutes"],
+      "logSources": ["Windows Security 4624 (LogonType), 4648, 7045", "Sysmon 1 and 3", "EDR", "Network flow between internal segments"],
+      "detections": ["Workstation-to-workstation SMB/RDP/WinRM connections", "New service creation by a remote logon", "Graph analytics: an account fanning out to an abnormal number of hosts"],
+      "controls": ["Block SMB/RDP between workstations with host firewalls", "Unique local admin passwords (LAPS)", "Patch SMB vulnerabilities; disable SMBv1", "Privileged access workstations and tiering"],
+      "response": ["Map the movement path from authentication logs", "Isolate affected hosts and disable used accounts", "Reset credentials that were exposed on compromised hosts", "Apply segmentation rules to stop further spread"],
+      "references": [
+        { "title": "Petya Ransomware (TA17-181A)", "publisher": "CISA (US-CERT)", "date": "2017-07-01", "url": "https://www.cisa.gov/news-events/alerts/2017/07/01/petya-ransomware" }
+      ],
+      "relatedProfiles": ["volt-typhoon"]
+    },
+    {
+      "id": "credential-dumping",
+      "name": "Credential dumping",
+      "category": "credential-access",
+      "overview": "Extracting password hashes, plaintext credentials or Kerberos material from memory (LSASS), the SAM or the Active Directory database (NTDS.dit).",
+      "methodology": ["Obtain local admin or SYSTEM privileges", "Read LSASS memory, or copy SAM/SYSTEM hives", "On domain controllers, copy NTDS.dit via shadow copies or ntdsutil", "Crack or pass the hashes to authenticate elsewhere"],
+      "incident": {
+        "title": "Volt Typhoon NTDS.dit extraction",
+        "date": "2024-02-07",
+        "facts": [
+          { "text": "The joint advisory described Volt Typhoon extracting the Active Directory database (NTDS.dit) from domain controllers, including by creating Volume Shadow Copies.", "source": 0 },
+          { "text": "The actor used built-in Windows tools such as ntdsutil and vssadmin as part of living-off-the-land tradecraft.", "source": 0 }
+        ],
+        "analysis": "Possession of NTDS.dit means every domain credential must be treated as compromised; recovery requires coordinated resets including KRBTGT."
+      },
+      "techniques": ["T1003.001", "T1003.003"],
+      "indicators": ["Processes opening lsass.exe with read access (Sysmon 10)", "ntdsutil 'ifm' or vssadmin create shadow on domain controllers", "comsvcs.dll MiniDump usage", "Copies of NTDS.dit or SYSTEM hive in temp paths"],
+      "logSources": ["Sysmon 1, 10, 11", "Windows Security 4688 with command line", "EDR", "Domain controller audit logs"],
+      "detections": ["Non-allow-listed process accessing LSASS memory", "Shadow-copy creation followed by file copy from the shadow volume on a DC", "Command lines containing 'ntds.dit' or 'ifm'"],
+      "controls": ["Enable LSA protection (RunAsPPL) and Credential Guard", "Limit domain admin logons to tier-0 systems", "Monitor and restrict access to domain controllers", "EDR with credential-theft prevention rules"],
+      "response": ["Assume all credentials on the host (or the whole domain, for NTDS) are compromised", "Reset privileged accounts and KRBTGT twice, with replication between resets", "Hunt for use of dumped credentials", "Rebuild compromised domain controllers if integrity is in doubt"],
+      "references": [
+        { "title": "AA24-038A: PRC State-Sponsored Actors Compromise and Maintain Persistent Access to U.S. Critical Infrastructure", "publisher": "CISA, NSA, FBI and partners", "date": "2024-02-07", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-038a" },
+        { "title": "Configure added LSA protection", "publisher": "Microsoft Learn", "date": "n.d.", "url": "https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection" }
+      ],
+      "relatedProfiles": ["volt-typhoon"]
+    },
+    {
+      "id": "malware-execution",
+      "name": "Malware execution",
+      "category": "execution",
+      "overview": "Getting malicious code to run on a host, commonly through a user opening a weaponised document that launches a script interpreter to download further payloads.",
+      "methodology": ["Deliver a malicious attachment or link", "User enables content or opens the file", "Macro or script launches an interpreter (PowerShell, wscript, rundll32)", "Payload downloaded, persistence established, C2 contacted"],
+      "incident": {
+        "title": "Emotet malicious-document campaigns",
+        "date": "2020-10-06",
+        "facts": [
+          { "text": "CISA reported Emotet spreading primarily through phishing emails containing malicious attachments or links.", "source": 0 },
+          { "text": "Emotet was used to drop other malware, including TrickBot and QakBot.", "source": 0 }
+        ],
+        "analysis": "Office-to-script-interpreter process chains remain one of the highest-value, lowest-noise detections for commodity malware."
+      },
+      "techniques": ["T1204.002", "T1059.001", "T1059.005", "T1547.001", "T1105"],
+      "indicators": ["winword.exe/excel.exe spawning powershell, cmd, wscript or rundll32", "Encoded PowerShell command lines", "Executables written to user temp or AppData directories", "New Run keys or scheduled tasks"],
+      "logSources": ["Sysmon 1, 11, 13", "PowerShell 4104 script block logging", "Windows Security 4688", "EDR", "Mail gateway"],
+      "detections": ["Office parent process spawning a script interpreter", "PowerShell with -enc / DownloadString / IEX", "Persistence created within minutes of a document being opened"],
+      "controls": ["Block macros from the internet (Mark-of-the-Web)", "Attack Surface Reduction rules", "Application control (WDAC/AppLocker)", "PowerShell Constrained Language Mode and logging"],
+      "response": ["Isolate the host and collect the document and dropped files", "Identify other recipients of the same lure", "Remove persistence and reimage if needed", "Block C2 and download infrastructure"],
+      "references": [
+        { "title": "AA20-280A: Emotet Malware", "publisher": "CISA", "date": "2020-10-06", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-280a" }
+      ],
+      "relatedProfiles": ["emotet", "qakbot"]
+    },
+    {
+      "id": "dns-tunnelling",
+      "name": "DNS tunnelling and DNS-based C2",
+      "category": "command-and-control",
+      "overview": "Encoding data or commands inside DNS queries and responses to communicate with attacker infrastructure, exploiting the fact that DNS is rarely blocked.",
+      "methodology": ["Register a domain with an attacker-controlled authoritative name server", "Malware encodes data in subdomain labels (e.g. base32 chunks)", "Responses (TXT, CNAME, A records) carry commands", "Low-and-slow beaconing to blend with normal DNS"],
+      "incident": {
+        "title": "SUNBURST backdoor DNS communications",
+        "date": "2020-12-17",
+        "facts": [
+          { "text": "CISA reported that the SolarWinds Orion backdoor communicated with subdomains of avsvmcloud[.]com via DNS as part of its command-and-control.", "source": 0 },
+          { "text": "FireEye (now Mandiant) described the backdoor encoding information in DNS subdomain requests before switching to HTTP for later stages.", "source": 1 }
+        ],
+        "analysis": "SUNBURST used DNS for beaconing and victim selection rather than bulk tunnelling, so volume-based detections alone would miss it; subdomain entropy and new-domain analytics are complementary."
+      },
+      "techniques": ["T1071.004", "T1572", "T1568"],
+      "indicators": ["Long, high-entropy subdomain labels", "High volume of TXT or NULL queries to one domain", "Many unique subdomains under a rarely seen parent domain", "Hosts querying external resolvers directly"],
+      "logSources": ["DNS server / resolver logs", "Sysmon 22 (DNS query)", "Zeek dns.log", "Firewall logs for port 53 egress"],
+      "detections": ["Average label length or Shannon entropy above baseline per parent domain", "Unique-subdomain count per domain per hour", "Direct-to-internet DNS bypassing internal resolvers"],
+      "controls": ["Force all DNS through monitored internal resolvers", "Protective DNS / RPZ blocking of newly registered domains", "Block outbound port 53 except from resolvers", "Log and retain DNS queries"],
+      "response": ["Sinkhole or block the domain", "Identify all hosts that queried it", "Recover encoded data where possible to assess exfiltration", "Investigate the infected hosts for the implant"],
+      "references": [
+        { "title": "AA20-352A: Advanced Persistent Threat Compromise of Government Agencies, Critical Infrastructure, and Private Sector Organizations", "publisher": "CISA", "date": "2020-12-17", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-352a" },
+        { "title": "Highly Evasive Attacker Leverages SolarWinds Supply Chain to Compromise Multiple Global Victims With SUNBURST Backdoor", "publisher": "FireEye / Mandiant (Google Cloud)", "date": "2020-12-13", "url": "https://cloud.google.com/blog/topics/threat-intelligence/evasive-attacker-leverages-solarwinds-supply-chain-compromises-with-sunburst-backdoor" }
+      ],
+      "relatedProfiles": ["apt29"]
+    },
+    {
+      "id": "ddos",
+      "name": "Distributed Denial of Service (DDoS)",
+      "category": "impact",
+      "overview": "Overwhelming a service's bandwidth, network devices or application resources with traffic from many sources so legitimate users cannot reach it.",
+      "methodology": ["Assemble attack capacity (botnets or reflection/amplification servers)", "Choose a vector: volumetric (UDP amplification), protocol (SYN flood) or application layer (HTTP floods)", "Launch, often in waves, sometimes alongside extortion demands"],
+      "incident": {
+        "title": "GitHub memcached amplification attack",
+        "date": "2018-02-28",
+        "facts": [
+          { "text": "GitHub reported an attack peaking at 1.35 Tbps that used memcached-based amplification.", "source": 0 },
+          { "text": "GitHub was unavailable or intermittently available for about ten minutes before traffic was routed to its DDoS mitigation provider.", "source": 0 }
+        ],
+        "analysis": "Amplification vectors rely on misconfigured internet-exposed services; upstream scrubbing capacity, not on-premises appliances, is what absorbs terabit-scale floods."
+      },
+      "techniques": ["T1498", "T1499"],
+      "indicators": ["Sudden traffic spikes from many sources", "Large volumes of UDP responses from port 11211, 123, 53 or 1900", "Exhausted connection tables and rising latency", "Extortion emails threatening attacks"],
+      "logSources": ["NetFlow/sFlow", "Edge router and firewall logs", "CDN/WAF analytics", "Load balancer metrics"],
+      "detections": ["Traffic volume beyond baseline thresholds per destination", "Protocol mix anomalies (e.g., spike in UDP fragments)", "Application request-rate anomalies per client"],
+      "controls": ["Upstream DDoS protection / scrubbing service", "CDN and anycast distribution", "Rate limiting and autoscaling", "Don't expose amplification-prone services (memcached, open resolvers)", "Documented DDoS runbook with your ISP"],
+      "response": ["Activate the mitigation provider and ISP escalation path", "Apply filters for the identified vector", "Communicate status to users", "Review post-incident and adjust thresholds"],
+      "references": [
+        { "title": "February 28th DDoS Incident Report", "publisher": "GitHub", "date": "2018-03-01", "url": "https://github.blog/2018-03-01-ddos-incident-report/" },
+        { "title": "Understanding and Responding to Distributed Denial-of-Service Attacks", "publisher": "CISA, FBI, MS-ISAC", "date": "2024-03-21", "url": "https://www.cisa.gov/resources-tools/resources/understanding-and-responding-distributed-denial-service-attacks" }
+      ],
+      "relatedProfiles": []
+    },
+    {
+      "id": "supply-chain",
+      "name": "Supply-chain attacks",
+      "category": "initial-access",
+      "overview": "Compromising a trusted supplier, its software build or its update channel so that malicious code reaches many downstream organisations through legitimate distribution.",
+      "methodology": ["Compromise a vendor's development or build environment", "Insert malicious code into a signed release or update", "Customers install the trusted update", "Selectively activate against high-value victims"],
+      "incident": {
+        "title": "3CXDesktopApp supply-chain compromise",
+        "date": "2023-03-30",
+        "facts": [
+          { "text": "CISA reported a supply-chain attack affecting 3CXDesktopApp, in which trojanised versions of the legitimate, signed desktop application were distributed.", "source": 0 },
+          { "text": "CISA urged users to review the vendor's guidance and to hunt for related malicious activity.", "source": 0 }
+        ],
+        "analysis": "Code signing proves origin, not integrity of the build process; behavioural monitoring of trusted applications is necessary because allow-lists will trust them."
+      },
+      "techniques": ["T1195.002", "T1071.001"],
+      "indicators": ["Trusted applications making connections to newly observed domains", "Unexpected child processes from signed vendor software", "Vendor security advisories or EDR detections for widely deployed software"],
+      "logSources": ["EDR process and network telemetry", "Proxy/DNS logs", "Software inventory", "Vendor advisories and threat-intel feeds"],
+      "detections": ["New outbound destinations for long-installed software", "Signed binary loading unsigned or newly modified DLLs", "Retro-hunt historical logs when an IOC set is published"],
+      "controls": ["Software inventory and SBOMs", "Vendor risk management and secure-development requirements", "Network egress restrictions for servers and apps", "Staged rollout of updates where possible"],
+      "response": ["Identify all installations and versions", "Isolate or uninstall affected versions per vendor guidance", "Hunt for follow-on activity on affected hosts", "Rotate credentials accessible to the compromised software"],
+      "references": [
+        { "title": "Supply Chain Attack Against 3CXDesktopApp", "publisher": "CISA", "date": "2023-03-30", "url": "https://www.cisa.gov/news-events/alerts/2023/03/30/supply-chain-attack-against-3cxdesktopapp" }
+      ],
+      "relatedProfiles": ["apt29"]
+    },
+    {
+      "id": "exploit-known-vuln",
+      "name": "Exploitation of known vulnerabilities",
+      "category": "initial-access",
+      "overview": "Exploiting publicly disclosed vulnerabilities for which patches exist but have not been applied, especially on internet-facing systems.",
+      "methodology": ["Scan the internet for vulnerable versions shortly after disclosure", "Use public or commodity exploits", "Gain code execution and deploy web shells or tools", "Pivot internally and exfiltrate"],
+      "incident": {
+        "title": "Equifax breach via unpatched Apache Struts",
+        "date": "2017-05",
+        "facts": [
+          { "text": "Attackers exploited a known vulnerability in the Apache Struts web framework (CVE-2017-5638) in an Equifax online dispute portal that had not been patched.", "source": 0 },
+          { "text": "According to the GAO, the attackers accessed personal information of at least 145.5 million individuals.", "source": 0 }
+        ],
+        "analysis": "The patch was available before the intrusion began; asset inventory and patch verification failures, not lack of a fix, enabled the breach."
+      },
+      "techniques": ["T1190", "T1505.003"],
+      "indicators": ["Exploit-pattern requests in web logs shortly after a CVE disclosure", "Web server processes spawning shells", "New files in web roots", "Vulnerability scanner showing unpatched KEV-listed CVEs"],
+      "logSources": ["Vulnerability scanner results", "Web/WAF logs", "EDR on servers", "Asset inventory / CMDB"],
+      "detections": ["Web server process (w3wp, httpd, java) spawning cmd, sh or PowerShell", "IDS signatures for newly published exploits", "Correlate scanner findings with internet exposure"],
+      "controls": ["Prioritise patching using CISA KEV and EPSS", "Maintain an accurate internet-facing asset inventory", "Virtual patching via WAF as an interim measure", "Verify patches were actually applied (rescan)"],
+      "response": ["Patch or isolate the vulnerable system immediately", "Hunt for web shells and persistence", "Scope data access via logs", "Review why the patch was missed and fix the process"],
+      "references": [
+        { "title": "Data Protection: Actions Taken by Equifax and Federal Agencies in Response to the 2017 Breach (GAO-18-559)", "publisher": "U.S. Government Accountability Office", "date": "2018-08-30", "url": "https://www.gao.gov/products/gao-18-559" },
+        { "title": "Known Exploited Vulnerabilities Catalog", "publisher": "CISA", "date": "continuously updated", "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog" }
+      ],
+      "relatedProfiles": ["citrix-bleed", "cl0p", "lockbit"]
+    }
+  ]
+}

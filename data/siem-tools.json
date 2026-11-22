@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "note": "How each open-source tool would fit the pipeline demonstrated here. None of these tools is integrated with Sentinel X; the parsing, enrichment and correlation shown run in your browser over simulated data.",
+  "tools": [
+    { "name": "Sysmon", "stage": "Collection", "role": "Windows endpoint telemetry: process creation, network connections, LSASS access, DNS queries, registry changes.", "integration": "not-integrated", "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon" },
+    { "name": "Zeek", "stage": "Collection", "role": "Network security monitor that writes structured protocol logs (conn, dns, http, ssl) from packet capture.", "integration": "not-integrated", "url": "https://docs.zeek.org/" },
+    { "name": "Suricata", "stage": "Detection", "role": "Signature-based IDS/IPS and network security monitoring engine producing alerts and EVE JSON logs.", "integration": "not-integrated", "url": "https://docs.suricata.io/" },
+    { "name": "Wazuh", "stage": "Collection → correlation", "role": "Open-source XDR/SIEM: agents, decoders (parsing), rules (correlation) and alerting.", "integration": "not-integrated", "url": "https://documentation.wazuh.com/" },
+    { "name": "Elastic Stack", "stage": "Normalisation → search", "role": "Ingest pipelines, the Elastic Common Schema (ECS) used for the field names on this page, search and dashboards.", "integration": "not-integrated", "url": "https://www.elastic.co/guide/en/ecs/current/index.html" },
+    { "name": "Security Onion", "stage": "Platform", "role": "Linux distribution bundling network and host monitoring, log management and case tools for threat hunting.", "integration": "not-integrated", "url": "https://docs.securityonion.net/" },
+    { "name": "Sigma", "stage": "Detection content", "role": "Vendor-neutral detection rule format that converts to many SIEM query languages (used in Phase 6).", "integration": "not-integrated", "url": "https://github.com/SigmaHQ/sigma" }
+  ]
+}

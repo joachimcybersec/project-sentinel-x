@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "provenance": "documented",
+  "reviewed": "2026-11-22",
+  "note": "Articles are original explanations written for this project, summarising widely accepted practice. Each article links to authoritative sources for detail; where an article states a specific fact about a framework or standard, the source is listed.",
+  "categories": [
+    { "id": "fundamentals", "label": "Cybersecurity fundamentals" },
+    { "id": "soc", "label": "SOC operations" },
+    { "id": "engineering", "label": "Security engineering" },
+    { "id": "hunting", "label": "Threat hunting" },
+    { "id": "detection", "label": "Detection engineering" },
+    { "id": "ir", "label": "Incident response" },
+    { "id": "network", "label": "Network security" },
+    { "id": "cloud", "label": "Cloud security" },
+    { "id": "frameworks", "label": "Security frameworks" },
+    { "id": "career", "label": "Career development" }
+  ],
+  "references": {
+    "sp800-12": { "title": "SP 800-12 Rev. 1: An Introduction to Information Security", "publisher": "NIST", "date": "2017-06", "url": "https://csrc.nist.gov/pubs/sp/800/12/r1/final" },
+    "sp800-61": { "title": "SP 800-61 Rev. 3: Incident Response Recommendations and Considerations for Cybersecurity Risk Management", "publisher": "NIST", "date": "2025-04", "url": "https://csrc.nist.gov/pubs/sp/800/61/r3/final" },
+    "sp800-86": { "title": "SP 800-86: Guide to Integrating Forensic Techniques into Incident Response", "publisher": "NIST", "date": "2006-08", "url": "https://csrc.nist.gov/pubs/sp/800/86/final" },
+    "sp800-207": { "title": "SP 800-207: Zero Trust Architecture", "publisher": "NIST", "date": "2020-08", "url": "https://csrc.nist.gov/pubs/sp/800/207/final" },
+    "csf2": { "title": "The NIST Cybersecurity Framework (CSF) 2.0", "publisher": "NIST", "date": "2024-02", "url": "https://www.nist.gov/cyberframework" },
+    "cis-controls": { "title": "CIS Critical Security Controls", "publisher": "Center for Internet Security", "date": "n.d.", "url": "https://www.cisecurity.org/controls" },
+    "cis-benchmarks": { "title": "CIS Benchmarks", "publisher": "Center for Internet Security", "date": "n.d.", "url": "https://www.cisecurity.org/cis-benchmarks" },
+    "iso27001": { "title": "ISO/IEC 27001:2022 Information security management systems", "publisher": "ISO", "date": "2022-10", "url": "https://www.iso.org/standard/27001" },
+    "attack": { "title": "MITRE ATT&CK", "publisher": "MITRE", "date": "n.d.", "url": "https://attack.mitre.org/" },
+    "d3fend": { "title": "MITRE D3FEND", "publisher": "MITRE", "date": "n.d.", "url": "https://d3fend.mitre.org/" },
+    "killchain": { "title": "The Cyber Kill Chain", "publisher": "Lockheed Martin", "date": "n.d.", "url": "https://www.lockheedmartin.com/en-us/capabilities/cyber/cyber-kill-chain.html" },
+    "pyramid": { "title": "The Pyramid of Pain", "publisher": "David J. Bianco", "date": "2013-03", "url": "https://detect-respond.blogspot.com/2013/03/the-pyramid-of-pain.html" },
+    "rfc3227": { "title": "RFC 3227: Guidelines for Evidence Collection and Archiving", "publisher": "IETF", "date": "2002-02", "url": "https://www.rfc-editor.org/rfc/rfc3227" },
+    "sigma": { "title": "Sigma rule repository", "publisher": "SigmaHQ", "date": "n.d.", "url": "https://github.com/SigmaHQ/sigma" },
+    "ms-events": { "title": "Appendix L: Events to Monitor", "publisher": "Microsoft Learn", "date": "n.d.", "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/appendix-l--events-to-monitor" },
+    "sysmon": { "title": "Sysmon", "publisher": "Microsoft Sysinternals", "date": "n.d.", "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon" },
+    "cvss": { "title": "Common Vulnerability Scoring System", "publisher": "FIRST", "date": "n.d.", "url": "https://www.first.org/cvss/" },
+    "epss": { "title": "Exploit Prediction Scoring System", "publisher": "FIRST", "date": "n.d.", "url": "https://www.first.org/epss/" },
+    "kev": { "title": "Known Exploited Vulnerabilities Catalog", "publisher": "CISA", "date": "n.d.", "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog" },
+    "ssvc": { "title": "Stakeholder-Specific Vulnerability Categorization", "publisher": "CISA", "date": "n.d.", "url": "https://www.cisa.gov/stakeholder-specific-vulnerability-categorization-ssvc" },
+    "zt-maturity": { "title": "Zero Trust Maturity Model", "publisher": "CISA", "date": "n.d.", "url": "https://www.cisa.gov/zero-trust-maturity-model" },
+    "aws-shared": { "title": "Shared Responsibility Model", "publisher": "AWS", "date": "n.d.", "url": "https://aws.amazon.com/compliance/shared-responsibility-model/" },
+    "azure-shared": { "title": "Shared responsibility in the cloud", "publisher": "Microsoft Learn", "date": "n.d.", "url": "https://learn.microsoft.com/en-us/azure/security/fundamentals/shared-responsibility" },
+    "cloudtrail": { "title": "AWS CloudTrail User Guide", "publisher": "AWS", "date": "n.d.", "url": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html" },
+    "entra-signins": { "title": "Sign-in logs in Microsoft Entra ID", "publisher": "Microsoft Learn", "date": "n.d.", "url": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-ins" },
+    "sp800-63b": { "title": "SP 800-63B: Digital Identity Guidelines, Authentication and Lifecycle Management", "publisher": "NIST", "date": "n.d.", "url": "https://pages.nist.gov/800-63-4/sp800-63b.html" },
+    "nice": { "title": "NICE Workforce Framework for Cybersecurity", "publisher": "NIST", "date": "n.d.", "url": "https://www.nist.gov/itl/applied-cybersecurity/nice/nice-framework-resource-center" }
+  },
+  "articles": [
+    {
+      "id": "cia-triad", "category": "fundamentals", "level": "beginner", "title": "Confidentiality, integrity and availability",
+      "summary": "The three security objectives most controls protect, and why incidents are usually described by which of them was affected.",
+      "sections": [
+        { "heading": "The three objectives", "paragraphs": ["Confidentiality means information is only disclosed to authorised people and systems. Integrity means information and systems are not altered in unauthorised ways. Availability means authorised users can access systems and data when they need them."] },
+        { "heading": "Using the triad in practice", "bullets": ["Data theft (IR-2026-006) is a confidentiality impact", "A cleared audit log (IR-2026-002) affects the integrity of evidence", "Ransomware (IR-2026-004) hits availability, and with data theft, confidentiality too"] },
+        { "heading": "Beyond the triad", "paragraphs": ["Many programmes also track authenticity, accountability and non-repudiation. These ideas sit behind logging, strong authentication and digital signatures."] }
+      ],
+      "practice": [{ "label": "See impact classification in the incident cases", "href": "#/incidents" }],
+      "refs": ["sp800-12"]
+    },
+    {
+      "id": "defence-in-depth", "category": "fundamentals", "level": "beginner", "title": "Defence in depth",
+      "summary": "Layering independent controls so that one failure does not lead to a breach.",
+      "sections": [
+        { "heading": "Idea", "paragraphs": ["No single control is perfect. Defence in depth puts several independent layers in an attacker's way (identity, endpoint, network, application, data and monitoring), so the failure of one layer is caught or limited by another."] },
+        { "heading": "Seen in the case studies", "bullets": ["Mail filtering missed a password-protected archive, but endpoint telemetry still caught Office spawning PowerShell", "EDR isolation failed silently, and a switch-port shutdown contained the host instead", "Forwarded logs survived the attacker clearing the domain controller's log"] },
+        { "heading": "Design tip", "paragraphs": ["Make layers genuinely independent. Two controls that depend on the same credential or the same agent fail together."] }
+      ],
+      "practice": [{ "label": "Compare network designs", "href": "#/network" }],
+      "refs": ["sp800-12", "cis-controls"]
+    },
+    {
+      "id": "soc-tiers", "category": "soc", "level": "beginner", "title": "How a Security Operations Centre works",
+      "summary": "Roles, the alert lifecycle and the measures SOCs use to understand their own performance.",
+      "sections": [
+        { "heading": "Typical structure", "paragraphs": ["Many SOCs organise analysts in tiers. Tier 1 triages incoming alerts, Tier 2 investigates confirmed suspicious activity, and Tier 3 or incident responders handle complex incidents, threat hunting and detection improvement. Smaller teams combine these roles."] },
+        { "heading": "Alert lifecycle", "bullets": ["Detection: a rule or analytic raises an alert", "Triage: is it real, how severe, and what is affected?", "Investigation: scope, root cause, related activity", "Response: containment, eradication, recovery", "Feedback: tune the detection and record lessons learned"] },
+        { "heading": "Useful measures", "paragraphs": ["Commonly tracked measures include mean time to detect, mean time to respond, false-positive rate per rule, and coverage of important techniques and log sources. Measures should drive improvement, not alert-closing speed for its own sake."] }
+      ],
+      "practice": [{ "label": "Open the SOC dashboard", "href": "#/soc" }, { "label": "Work through IR-2026-001", "href": "#/incidents/IR-2026-001" }],
+      "refs": ["sp800-61"]
+    },
+    {
+      "id": "alert-triage", "category": "soc", "level": "intermediate", "title": "A repeatable alert-triage method",
+      "summary": "Five questions that turn an alert into a decision in a few minutes.",
+      "sections": [
+        { "heading": "The questions", "bullets": ["What exactly fired, and what does the rule look for?", "Who and what is involved: user, host, asset criticality, source IP reputation?", "What happened just before and after on the same host or account?", "Is there a benign explanation (change ticket, known tool, scheduled job)?", "What is the impact if this is real, and how urgent is it?"] },
+        { "heading": "Document as you go", "paragraphs": ["Record the evidence you checked, not just the conclusion. A good triage note lets the next analyst repeat your reasoning and helps you tune noisy rules later."] },
+        { "heading": "Escalate or close", "paragraphs": ["Escalate when impact or uncertainty is high. Close as a false positive only when you can name the benign cause, and feed that back into the rule's filters."] }
+      ],
+      "practice": [{ "label": "Pivot from an alert to raw logs", "href": "#/siem" }],
+      "refs": ["sp800-61"]
+    },
+    {
+      "id": "log-sources", "category": "soc", "level": "intermediate", "title": "Essential log sources for detection",
+      "summary": "The telemetry that supports most investigations and detections, and what each source is good for.",
+      "sections": [
+        { "heading": "Windows", "bullets": ["Security log: logons (4624), failed logons (4625), special privileges (4672), account creation (4720), audit log cleared (1102)", "Process creation with command line (4688), or Sysmon event 1", "PowerShell script block logging (event 4104)"] },
+        { "heading": "Beyond the endpoint", "bullets": ["Identity provider sign-ins, including MFA results", "DNS resolver logs: which host asked for which domain", "Proxy and firewall logs: destinations, bytes and actions", "Web server access logs for public applications", "Cloud audit logs (control-plane activity)"] },
+        { "heading": "Practical advice", "paragraphs": ["Collect less but collect well: the right events with command lines and correct timestamps beat everything at low quality. Forward logs off the host quickly so an attacker cannot erase them."] }
+      ],
+      "practice": [{ "label": "Explore 8 log types in the SIEM", "href": "#/siem" }],
+      "refs": ["ms-events", "sysmon"]
+    },
+    {
+      "id": "hardening-baselines", "category": "engineering", "level": "intermediate", "title": "Hardening and secure baselines",
+      "summary": "Reducing attack surface with consistent, verifiable configuration.",
+      "sections": [
+        { "heading": "Start from a baseline", "paragraphs": ["Community baselines such as the CIS Benchmarks describe secure settings for operating systems, cloud services and applications. Adopt one, document justified deviations and measure drift."] },
+        { "heading": "High-value settings", "bullets": ["Remove local admin rights from everyday accounts", "Disable unused services (the Print Spooler on domain controllers is a known example)", "Block macros from the internet and restrict script interpreters", "Enforce logging settings as part of the baseline"] },
+        { "heading": "Verify continuously", "paragraphs": ["Configuration drifts. Automated compliance scans and configuration management keep the baseline real rather than aspirational."] }
+      ],
+      "practice": [{ "label": "PrintNightmare dossier", "href": "#/attacks/privilege-escalation" }],
+      "refs": ["cis-benchmarks", "cis-controls"]
+    },
+    {
+      "id": "identity-security", "category": "engineering", "level": "intermediate", "title": "Identity security and phishing-resistant MFA",
+      "summary": "Why identity is the main attack surface, and which controls actually stop modern credential attacks.",
+      "sections": [
+        { "heading": "Why identity", "paragraphs": ["Several case studies in this platform start with identity: password spraying, help-desk impersonation, session-cookie theft and service accounts with weak passwords. Valid credentials let attackers blend in."] },
+        { "heading": "Controls that matter", "bullets": ["Phishing-resistant authenticators (FIDO2 security keys, platform passkeys, certificate-based) resist credential and code phishing", "Remove legacy authentication protocols that bypass MFA", "Separate administrative accounts and use privileged access workstations", "Strong identity checks for password and MFA resets"] },
+        { "heading": "Monitor", "paragraphs": ["Alert on new MFA device registration, impossible travel, sign-ins after many failures, and service accounts logging on interactively."] }
+      ],
+      "practice": [{ "label": "Scattered Spider profile", "href": "#/threat-intel/scattered-spider" }, { "label": "IR-2026-002", "href": "#/incidents/IR-2026-002" }],
+      "refs": ["sp800-63b"]
+    },
+    {
+      "id": "threat-hunting-intro", "category": "hunting", "level": "intermediate", "title": "Hypothesis-driven threat hunting",
+      "summary": "Proactively searching for attacker activity that has not triggered an alert.",
+      "sections": [
+        { "heading": "The hunting loop", "bullets": ["Form a hypothesis, e.g. 'an attacker uses DNS TXT records for C2 in our network'", "Identify the data needed to test it", "Query and analyse, looking for outliers", "Confirm or reject, and record what you learned", "Turn confirmed patterns into detections"] },
+        { "heading": "Hunt up the Pyramid of Pain", "paragraphs": ["David Bianco's Pyramid of Pain ranks indicators by how costly they are for an adversary to change. Hash values and IP addresses are trivial for attackers to change, while tools and TTPs (tactics, techniques and procedures) are expensive. Hunts and detections aimed at behaviour last longer."] }
+      ],
+      "practice": [{ "label": "Hunt in the SIEM log explorer", "href": "#/siem" }],
+      "refs": ["pyramid", "attack"]
+    },
+    {
+      "id": "hunting-with-attack", "category": "hunting", "level": "intermediate", "title": "Using MITRE ATT&CK for hunting and coverage",
+      "summary": "Turning a knowledge base of adversary behaviour into hunt plans and coverage maps.",
+      "sections": [
+        { "heading": "What ATT&CK is", "paragraphs": ["MITRE ATT&CK is a publicly available knowledge base of adversary tactics and techniques based on real-world observations. Tactics are the adversary's goals (for example credential access); techniques are how they achieve them (for example LSASS memory dumping)."] },
+        { "heading": "Practical uses", "bullets": ["Map existing detections to techniques to see gaps", "Pick techniques used by actors relevant to your sector and hunt for them", "Describe incidents in a shared vocabulary"] },
+        { "heading": "Caution", "paragraphs": ["A technique marked 'covered' rarely means every procedure is detected. Record which data source and which variant each detection handles."] }
+      ],
+      "practice": [{ "label": "Detection coverage map", "href": "#/detections" }],
+      "refs": ["attack"]
+    },
+    {
+      "id": "detection-lifecycle", "category": "detection", "level": "intermediate", "title": "The detection engineering lifecycle",
+      "summary": "Treating detections as code: requirements, development, testing, deployment and maintenance.",
+      "sections": [
+        { "heading": "Lifecycle", "bullets": ["Requirement: a threat or technique worth detecting, and the data available", "Development: write the logic, often in a portable format such as Sigma", "Testing: run against known-good and known-bad data", "Deployment: version control, review, rollout", "Maintenance: track false positives, tune, retire stale rules"] },
+        { "heading": "Test data matters", "paragraphs": ["A rule that has never matched a true positive is untested. Keep sample events for each rule and run them automatically, which is what this platform's test suite does for its Sigma library."] }
+      ],
+      "practice": [{ "label": "Edit and test a Sigma rule", "href": "#/detections?edit=office-spawns-script-interpreter" }],
+      "refs": ["sigma"]
+    },
+    {
+      "id": "false-positives", "category": "detection", "level": "advanced", "title": "Measuring and reducing false positives",
+      "summary": "Keeping detections trustworthy without blinding the SOC.",
+      "sections": [
+        { "heading": "Measure first", "paragraphs": ["Track, per rule, how many alerts were true positives, benign true positives (real activity that was allowed) and false positives. Without that data, tuning is guesswork."] },
+        { "heading": "Tuning techniques", "bullets": ["Narrow filters to specific known-good parents, paths or accounts, not broad exclusions", "Raise thresholds in correlation rules carefully and record why", "Enrich alerts with asset criticality so low-value noise can be prioritised down", "Split one noisy rule into a high-fidelity alert and a lower-severity hunting query"] },
+        { "heading": "Beware over-tuning", "paragraphs": ["Every exclusion is a place an attacker can hide. Prefer exclusions that are hard to imitate, such as a signed binary's full path plus its parent, over ones attackers can easily copy."] }
+      ],
+      "practice": [{ "label": "Tune correlation thresholds", "href": "#/siem" }],
+      "refs": ["sigma"]
+    },
+    {
+      "id": "ir-lifecycle", "category": "ir", "level": "beginner", "title": "The incident response lifecycle",
+      "summary": "From preparation to lessons learned, and how NIST's 2025 guidance places response within the wider risk-management picture.",
+      "sections": [
+        { "heading": "Classic phases", "paragraphs": ["Earlier NIST guidance described incident handling as preparation; detection and analysis; containment, eradication and recovery; and post-incident activity. Many teams still structure playbooks this way."] },
+        { "heading": "NIST SP 800-61 Rev. 3 (2025)", "paragraphs": ["Revision 3 frames incident response recommendations as a CSF 2.0 Community Profile, so preparation and improvement are connected to the Govern, Identify and Protect functions as well as Detect, Respond and Recover."] },
+        { "heading": "What good looks like", "bullets": ["Clear roles and an incident commander", "Pre-approved containment actions", "Evidence preserved before systems are rebuilt", "Lessons learned that change controls, not just documents"] }
+      ],
+      "practice": [{ "label": "Step through a case study", "href": "#/incidents/IR-2026-004" }],
+      "refs": ["sp800-61", "csf2"]
+    },
+    {
+      "id": "evidence-handling", "category": "ir", "level": "intermediate", "title": "Evidence collection and chain of custody",
+      "summary": "Collecting the most volatile evidence first and keeping it trustworthy.",
+      "sections": [
+        { "heading": "Order of volatility", "paragraphs": ["RFC 3227 recommends collecting evidence from the most to the least volatile: registers and cache, memory and network state, then temporary files, disk, remote logging and finally archival media. Pulling the power destroys memory evidence."] },
+        { "heading": "Chain of custody", "bullets": ["Record who collected each item, when, from where and how", "Hash evidence at collection and verify the hash before analysis", "Store originals read-only and analyse copies"] },
+        { "heading": "Balance with containment", "paragraphs": ["Sometimes stopping harm matters more than perfect evidence. Decide in advance which systems justify a memory capture before isolation."] }
+      ],
+      "practice": [{ "label": "Chain of custody in IR-2026-002", "href": "#/incidents/IR-2026-002" }],
+      "refs": ["rfc3227", "sp800-86"]
+    },
+    {
+      "id": "zero-trust-practice", "category": "network", "level": "intermediate", "title": "Segmentation and Zero Trust in practice",
+      "summary": "Moving from 'trusted internal network' to per-request access decisions.",
+      "sections": [
+        { "heading": "Principles", "paragraphs": ["NIST SP 800-207 describes Zero Trust as removing implicit trust based on network location. Access to each resource is granted per session, using policy that considers identity, device state and other signals."] },
+        { "heading": "Practical steps", "bullets": ["Segment first: block workstation-to-workstation and workstation-to-server admin traffic", "Put admin access behind privileged access workstations and strong MFA", "Restrict server egress to what each server needs", "Route user web traffic through a gateway that evaluates destination reputation"] },
+        { "heading": "Maturity", "paragraphs": ["CISA's Zero Trust Maturity Model describes progress across identity, devices, networks, applications and data. It is a journey, not a single purchase."] }
+      ],
+      "practice": [{ "label": "Run the segmentation simulator", "href": "#/network" }],
+      "refs": ["sp800-207", "zt-maturity"]
+    },
+    {
+      "id": "shared-responsibility", "category": "cloud", "level": "beginner", "title": "The cloud shared responsibility model",
+      "summary": "Which security tasks the cloud provider handles and which remain yours.",
+      "sections": [
+        { "heading": "The split", "paragraphs": ["Cloud providers secure the underlying infrastructure. Customers remain responsible for what they put in the cloud and how they configure it. The exact split depends on the service model: you manage more with virtual machines (IaaS) than with fully managed software (SaaS)."] },
+        { "heading": "Always yours", "bullets": ["Identities and access permissions", "Data classification and protection", "Configuration of the services you use (for example public storage settings)", "Monitoring and responding to activity in your accounts"] }
+      ],
+      "practice": [{ "label": "Cloud tools in the directory", "href": "#/tools" }],
+      "refs": ["aws-shared", "azure-shared"]
+    },
+    {
+      "id": "cloud-logging", "category": "cloud", "level": "intermediate", "title": "Cloud logging for detection",
+      "summary": "The control-plane and identity logs that reveal most cloud attacks.",
+      "sections": [
+        { "heading": "Key sources", "bullets": ["Control-plane audit logs (for example AWS CloudTrail): who changed what, from where", "Identity sign-in logs (for example Microsoft Entra ID): authentication results, MFA, conditional access", "Service-specific data access logs for storage and databases", "Network flow logs for workloads"] },
+        { "heading": "What to alert on", "bullets": ["New access keys or role assignments for privileged identities", "Disabling of logging or security services", "Sign-ins from unusual locations followed by permission changes", "Storage made public"] }
+      ],
+      "practice": [{ "label": "Identity attacks in the threat profiles", "href": "#/threat-intel/apt29" }],
+      "refs": ["cloudtrail", "entra-signins"]
+    },
+    {
+      "id": "frameworks-overview", "category": "frameworks", "level": "beginner", "title": "Security frameworks at a glance",
+      "summary": "What NIST CSF 2.0, CIS Controls, ISO/IEC 27001, ATT&CK, D3FEND and the Cyber Kill Chain are each for.",
+      "sections": [
+        { "heading": "Programme frameworks", "bullets": ["NIST CSF 2.0 organises cybersecurity outcomes into six functions: Govern, Identify, Protect, Detect, Respond and Recover", "CIS Critical Security Controls are a prioritised set of safeguards grouped into Implementation Groups for organisations of different sizes", "ISO/IEC 27001 specifies requirements for an information security management system and can be certified"] },
+        { "heading": "Threat-informed frameworks", "bullets": ["MITRE ATT&CK catalogues adversary tactics and techniques", "MITRE D3FEND catalogues defensive countermeasure techniques", "The Lockheed Martin Cyber Kill Chain describes intrusion phases from reconnaissance to actions on objectives"] },
+        { "heading": "How they fit together", "paragraphs": ["Programme frameworks say what a security programme should achieve; threat-informed frameworks help decide which threats to prioritise and how to detect and counter them."] }
+      ],
+      "practice": [{ "label": "ATT&CK mapping in the attack library", "href": "#/attacks" }],
+      "refs": ["csf2", "cis-controls", "iso27001", "attack", "d3fend", "killchain"]
+    },
+    {
+      "id": "vuln-prioritisation", "category": "frameworks", "level": "intermediate", "title": "Prioritising vulnerabilities: CVSS, EPSS, KEV and SSVC",
+      "summary": "Four different signals and the question each one answers.",
+      "sections": [
+        { "heading": "Different questions", "bullets": ["CVSS (FIRST) rates technical severity: how bad would exploitation be?", "EPSS (FIRST) estimates the probability of exploitation activity in the next 30 days", "CISA KEV lists vulnerabilities with evidence of exploitation in the wild", "SSVC (CISA) is a decision tree that adds your own context, such as exposure and mission impact"] },
+        { "heading": "Combine them", "paragraphs": ["Severity alone produces too many 'critical' items. Exploitation evidence (KEV) and likelihood (EPSS), weighed against asset exposure and business impact, focus effort where attacks are actually happening."] }
+      ],
+      "practice": [{ "label": "CVE snapshot with all three signals", "href": "#/vulnerabilities" }],
+      "refs": ["cvss", "epss", "kev", "ssvc"]
+    },
+    {
+      "id": "soc-career", "category": "career", "level": "beginner", "title": "Building a career in security operations",
+      "summary": "Roles, skills and how to show practical ability.",
+      "sections": [
+        { "heading": "Roles", "paragraphs": ["NIST's NICE Workforce Framework describes cybersecurity work roles and the knowledge and skills they need. Common SOC-related roles include defensive cybersecurity analysis, incident response and threat analysis."] },
+        { "heading": "Skills that transfer", "bullets": ["Operating systems and networking fundamentals", "Reading logs and writing queries", "Scripting for automation (for example Python or PowerShell)", "Clear written communication of findings"] },
+        { "heading": "Show, don't just tell", "paragraphs": ["Projects with honest documentation (what you built, what you tested, what you did not do) demonstrate ability. Certifications are offered by several bodies; check which ones employers in your target region actually ask for rather than collecting them."] }
+      ],
+      "practice": [{ "label": "Start a learning pathway", "href": "#/knowledge" }],
+      "refs": ["nice"]
+    },
+    {
+      "id": "home-lab", "category": "career", "level": "beginner", "title": "Building a safe home lab",
+      "summary": "Practising detection and response without risk to anyone else.",
+      "sections": [
+        { "heading": "Isolation and permission", "paragraphs": ["Keep attack simulations inside networks and systems you own, isolated from your home and work networks. Never test against systems you do not have written permission to test."] },
+        { "heading": "A starter lab", "bullets": ["A hypervisor with a Windows client, a Windows server (domain controller) and a Linux host", "Sysmon on Windows hosts and log forwarding to an open-source SIEM", "A small network sensor (Zeek or Suricata) on the lab network", "Snapshots so you can reset after each exercise"] },
+        { "heading": "Exercises", "bullets": ["Generate failed logons and build a brute-force alert", "Run a benign PowerShell download in the lab and find it in script block logs", "Write a Sigma rule and test it against your own events"] }
+      ],
+      "practice": [{ "label": "Tools for a lab", "href": "#/tools" }],
+      "refs": ["sysmon"]
+    }
+  ],
+  "pathways": [
+    {
+      "id": "soc-analyst", "title": "SOC Analyst (Tier 1)", "summary": "Triage alerts confidently and escalate with evidence.",
+      "steps": [
+        { "type": "article", "ref": "cia-triad" },
+        { "type": "article", "ref": "soc-tiers" },
+        { "type": "article", "ref": "log-sources" },
+        { "type": "practice", "label": "Filter the SOC dashboard to critical events and open one in the investigation panel", "href": "#/soc" },
+        { "type": "article", "ref": "alert-triage" },
+        { "type": "practice", "label": "In the SIEM, find every failed logon for adm.svc (user:adm.svc code:4625)", "href": "#/siem?q=user%3Aadm.svc%20code%3A4625" },
+        { "type": "practice", "label": "Complete the investigation steps in IR-2026-001", "href": "#/incidents/IR-2026-001" }
+      ]
+    },
+    {
+      "id": "detection-engineer", "title": "Detection Engineer", "summary": "Write, test and tune detections that hold up in production.",
+      "steps": [
+        { "type": "article", "ref": "log-sources" },
+        { "type": "article", "ref": "detection-lifecycle" },
+        { "type": "practice", "label": "Broaden a Sigma rule in the playground and watch the false positives appear", "href": "#/detections?edit=web-xss-query" },
+        { "type": "article", "ref": "hunting-with-attack" },
+        { "type": "practice", "label": "Review incident coverage gaps in the Coverage tab", "href": "#/detections" },
+        { "type": "article", "ref": "false-positives" },
+        { "type": "practice", "label": "Lower the brute-force threshold to 3 and compare the alerts", "href": "#/siem" }
+      ]
+    },
+    {
+      "id": "incident-responder", "title": "Incident Responder", "summary": "Lead an incident from detection to lessons learned.",
+      "steps": [
+        { "type": "article", "ref": "ir-lifecycle" },
+        { "type": "article", "ref": "evidence-handling" },
+        { "type": "practice", "label": "Work through the ransomware case and its containment gap", "href": "#/incidents/IR-2026-004" },
+        { "type": "practice", "label": "Export an incident report", "href": "#/incidents/IR-2026-006" },
+        { "type": "article", "ref": "zero-trust-practice" },
+        { "type": "practice", "label": "Find which network design would have stopped the exfiltration", "href": "#/network" }
+      ]
+    },
+    {
+      "id": "threat-intel-analyst", "title": "Threat Intelligence Analyst", "summary": "Turn public reporting into prioritised, actionable intelligence.",
+      "steps": [
+        { "type": "article", "ref": "frameworks-overview" },
+        { "type": "article", "ref": "threat-hunting-intro" },
+        { "type": "practice", "label": "Read the Volt Typhoon profile and its cited facts", "href": "#/threat-intel/volt-typhoon" },
+        { "type": "article", "ref": "vuln-prioritisation" },
+        { "type": "practice", "label": "Find the P1 vulnerabilities with known ransomware use", "href": "#/vulnerabilities" }
+      ]
+    },
+    {
+      "id": "cloud-security", "title": "Cloud Security Foundations", "summary": "Understand responsibilities, identity and logging in the cloud.",
+      "steps": [
+        { "type": "article", "ref": "shared-responsibility" },
+        { "type": "article", "ref": "identity-security" },
+        { "type": "article", "ref": "cloud-logging" },
+        { "type": "article", "ref": "hardening-baselines" },
+        { "type": "practice", "label": "Explore cloud security tools and the posture-review workflow", "href": "#/tools" }
+      ]
+    }
+  ]
+}

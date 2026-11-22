@@ -1,0 +1,25 @@
+title: SQL Injection Pattern in URI Query
+id: d7e3b9a1-4c6f-4d28-8a95-1e0f7b3c2d64
+status: experimental
+description: Detects quote characters, boolean tautologies, UNION SELECT and time-based probes in raw or URL-encoded query strings.
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.initial-access
+  - attack.t1190
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-query|contains:
+      - "'"
+      - '%27'
+      - 'UNION SELECT'
+      - 'UNION%20SELECT'
+      - 'SLEEP('
+      - ' OR 1=1'
+      - '%20OR%201%3D1'
+  condition: selection
+falsepositives:
+  - Search fields where users legitimately type apostrophes (names such as O'Brien)
+level: high

@@ -1,0 +1,23 @@
+title: Cross-Site Scripting Probe in URI Query
+id: 4a8d2f7e-1b5c-4e39-a6d0-9c3f8e2b7a51
+status: experimental
+description: Detects script tags, javascript URLs and event-handler attributes in raw or URL-encoded query strings.
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.initial-access
+  - attack.t1189
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-query|contains:
+      - '<script'
+      - '%3Cscript'
+      - 'javascript:'
+      - 'onerror='
+      - 'onerror%3D'
+  condition: selection
+falsepositives:
+  - Security scanners run by your own team
+level: medium

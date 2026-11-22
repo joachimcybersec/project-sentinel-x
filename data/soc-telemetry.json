@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "provenance": "simulated",
+  "description": "Synthetic network and platform-health telemetry that accompanies sample-events.json. Values are invented to tell a consistent story (DNS tunnelling at 23:00, bulk exfiltration around 00:15–00:30 UTC) and do not come from any real network.",
+  "generated": "2026-11-22",
+  "bucketMinutes": 15,
+  "network": [
+    { "ts": "2026-11-21T22:00:00Z", "inboundMB": 118, "outboundMB": 41, "dnsQueries": 912 },
+    { "ts": "2026-11-21T22:15:00Z", "inboundMB": 104, "outboundMB": 38, "dnsQueries": 874 },
+    { "ts": "2026-11-21T22:30:00Z", "inboundMB": 162, "outboundMB": 47, "dnsQueries": 951 },
+    { "ts": "2026-11-21T22:45:00Z", "inboundMB": 121, "outboundMB": 44, "dnsQueries": 903 },
+    { "ts": "2026-11-21T23:00:00Z", "inboundMB": 97,  "outboundMB": 52, "dnsQueries": 2347 },
+    { "ts": "2026-11-21T23:15:00Z", "inboundMB": 92,  "outboundMB": 39, "dnsQueries": 1188 },
+    { "ts": "2026-11-21T23:30:00Z", "inboundMB": 88,  "outboundMB": 36, "dnsQueries": 846 },
+    { "ts": "2026-11-21T23:45:00Z", "inboundMB": 81,  "outboundMB": 34, "dnsQueries": 811 },
+    { "ts": "2026-11-22T00:00:00Z", "inboundMB": 76,  "outboundMB": 58, "dnsQueries": 790 },
+    { "ts": "2026-11-22T00:15:00Z", "inboundMB": 79,  "outboundMB": 2412, "dnsQueries": 802 },
+    { "ts": "2026-11-22T00:30:00Z", "inboundMB": 74,  "outboundMB": 66, "dnsQueries": 774 },
+    { "ts": "2026-11-22T00:45:00Z", "inboundMB": 71,  "outboundMB": 31, "dnsQueries": 752 },
+    { "ts": "2026-11-22T01:00:00Z", "inboundMB": 69,  "outboundMB": 29, "dnsQueries": 741 },
+    { "ts": "2026-11-22T01:15:00Z", "inboundMB": 84,  "outboundMB": 33, "dnsQueries": 768 },
+    { "ts": "2026-11-22T01:30:00Z", "inboundMB": 72,  "outboundMB": 30, "dnsQueries": 733 },
+    { "ts": "2026-11-22T01:45:00Z", "inboundMB": 66,  "outboundMB": 28, "dnsQueries": 719 }
+  ],
+  "health": [
+    { "name": "SIEM ingestion pipeline", "status": "operational", "detail": "Ingest lag 42 s (p95)" },
+    { "name": "EDR sensors", "status": "degraded", "detail": "412 of 418 online; 6 offline for over 15 min" },
+    { "name": "Log sources reporting", "status": "operational", "detail": "27 of 27 sources sent data in the last hour" },
+    { "name": "Network IDS (ids-01)", "status": "operational", "detail": "Suricata ruleset updated 2026-11-21" },
+    { "name": "Threat-intel feed sync", "status": "not-configured", "detail": "Live feeds are added in Phase 9" }
+  ]
+}

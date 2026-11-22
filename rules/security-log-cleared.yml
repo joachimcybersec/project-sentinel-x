@@ -1,0 +1,19 @@
+title: Security Event Log Cleared
+id: 2d8f4b1e-7a3c-4e95-8c62-b1f0a7d3e9c8
+status: experimental
+description: Detects event 1102, written when the Windows Security audit log is cleared.
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.defense-evasion
+  - attack.t1070.001
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 1102
+  condition: selection
+falsepositives:
+  - Documented maintenance on lab or test systems
+level: high

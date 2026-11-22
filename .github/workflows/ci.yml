@@ -1,0 +1,71 @@
+# Continuous integration: in-browser test suite + route smoke tests in three
+# engines, and Sigma rule validation with the official sigma-cli.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  predeploy:
+    name: Pre-deploy checks
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: JSON, BOM, secrets, imports, CSP, function entry point
+        shell: pwsh
+        run: ./tools/predeploy-check.ps1
+
+  browser-tests:
+    name: Tests (${{ matrix.browser }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      - name: Install Playwright and browser
+        run: |
+          npm install --no-save playwright@1.49.1
+          npx playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Start static server
+        run: |
+          npx --yes serve@14.2.4 . -l 8080 > serve.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://localhost:8080/ > /dev/null && break; sleep 1; done
+          curl -sf http://localhost:8080/ > /dev/null
+
+      - name: Run test suite and route smoke tests
+        run: node tests/run-in-browser.mjs http://localhost:8080 ${{ matrix.browser }}
+
+  sigma-check:
+    name: Sigma rule validation
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+
+      # Unpinned on purpose until the first green run records a known-good version; pin it then.
+      - name: Install sigma-cli
+        run: pip install sigma-cli
+
+      - name: Export rules from data/detection-rules.json
+        shell: pwsh
+        run: ./tools/export-sigma.ps1 -OutDir rules-ci
+
+      - name: sigma check
+        run: sigma check rules-ci

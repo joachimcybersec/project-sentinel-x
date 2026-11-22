@@ -1,0 +1,7 @@
+.results { font: .85rem/1.5 var(--font-mono); padding-left: 1.5em; }
+.results li { padding: 3px 0; }
+.results .pass { color: var(--ok); }
+.results .fail { color: var(--sev-critical); }
+.results .err { display: block; color: var(--text-2); white-space: pre-wrap; }
+#summary.pass { color: var(--ok); font-weight: 700; }
+#summary.fail { color: var(--sev-critical); font-weight: 700; }

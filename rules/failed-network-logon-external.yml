@@ -1,0 +1,30 @@
+title: Failed Network Logon From Non-Internal Address
+id: 8b4f1d6c-2e9a-4c35-9d70-5a3e8b2f6c19
+status: experimental
+description: Detects event 4625 with logon type 3 where the source address is not in a private range. Threshold logic belongs in a correlation rule.
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.credential-access
+  - attack.t1110.001
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4625
+    LogonType: 3
+  filter_private:
+    IpAddress|cidr:
+      - '10.0.0.0/8'
+      - '172.16.0.0/12'
+      - '192.168.0.0/16'
+      - '127.0.0.0/8'
+  filter_empty:
+    IpAddress:
+      - '-'
+      - '::1'
+  condition: selection and not 1 of filter_*
+falsepositives:
+  - Remote users mistyping passwords over VPNs that do not translate client addresses
+level: low

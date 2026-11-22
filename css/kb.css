@@ -1,0 +1,57 @@
+/* ==========================================================================
+   Sentinel X — kb.css
+   Security Tools Directory (Module 09) and Knowledge Centre (Module 10).
+   ========================================================================== */
+
+/* ---------- Tools ---------- */
+.cat-heading { font-size: 1.05rem; margin: 8px 0 12px; }
+.tool-card { display: flex; flex-direction: column; gap: 8px; scroll-margin-top: calc(var(--topbar-h) + 24px); transition: box-shadow 300ms var(--ease); }
+.tool-card h3 { margin: 0; }
+.tool-card p { margin: 0; font-size: .88rem; }
+.tool-card .checklist { font-size: .84rem; }
+.tool-card .tool-links { margin-top: auto; padding-top: 6px; }
+.tool-card.is-highlight { box-shadow: 0 0 0 2px var(--cyan), 0 0 24px var(--accent-glow); }
+.tool-caution { color: var(--sev-medium) !important; font-size: .8rem !important; }
+.lic { font: 600 .66rem var(--font-mono); text-transform: uppercase; letter-spacing: .05em; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.lic-open-source { background: rgba(52, 211, 153, .14); color: #6ee7b7; }
+.lic-free { background: rgba(56, 189, 248, .14); color: #7dd3fc; }
+.lic-commercial { background: rgba(251, 146, 60, .16); color: #fdba74; }
+.lic-cloud-service { background: rgba(167, 139, 250, .16); color: #c4b5fd; }
+.workflow { border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px; background: rgba(7, 11, 20, .35); display: flex; flex-direction: column; gap: 8px; }
+.workflow h3 { margin: 0; font-size: .98rem; }
+.workflow p { margin: 0; }
+.wf-steps { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; font-size: .84rem; color: var(--text-2); }
+.wf-steps li::marker { color: var(--cyan); font-family: var(--font-mono); }
+.wf-tool { border: 1px solid var(--line-strong); background: var(--bg-2); color: var(--cyan); border-radius: 4px; padding: 1px 8px; margin-right: 8px; cursor: pointer; font: 600 .78rem var(--font-sans); }
+.wf-tool:hover { border-color: var(--cyan); }
+.workflow .btn { align-self: flex-start; margin-top: auto; }
+
+/* ---------- Knowledge ---------- */
+.level { font: 600 .66rem var(--font-mono); text-transform: uppercase; padding: 2px 8px; border-radius: 999px; }
+.level-beginner { background: rgba(52, 211, 153, .14); color: #6ee7b7; }
+.level-intermediate { background: rgba(56, 189, 248, .14); color: #7dd3fc; }
+.level-advanced { background: rgba(244, 114, 182, .15); color: #f9a8d4; }
+.pathway { display: flex; flex-direction: column; gap: 8px; }
+.pathway h3 { margin: 0; }
+.pathway p { margin: 0; font-size: .88rem; }
+.pw-steps { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 6px; counter-reset: step; }
+.pw-steps li { display: grid; grid-template-columns: auto auto 1fr; gap: 8px; align-items: center; font-size: .86rem; padding: 6px 8px; border-radius: var(--r-sm); background: rgba(7, 11, 20, .35); }
+.pw-steps li.is-done a { color: var(--text-3); text-decoration: line-through; }
+.pw-steps input { width: 16px; height: 16px; accent-color: var(--ok); }
+.step-type { font: 600 .62rem var(--font-mono); text-transform: uppercase; padding: 1px 6px; border-radius: 4px; }
+.type-article { background: rgba(56, 189, 248, .14); color: #7dd3fc; }
+.type-practice { background: rgba(251, 191, 36, .14); color: #fde68a; }
+.search-results { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.search-results li { padding: 8px 10px; border-left: 2px solid var(--line-strong); }
+.search-results a { font-weight: 600; }
+.search-excerpt { margin: 4px 0 0; font-size: .8rem; color: var(--text-3); }
+.kb-article { max-width: 860px; }
+.kb-article section + section { margin-top: 18px; }
+.kb-article h2 { font-size: 1.15rem; }
+.kb-article p { font-size: .98rem; line-height: 1.7; }
+.kb-practice { border-top: 1px solid var(--line); padding-top: 14px; }
+
+@media (max-width: 640px) {
+  .pw-steps li { grid-template-columns: auto 1fr; }
+  .pw-steps li a { grid-column: 1 / -1; }
+}

@@ -1,0 +1,20 @@
+title: SSH Failed Password or Invalid User
+id: 6c2a9e4d-8f1b-4a63-b7e5-0d9c3a1f5e82
+status: experimental
+description: Detects sshd messages for failed passwords and unknown users.
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.credential-access
+  - attack.t1110.001
+logsource:
+  product: linux
+  service: sshd
+detection:
+  keywords:
+    - 'Failed password'
+    - 'Invalid user'
+  condition: keywords
+falsepositives:
+  - Users mistyping passwords; automation with outdated credentials
+level: low

@@ -1,0 +1,27 @@
+title: PowerShell Encoded Command
+id: b8e2f1c4-6a9d-4e13-8f52-0c7a3d9e6b21
+status: experimental
+description: Detects PowerShell launched with an encoded command line argument.
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.execution
+  - attack.defense-evasion
+  - attack.t1059.001
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection_img:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+  selection_enc:
+    CommandLine|contains:
+      - '-EncodedCommand'
+      - ' -enc '
+      - ' -ec '
+  condition: selection_img and selection_enc
+falsepositives:
+  - Management agents and installers that pass encoded commands
+level: high

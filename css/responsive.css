@@ -1,0 +1,75 @@
+/* ==========================================================================
+   Sentinel X — responsive.css
+   Breakpoints and motion preferences. Loaded last so it can override.
+   ========================================================================== */
+
+/* Laptop */
+@media (max-width: 1200px) {
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Tablet & below: sidebar becomes an off-canvas drawer */
+@media (max-width: 960px) {
+  .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .sidebar {
+    position: fixed; z-index: 60; left: 0; top: var(--topbar-h);
+    height: calc(100vh - var(--topbar-h));
+    transform: translateX(-102%);
+    transition: transform 220ms var(--ease);
+    background: var(--bg-1);
+    box-shadow: 12px 0 40px rgba(0, 0, 0, .5);
+    visibility: hidden;
+  }
+  .sidebar.is-open { transform: none; visibility: visible; }
+  .scrim:not([hidden]) {
+    display: block; position: fixed; inset: var(--topbar-h) 0 0 0; z-index: 50;
+    background: rgba(2, 6, 14, .6);
+  }
+  .topbar-clock { display: none; }
+  .topbar-search { flex-basis: 260px; margin-left: 12px; }
+}
+@media (max-width: 760px) {
+  .topbar-search { display: none; }
+  .topbar .topbar-search-link { display: inline-grid; margin-left: auto; }
+  .topbar-status { margin-left: 8px; }
+}
+
+@media (min-width: 961px) {
+  .nav-toggle { display: none; }
+}
+
+/* Phone */
+@media (max-width: 640px) {
+  .grid-4, .grid-3, .grid-2 { grid-template-columns: minmax(0, 1fr); }
+  .topbar { padding: 0 12px; gap: 10px; }
+  .topbar-status #env-label { display: none; }
+  .main { padding: 20px 16px 48px; }
+  .hero { min-height: 460px; }
+  .hero::after { background: linear-gradient(0deg, rgba(7, 11, 20, .95) 0%, rgba(7, 11, 20, .85) 55%, rgba(7, 11, 20, .1) 85%); }
+  .feed li { grid-template-columns: 1fr auto; }
+  .feed li .feed-msg { grid-column: 1 / -1; }
+  .kpi-value { font-size: 1.6rem; }
+  .filter-field, .filter-search { flex: 1 1 100%; min-width: 0; }
+  .filter-actions { margin-left: 0; }
+  .date-range .input { flex: 1; min-width: 0; }
+  .section-head .btn-row { margin-left: 0; }
+  .table-foot { flex-direction: column; align-items: flex-start; }
+}
+
+/* Reduced motion: remove non-essential animation entirely */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .hero-scan { display: none; }
+}
+
+/* High-contrast / forced colours */
+@media (forced-colors: active) {
+  .badge, .card, .btn { border: 1px solid CanvasText; }
+  .nav-link[aria-current="page"] { outline: 2px solid Highlight; }
+}

@@ -1,0 +1,24 @@
+title: Large Outbound Transfer to Non-Private Destination
+id: 1e5c9a3b-7d2f-4b46-8e91-3f0a6c4d9b27
+status: experimental
+description: Detects allowed firewall sessions with more than 500 MiB sent to a destination outside private address space.
+author: Sentinel X project
+date: 2026-11-22
+tags:
+  - attack.exfiltration
+  - attack.t1048
+logsource:
+  category: firewall
+detection:
+  selection:
+    action: allow
+    bytes_out|gte: 524288000
+  filter_private:
+    dst_ip|cidr:
+      - '10.0.0.0/8'
+      - '172.16.0.0/12'
+      - '192.168.0.0/16'
+  condition: selection and not filter_private
+falsepositives:
+  - Backups to cloud storage and large legitimate uploads (baseline per host)
+level: high

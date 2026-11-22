@@ -1,0 +1,89 @@
+/* ==========================================================================
+   Sentinel X — intel.css
+   Threat Intelligence Centre (Module 02) and Attack Library (Module 03).
+   ========================================================================== */
+
+:root { --prov-analysis: #fbbf24; }
+.prov-analysis { color: var(--prov-analysis); }
+
+/* ---------- Cards ---------- */
+.intel-card { display: flex; flex-direction: column; gap: 8px; height: 100%; color: inherit; text-decoration: none;
+  transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease), background var(--dur) var(--ease); }
+.intel-card:hover { border-color: var(--line-strong); background: rgba(23, 34, 58, .7); transform: translateY(-2px); }
+.intel-card h3 { margin: 0; }
+.intel-card p { margin: 0; font-size: .88rem; }
+.intel-card .tile-foot { margin-top: auto; padding-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }
+.intel-card-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.aliases { color: var(--text-3) !important; font-size: .8rem !important; }
+.incident-line { font-size: .82rem !important; color: var(--text-2); }
+
+.type-pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font: 600 .7rem var(--font-mono); text-transform: uppercase; letter-spacing: .06em; background: var(--bg-3); color: var(--text-2); }
+.type-apt { background: rgba(244, 63, 94, .15); color: #fda4af; }
+.type-ransomware { background: rgba(251, 146, 60, .15); color: #fdba74; }
+.type-cybercrime { background: rgba(250, 204, 21, .13); color: #fde68a; }
+.type-botnet { background: rgba(167, 139, 250, .15); color: #c4b5fd; }
+.type-phishing { background: rgba(56, 189, 248, .15); color: #7dd3fc; }
+.type-exploitation { background: rgba(52, 211, 153, .14); color: #6ee7b7; }
+.tech-chip { font: .7rem var(--font-mono); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--line-strong); color: var(--text-2); }
+
+/* ---------- Facts, citations, analysis ---------- */
+.fact-list { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; color: var(--text-1); }
+.fact-list li::marker { color: var(--prov-documented); }
+.cite { font: 600 .75rem var(--font-mono); color: var(--prov-documented); text-decoration: none; padding: 0 2px; border-radius: 3px; }
+.cite:hover { text-decoration: underline; }
+.analysis { margin-top: 16px; border: 1px dashed rgba(251, 191, 36, .45); border-radius: var(--r-md); background: rgba(251, 191, 36, .05); padding: 12px 14px; }
+.analysis-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 6px; }
+.analysis p, .analysis ul { margin: 0; color: var(--text-2); font-size: .9rem; }
+.analysis ul { padding-left: 1.1em; display: grid; gap: 4px; }
+
+.source-list { margin: 0; padding-left: 1.4em; display: grid; gap: 10px; }
+.source-list li::marker { color: var(--text-3); font-family: var(--font-mono); }
+.source-list a { overflow-wrap: anywhere; }
+.source-meta { display: block; font-size: .78rem; color: var(--text-3); margin-top: 2px; }
+
+.technique-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.technique-list li { display: grid; grid-template-columns: 7.5em 1fr; gap: 10px; align-items: baseline; font-size: .88rem; }
+.tech-id { font: 600 .8rem var(--font-mono); color: var(--violet); }
+.tech-name { color: var(--text-2); }
+
+/* ---------- Timeline ---------- */
+.timeline { list-style: none; margin: 0; padding: 0 0 0 14px; border-left: 2px solid var(--line-strong); display: grid; gap: 14px; }
+.timeline li { position: relative; display: grid; gap: 2px; }
+.timeline li::before { content: ""; position: absolute; left: -20px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 3px var(--bg-1); }
+.timeline time { font: .75rem var(--font-mono); color: var(--text-3); }
+.timeline p { margin: 2px 0 0; font-size: .86rem; }
+
+/* ---------- Reports & IOC ---------- */
+.report-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.report-list li { display: grid; grid-template-columns: 8.5em 1fr; gap: 12px; padding: 10px 4px; border-bottom: 1px dashed var(--line); }
+.report-date { font: .78rem var(--font-mono); color: var(--text-3); padding-top: 2px; }
+.conf { font: 600 .72rem var(--font-mono); text-transform: uppercase; }
+.conf-high { color: var(--sev-critical); } .conf-medium { color: var(--sev-medium); } .conf-low { color: var(--text-3); }
+
+/* ---------- Dossier ---------- */
+.crumbs { font-size: .82rem; color: var(--text-3); }
+.dossier-layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: var(--gap); align-items: start; }
+.dossier-toc { position: sticky; top: calc(var(--topbar-h) + 16px); padding: 14px; }
+.dossier-toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc-btn { width: 100%; display: flex; gap: 8px; align-items: baseline; text-align: left; padding: 6px 8px; border-radius: var(--r-sm);
+  border: 0; background: transparent; color: var(--text-2); font: .82rem var(--font-sans); cursor: pointer; }
+.toc-btn:hover { background: var(--bg-2); color: var(--text-1); }
+.sec-num { font: 600 .72rem var(--font-mono); color: var(--cyan); margin-right: 8px; }
+.dossier-section { scroll-margin-top: calc(var(--topbar-h) + 16px); }
+.dossier-section:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.dossier-section h2 { display: flex; align-items: baseline; }
+.incident-head { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; margin-bottom: 10px; }
+.incident-head h3 { margin: 0; }
+.steps { margin: 0; padding-left: 1.4em; display: grid; gap: 6px; color: var(--text-2); }
+.steps li::marker { color: var(--cyan); font-family: var(--font-mono); }
+
+@media (max-width: 960px) {
+  .dossier-layout { grid-template-columns: minmax(0, 1fr); }
+  .dossier-toc { position: static; }
+  .dossier-toc ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .dossier-toc ol { grid-template-columns: minmax(0, 1fr); }
+  .technique-list li { grid-template-columns: 1fr; gap: 0; }
+  .report-list li { grid-template-columns: 1fr; gap: 2px; }
+}

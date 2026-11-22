@@ -1,0 +1,27 @@
+# Weekly check that every cited source still resolves and still contains the
+# phrases our documented facts rely on (advisories get updated or moved).
+# A failure here means a human should review the affected content.
+name: Source checks
+
+on:
+  schedule:
+    - cron: '41 7 * * 1'   # Mondays 07:41 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  links-and-claims:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check links
+        shell: powershell
+        run: .\tools\check-links.ps1
+
+      - name: Check claims
+        if: always()
+        shell: powershell
+        run: .\tools\check-claims.ps1

@@ -1,0 +1,92 @@
+# Netlify configuration — static publish (no build step) plus serverless functions.
+[build]
+  publish = "."
+  command = ""
+
+# Tier B: serverless functions (see netlify/functions/ioc.mjs → GET /api/ioc).
+# Provider API keys are set as environment variables in the Netlify UI, never in this file.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Security headers for every response.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types 'none'; upgrade-insecure-requests"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    Cross-Origin-Opener-Policy = "same-origin"
+    Cross-Origin-Resource-Policy = "same-origin"
+
+# Datasets: short cache so updated snapshots appear quickly.
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300, must-revalidate"
+
+# Static assets.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Do not serve internal folders as static files (publish = "." would otherwise expose them).
+[[redirects]]
+  from = "/tests/*"
+  to = "/404"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/netlify/*"
+  to = "/404"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/tools/*"
+  to = "/404"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.github/*"
+  to = "/404"
+  status = 404
+  force = true
+
+# The bare folder paths (no trailing slash) as well.
+[[redirects]]
+  from = "/tests"
+  to = "/404"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/netlify"
+  to = "/404"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/tools"
+  to = "/404"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.github"
+  to = "/404"
+  status = 404
+  force = true
+
+# API responses: JSON only, never framed, never sniffed.
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
