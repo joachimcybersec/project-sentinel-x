@@ -234,7 +234,7 @@ Live site: <https://joachimcybersec-project.netlify.app> (Netlify, deployed from
 | 133 | Demo guide: every step run against the live site (KPI filter, event drawer, incident → SIEM link, `host:FS-02` query, rule page matches exactly 1 expected log, policy simulator, packet checksums, 8 tunable correlation thresholds, KEV/NVD/EPSS freshness, CVSS breakdown, `innerHTML` → TypeError) | ✅ one link fixed: `#/network?tab=packets` does not select the tab, so the guide says to click it |
 | 134 | Case study facts against the data (attack chronology from incident timelines, counts from the JSON files) | ✅ one correction: the attack order |
 | 135 | About page "For reviewers" section at 1440 px and 390 px: no overflow; 5 in-app and 5 GitHub links | ✅ (the GitHub doc links resolve once pushed) |
-| 136 | Full suite and pre-deploy check after Phase 12 changes | see the release run below |
+| 136 | Release v1.0.0 (`3362de2`): CI run 45031615386 (pre-deploy, Sigma check, Chromium, Firefox, WebKit); live site redeployed; `og-image.jpg` served; rules served as `"simulated"`; live smoke test of 21 routes | ✅ all 5 CI jobs passed; no CSP violations from the app (the only console error is the Netlify badge script, #130) |
 
 ## Not yet performed
 
