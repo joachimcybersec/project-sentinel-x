@@ -59,6 +59,25 @@
   status = 404
   force = true
 
+# Local-development files: no secrets, but nothing the site needs to serve.
+[[redirects]]
+  from = "/package.json"
+  to = "/404"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/serve.json"
+  to = "/404"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/serve.ps1"
+  to = "/404"
+  status = 404
+  force = true
+
 # The bare folder paths (no trailing slash) as well.
 [[redirects]]
   from = "/tests"
