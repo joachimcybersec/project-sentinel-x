@@ -24,7 +24,7 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="topbar" role="banner">
+  <header class="topbar">
     <button class="icon-btn nav-toggle" id="nav-toggle" type="button"
             aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation">
       <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -47,7 +47,7 @@
       <span class="status-dot" aria-hidden="true"></span>
       <span id="env-label">Demo environment · simulated telemetry</span>
     </div>
-    <time class="topbar-clock" id="utc-clock" aria-label="Current UTC time"></time>
+    <span class="visually-hidden">Current UTC time:</span><time class="topbar-clock" id="utc-clock" datetime="2026-01-01T00:00:00Z"></time>
   </header>
 
   <div class="shell">
@@ -56,7 +56,7 @@
         <!-- populated from data/modules.json by navigation.js; static fallback below for no-JS -->
         <li><a class="nav-link" href="#/">Overview</a></li>
       </ul>
-      <p class="sidebar-foot">v0.11 · Phase 11 deployment</p>
+      <p class="sidebar-foot">v0.11 · Deployed</p>
     </nav>
     <div class="scrim" id="scrim" hidden></div>
 

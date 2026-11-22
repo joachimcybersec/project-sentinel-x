@@ -32,7 +32,7 @@ const PHASES = [
   ['8', 'Modules 09–10 — Tools directory, knowledge centre and site-wide search', 'Complete'],
   ['9', 'Serverless IOC proxy and GitHub Actions automation', 'Complete (not yet deployed)'],
   ['10', 'Security review and QA (Trusted Types, accessibility audit, click-through crawl)', 'Complete'],
-  ['11', 'Documentation and deployment (GitHub, Netlify, CI)', 'In progress'],
+  ['11', 'Documentation and deployment (GitHub, Netlify, CI)', 'Complete'],
   ['12', 'Portfolio presentation', 'Planned']
 ];
 

@@ -2,7 +2,15 @@
 
 Versions follow the build phases. Dates are UTC.
 
-## 0.11.0 — 2026-11-22 · Phase 11: documentation and deployment preparation
+## 0.11.0 — 2026-11-22 · Phase 11: documentation and deployment
+- Deployed to Netlify (<https://joachimcybersec-project.netlify.app>) from GitHub; CI green on Chromium,
+  Firefox and WebKit
+- Router serialises navigations, so a slow lazy view can no longer render on top of a newer one (found by
+  CI on WebKit)
+- CI fixes: `serve.json` serves `index.html` instead of directory listings; the test driver polls with
+  `page.evaluate` (the CSP blocks `waitForFunction`)
+- 28 px minimum height on sort buttons, technique links and tool links (24 px measured 23.x intermittently)
+- 404 for `package.json`, `serve.json`, `serve.ps1` on the live site; W3C validator fixes in `index.html`
 - `tools/predeploy-check.ps1`: JSON validity, no BOMs, secret patterns, module imports, HTML asset paths,
   CSP essentials, function entry point, file sizes. Runs locally and as a CI job
 - GitHub Actions pinned to commit SHAs (checkout v7.0.1, setup-node v7.1.0, setup-python v7.1.0); CI on

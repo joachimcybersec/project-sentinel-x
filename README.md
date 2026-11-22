@@ -6,10 +6,12 @@ A demonstration platform showing how security teams monitor telemetry, investiga
 detections and act on threat intelligence. Every dataset is labelled **Simulated**, **Documented** (cited
 public source) or **Lab result**. It does not ingest live telemetry from any organisation.
 
-> **Status: Phases 1–10 of 12 complete**: all **ten modules are live** with site-wide search, and the code has been
-> through a security review and QA pass ([findings](docs/security-review.md)). The serverless IOC-lookup proxy and
-> GitHub Actions automation are written and unit-tested, but **not yet deployed**. Remaining: deployment (11) and
-> portfolio presentation (12).
+**Live demo:** <https://joachimcybersec-project.netlify.app>
+
+> **Status: Phases 1–11 of 12 complete**: all **ten modules are live** with site-wide search, the code has been
+> through a security review and QA pass ([findings](docs/security-review.md)), and the site is deployed on Netlify
+> with CI (Chromium, Firefox, WebKit) passing on GitHub. The IOC-lookup proxy is live but has **no provider API keys
+> set**, so lookups report "not configured". Remaining: portfolio presentation (12).
 
 ## Features (implemented)
 

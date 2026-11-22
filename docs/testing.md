@@ -207,24 +207,39 @@ Full write-up, with severities: [security-review.md](security-review.md).
 | 118 | Landing page weight (local, uncompressed) | 54 requests / 449 KB → ✅ 20 requests / 139 KB after lazy-loading module views; 0 third-party requests; no long tasks; CLS 0.003 on `/soc` |
 | 119 | docs.zeek.org | ⏳ Cloudflare bot check on automated access; not bypassed. Verify by hand |
 
+## Phase 11 results — 2026-11-22 (GitHub, CI, Netlify deployment)
+
+Live site: <https://joachimcybersec-project.netlify.app> (Netlify, deployed from `main`). No provider API keys are set, so live lookups return "not-configured".
+
+| # | Check | Result |
+|---|---|---|
+| 120 | First CI run on GitHub (`ci.yml`) | ❌ pre-deploy and Sigma check passed; all three browser jobs timed out: `serve@14` showed directory listings for `/` and `/tests/` → fixed in `serve.json` (no listings, `/` → `index.html`) and the driver opens `/tests/index.html` |
+| 121 | Local run of the CI driver (Playwright 1.49.1, `serve@14.2.4`) | ❌ `page.waitForFunction` evaluates a string in the page, which the CSP (`script-src 'self'`, Trusted Types) blocks → ✅ driver polls with `page.evaluate`; the CSP stays on in tests. Local runs used installed Chrome: Playwright 1.49's browser download fails under Node 26 (CI uses Node 22) |
+| 122 | Intermittent target-size findings: `.th-sort` (local), `a.tech-id` (CI Chromium) measured 23.x px with `min-height: 24px` | ✅ `min-height: 28px` on `.th-sort`, `a.tech-id`, `.wf-tool` |
+| 123 | CI WebKit: SIEM view rendered twice (2 h1s, duplicate ids, unlabelled controls) | ❌ real bug: a lazy view from an earlier navigation finished after a newer one had cleared `#view` → ✅ router serialises navigations (`latestOnly`, unit-tested); `#view` records `data-rendered`; a burst of 5 hash changes leaves 1 h1 and 0 duplicate ids |
+| 124 | CI run on `54bd76f`: pre-deploy, Sigma check (`sigma check`), Chromium, Firefox, WebKit (127 unit tests + 21 routes with the accessibility audit on every tab) | ✅ all 5 jobs passed |
+| 125 | Live response headers on `/` | ✅ CSP incl. `require-trusted-types-for 'script'`, HSTS (preload), X-Frame-Options DENY, nosniff, Referrer-Policy, Permissions-Policy, COOP, CORP |
+| 126 | Internal paths on the live site: `/tests/`, `/netlify/`, `/tools/`, `/.github/` (folders and files inside) | ✅ 404 |
+| 127 | Local-development files served: `package.json`, `serve.json`, `serve.ps1` (no secrets) | ❌ 200 → ✅ 404 after adding redirect rules |
+| 128 | Live `/api/ioc`: documentation IP and private IP → `lookup:false`, nothing sent upstream; `8.8.8.8`, `example.com` → each provider `not-configured`; `<script>` → 400; POST → 405; `no-store` on lookups and errors | ✅ |
+| 129 | Live smoke test in Chrome: 21 routes, one h1 each, no error notices, no 4xx/5xx, no CSP violations from the app; Live lookup tab with `8.8.8.8` | ✅ |
+| 130 | Console on the live site | ⚠️ one Trusted Types error from a script **Netlify injects** (`/.netlify/scripts/hud?variant=public`, the "Powered by Netlify" badge), which builds an iframe via `srcdoc`. The CSP blocks it, so the badge never renders. Turning the badge off in project settings did not remove it: the script itself says the badge cannot be hidden on the free plan. Not an application error; goes away on a paid plan or another host |
+| 131 | W3C Nu validator on the live URL | ❌ 2 errors in our markup (`aria-label` on `<time>`, clock `<time>` with no valid `datetime` before boot) + redundant `role="banner"` → ✅ fixed; `index.html` revalidated by direct input: 0 errors (the only warnings are CSP `'self'` not matching when there is no origin). The live page also reports a stray `<script>` after `</html>`: Netlify's injected badge tag, not our markup |
+
 ## Not yet performed
 
 | Check | Phase |
 |---|---|
 | Verify docs.zeek.org and docs.suricata.io manually in a normal browser (automated access is challenged) | ⏳ manual |
-| Validate all Sigma rules with pySigma / sigma-cli (`sigma check`) in a GitHub Action | ⏳ job written (Phase 9); first run after pushing to GitHub |
-| Scheduled regeneration of `cve-snapshot.json` (GitHub Action running `update-cve-snapshot.ps1`) | ⏳ workflow written (Phase 9); first run after pushing to GitHub |
+| Scheduled regeneration of `cve-snapshot.json` (GitHub Action running `update-cve-snapshot.ps1`) | ⏳ workflow on GitHub; not yet run (manual "Run workflow" or first daily schedule) |
 
 | Check | Phase |
 |---|---|
-| W3C HTML validation (validator.w3.org on the deployed URL) | ⏳ 11 |
-| Firefox and Safari (WebKit) testing, including the accessibility audit per route | ⏳ CI matrix written; first run after pushing to GitHub |
 | Reduced-motion visual check with OS setting enabled (the in-app browser cannot emulate it) | ⏳ manual |
 | Real file save of CSV/JSON export (the crawl stubbed downloads: 17 export actions produced a file name with no error); opening the CSV in Excel / LibreOffice | ⏳ manual |
 | Clipboard copy with a real user gesture (the crawl stubbed the clipboard) | ⏳ manual |
 | Screen reader pass (NVDA / VoiceOver) | ⏳ manual |
-| axe-core / Lighthouse performance and accessibility scores on the deployed site | ⏳ 11 |
+| axe-core / Lighthouse performance and accessibility scores on the deployed site | ⏳ manual (Chrome DevTools) |
 | Independent penetration test or DAST scan (e.g. OWASP ZAP baseline) | ⏳ optional, after deployment |
-| Netlify deploy + header verification on the live URL | ⏳ 11 |
-| Scheduled re-run of link and claim checks (advisories get updated, as AA23-320A was) | ⏳ 9 (GitHub Action) |
-| Playwright automated E2E in GitHub Actions | ⏳ workflow written (Phase 9); first run after pushing to GitHub |
+| Scheduled re-run of link and claim checks (advisories get updated, as AA23-320A was) | ⏳ `source-checks.yml` on GitHub; not yet run |
+| Real provider responses through `/api/ioc` (needs API keys set in Netlify) | ⏳ when keys are added |

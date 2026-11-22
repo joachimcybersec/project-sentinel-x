@@ -120,6 +120,11 @@ curl.exe -s -o NUL -w "%{http_code}`n" -X POST "$site/api/ioc"   # expect 405
 curl.exe -s "$site/api/ioc?value=8.8.8.8"               # with keys set: provider results; without: "not-configured"
 ```
 
+On the free Netlify plan, Netlify injects `/.netlify/scripts/hud?variant=public` (the "Powered by Netlify"
+badge) into every page, and the project setting does not remove it. The script builds an iframe via `srcdoc`, which
+the Trusted Types policy blocks, so the badge does not render and one console error appears. This is expected and
+not an application error; do not weaken the CSP to allow it.
+
 Then in a browser:
 - Open the site, visit each module, and check the console stays free of errors.
 - Threat Intelligence → **Live lookup** → try `8.8.8.8`.
